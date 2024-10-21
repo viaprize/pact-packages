@@ -14,7 +14,7 @@ import {
 } from '../database/schema'
 import { CacheTag } from './cache-tag'
 import type { Wallet } from './wallet'
-
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 const CACHE_TAGS = {
   LASTEST_LEADERBOARD: { value: 'latest-leaderboard', requiresSuffix: false },
 } as const
@@ -111,6 +111,28 @@ export class Users extends CacheTag<typeof CACHE_TAGS> {
     })
 
     return result?.user
+  }
+  async onboardCustodialUser(
+    user: typeof users.$inferInsert,
+    walletAddress: string,
+  ) {
+    console.log('onboardCustodialUser', user.username)
+    // await delay(1000)
+    // const wallet = await this.wallet.generateWallet()
+
+    // wallet.address = wallet.address.toLowerCase()
+
+    await this.db.transaction(async (tx) => {
+      await tx.insert(users).values({
+        ...user,
+      })
+      await tx.insert(wallets).values({
+        address: walletAddress,
+        network: 'optimism',
+
+        username: user.username,
+      })
+    })
   }
   async getStatisticsByUsername(username: string) {
     const prizeWith = {

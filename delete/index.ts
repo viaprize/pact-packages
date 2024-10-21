@@ -54,7 +54,7 @@ async function filterAndCreateNewCSV() {
     // Filter the CSV data where authId matches user.id and the user has an email
     const filteredUsers = csvData.filter((csvUser: any) => {
       const matchedUser = users.find((user: any) => csvUser.authId === user.id)
-      return matchedUser && matchedUser.email // Ensure the user has an email
+      return matchedUser && !matchedUser.email // Ensure the user has an email
     })
 
     // Write the filtered data to a new CSV file

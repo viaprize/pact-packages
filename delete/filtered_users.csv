@@ -1,8 +1,4 @@
-import fs from 'node:fs'
-import { Readable } from 'node:stream'
-import csv from 'csv-parser'
-import { viaprize } from './utils/viaprize'
-const csvString = `id,email,authId,name,username,isAdmin,bio,avatar,proficiencies,priorities,walletAddress
+id,email,authId,name,username,isAdmin,bio,avatar,proficiencies,priorities,walletAddress
 0228db18-36d6-4bff-99b3-2c60e1684f3a,support@viaprize.org,did:privy:clq7grnlw008tl10f0tljt5so,viaPrize,viaprize,false,The home for all your crowdfunding needs,,[],[],0x1f00DD750aD3A6463F174eD7d63ebE1a7a930d0c
 029ab785-b49a-4e91-9ef9-b6ab0d5d44b2,boyang@p12.dev,did:privy:clr6rrzru00v4ky0gpucugwjg,boyang,b0yan913,false,Founder @ P12. Brain Computer Interface; Transhumanism; Network State,,[],[],0x98e1AF316aee58814FDb062e0e531e7bdEba5a6C
 0f13705b-2f47-483a-a029-39b840dc22bf,cef7@pm.me,did:privy:clzla98mz04pbfiz2ja8pb21d,Charlie Fisher,charlie,false,,,[],[],0x97B59C2EC4Ac59B5A581d028bf495Fd47C96892d
@@ -61,39 +57,3 @@ f195dd52-8295-468a-b3b4-4e10da215a2f,artem@harmonica.chat,did:privy:cm02gvptg06g
 f1c7a2cb-1676-40d5-9c48-378ac3fa3d1e,noahchonlee@gmail.com,did:privy:clnfhmdei0gsql50f80tcmka8,Noah Chon Lee,noahchonlee,true,Founder of viaPrize,https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/946IMG_1970.JPG,"Writing,Research,AI,Meta","Network Civilizations,Community Coordination,Open-Source",0x850a146D7478dAAa98Fc26Fd85e6A24e50846A9d
 f31cb4bf-a70a-4a20-a65d-767f5d56c366,gages-pampas.0e@icloud.com,did:privy:clriqql9o02nvjn0fr3j820wc,raj ,swarajmobile,false,I am viaprize dev ,,[],[],0x69aE76cA2b0C724800F131F184da37783A3F6317
 fba4b9a2-68fc-47e7-ad48-94007b5d039c,tabufili.uhuholi@gotgel.org,did:privy:cls934dsr01xl9dgdjymxyr7p,musterman,max,false,I want to check this website out,,[],[],0x06d29407182B59e3b3259aaE5aE72EDCA6aEb608
-`
-function readCSVFromString(csvString: string): Promise<any[]> {
-  return new Promise((resolve, reject) => {
-    const results: any[] = []
-    const readableStream = Readable.from([csvString]) // Convert the string to a readable stream
-
-    readableStream
-      .pipe(csv()) // Pipe the stream to csv-parser
-      .on('data', (data) => results.push(data))
-      .on('end', () => resolve(results))
-      .on('error', (err) => reject(err))
-  })
-}
-
-export const handler = async () => {
-  const csvData = await readCSVFromString(csvString)
-
-  for (const row of csvData) {
-    await viaprize.users.onboardCustodialUser(
-      {
-        bio: row.bio,
-        image: row.avatar,
-        username: row.username,
-        email: row.email,
-        name: row.name,
-        authId: row.authId,
-      },
-      row.walletAddress,
-    )
-  }
-
-  return {
-    statusCode: 200,
-    body: 'Hi',
-  }
-}
