@@ -27,7 +27,16 @@ export const webhook = new stripe.WebhookEndpoint('PaymentWebhook', {
 
   enabledEvents: ['checkout.session.completed'],
 })
-
+router.route('GET /migrate', {
+  handler: 'packages/functions/src/migrate.handler',
+  environment: {
+    DATABASE_URL: DATABASE_URL.value,
+    CHAIN_ID: CHAIN_ID.value,
+    WALLET_PAYMENT_INFRA_API: WALLET_PAYMENT_INFRA_API.value,
+    RPC_URL: RPC_URL.value,
+    WALLET_API_KEY: WALLET_API_KEY.value,
+  },
+})
 router.route('POST /payment/webhook', {
   handler: 'packages/functions/src/payments/webhook.handler',
   link: [webhook, eventBus],

@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "add": "^2.0.6",
+    "csv-parser": "^3.0.0",
     "drizzle-orm": "^0.33.0",
     "drizzle-zod": "^0.5.1",
     "nanoid": "^5.0.7",
@@ -21,7 +22,6 @@
     "pnpm": "^9.10.0",
     "postgres": "^3.4.4",
     "slugify": "^1.6.6",
-
     "viem": "catalog:",
     "vite": "^5.4.2",
     "zod": "^3.23.3"

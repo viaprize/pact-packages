@@ -1,0 +1,121 @@
+id,email,authId,name,username,isAdmin,bio,avatar,proficiencies,priorities,walletAddress
+00d31bb2-2af3-4d6f-a7c0-79cf0028a3e1,sebbelh@live.no,did:privy:clzlqblwa00qxmsy0aiv9zt64,Sebastian,sebaslh,false,,,[],[],0x1Dc43c9261090221D1CF42DbA9969D936f964634
+01602452-5796-48b7-a171-41984d598053,dinovc@icloud.com,did:privy:clygmg51r05clduw1c79k6ler,Daniel Van Cleave,danvc,false,,,[],[],0x7C112AcD7Ee2D70dfB123683fC1Bd7958f3eD99A
+0228db18-36d6-4bff-99b3-2c60e1684f3a,support@viaprize.org,did:privy:clq7grnlw008tl10f0tljt5so,viaPrize,viaprize,false,The home for all your crowdfunding needs,,[],[],0x1f00DD750aD3A6463F174eD7d63ebE1a7a930d0c
+029ab785-b49a-4e91-9ef9-b6ab0d5d44b2,boyang@p12.dev,did:privy:clr6rrzru00v4ky0gpucugwjg,boyang,b0yan913,false,Founder @ P12. Brain Computer Interface; Transhumanism; Network State,,[],[],0x98e1AF316aee58814FDb062e0e531e7bdEba5a6C
+0f13705b-2f47-483a-a029-39b840dc22bf,cef7@pm.me,did:privy:clzla98mz04pbfiz2ja8pb21d,Charlie Fisher,charlie,false,,,[],[],0x97B59C2EC4Ac59B5A581d028bf495Fd47C96892d
+0f20facb-7681-4cce-a12c-e4bebc0c21eb,colton.orr25@gmail.com,did:privy:clukh2feq06618v9lzl830ubb,Colton Orr,colton,false,"Building - http://AceTCG.xyz Artist, storyteller, optimist 🌴☀️ Prev: 
+@Gitcoin
+, 
+@InsomniacGames
+ Spider-Man Character Artist",,[],[],0x6B5918D8EF9094679F4b4e1Bf397a66eA411B118
+0fd1be5c-5727-48db-9e75-cbb7ce097b5e,coderintherye@gmail.com,did:privy:clyhy02j7040f4g1loduo2eb6,coderintherye,coderintherye,false,,,[],[],0xF91A47823dda189dCBEd6C8eD2b781D587821f33
+11554e58-362e-469e-923d-dcdb9a63b7ce,bluelotus363@gmail.com,did:privy:clrj7guc303ajjj0fev3y8ytp,Akash,zkash,false,dev,,[],[],0x7E044abb75D743dc0A823Dad1d3efe5B8418797A
+12a666cb-7e01-452d-a3d5-7b443e75bfdf,Khaddaoui.hamid@gmail.com,did:privy:cltg9bus900lxzb36cvcietap,Hamidov,hamid,false,Beginning dev web3,,[],[],0x1a2f930cCE769A38391B760af33b5c242a50038e
+167c7ea2-6348-4a99-a23f-05e6e229228b,jehan.azad@gmail.com,did:privy:clqd487s000czl40f8zeagf0u,Jehan,jehan,false,Into public good bounties :),,[],[],0x96a49913Ca0628FE6533C2CD634058E1E95801eE
+1d5bba74-d2ae-4864-8d19-27098683f8fe,spam.flo@pm.me,did:privy:clrdndwmw0037l40idhpifjc4,flo,flowrider,false,...,,[],[],0x220AbD48f2b444E1a352B6927c885C4579738081
+1f4d0337-9194-4af8-8369-db03eb6b38f5,ben@latenightsketches.com,did:privy:clzutwjr500g5ijboydnkfn8l,Ben Green,numtel,false,,,[],[],0xa48c718AE6dE6599c5A46Fd6caBff54Def39473a
+219e9439-eed0-41d1-b35f-605bdaed5a1b,tibet@terran.io,did:privy:clzu2fbxi01jvzsy0adeamec1,Tibet Sprague,tibetsprague,false,,,[],[],0x0084FB1d84F2359Cafd00f92B901C121521d6809
+23326308-b113-4999-8ad0-8ab796e935ec,aryantiwari7762@gmail.com,did:privy:clpe981au02o7jw0fl34i16bj,Aryan Tiwari,arry,false,Software Developer,https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/169IMG3075JPG,"Python,JavaScript","Network Civilizations,Open-Source",0xBAfF9f54b938AFcd07Ef1819B6162F340b80ACA7
+2466a28e-a0d8-4dfc-b584-f396b1893dcd,anextraemailformwa@gmail.com,did:privy:clxtbj13f0ehy3c5m44c5eubb,yhoyo,hey,false,assydfdf,,[],[],0xAE0739e3d9DB4e5702104c8fF946CEf3Dee73c2E
+24d33f75-ccdc-4bb9-8110-509a73d2efd4,parsan16167@gmail.com,did:privy:cm0htxe4k01kdjskve2iuia62,Back up,backup,false,,,[],[],0x8f43115B07B3cAa2eeE72989E8c206Ec8E10FB92
+25980f5d-5dfd-4886-bc15-1af70541a3b4,sianoi.kimari@yandex.com,did:privy:clz35qnl906md82txpe8oxymh,Sianoi Kimari,sian,false,,https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/731IMG3465JPG,"[],Research,Writing","[],Open-Source,Community Coordination,Education",0x074D999AD52c677915824ea0E34d90c55D35D8D7
+28564da2-3381-45b4-8b4a-c93c5c888285,defu.digest@gmail.com,did:privy:clzbemzqg02qovfhxd48q9g2w,defu,defu,false,,,[],[],0x1AeCCba891aBbbF5226df53C3F2F5094eCfDf74B
+28ea0053-3884-43cd-9054-58bede08e339,ashleyjherr@gmail.com,did:privy:clzktfe4806ee115i9p1hk8wj,ash,empowa,false,,,[],[],0x0FDFD2b9C2c5d37557223c574c76aF658F891C6b
+2955266d-d500-4730-b117-c2efa5d01d99,chengwei2061@gmail.com,did:privy:cluijgh4602t3ezm6109j12wq,Vee Cheng,bonecato,false,,,[],[],0x4f0Dc1c5c57b3a63b23205b43e055bE45F4dc702
+2d0c6ab5-a4f6-42c3-98b5-0bb692e6f549,robsheko@gmail.com,did:privy:clsmgekzl00z3iwx7aukzr6qh,Rob Shekoyan,robsheko,false,"Death is bad, life is good",,[],[],0x1Ad10b10083d37ff367a2ade5e40db981A05eB8e
+2e7070af-4a01-4854-b812-54f785706d69,poshettysaiteja@gmail.com,did:privy:cm05d2o0p024gcpab8mzlzhps,Poshetty Saiteja,saiteja,false,,,[],[],0x96C9097ec76ea5d91F1d9874B1fF7444e94795CE
+2ebae20d-11e3-4a60-b324-e6ca250dd668,mcmarkse@gmail.com,did:privy:clwmi7pai02mzg84qd7pf4lfu,Mark,mac,false,jacked,,[],[],0x9A7B14053C88928f7d59A6dfFdb745D8e256E654
+2ebb9e66-e750-41e9-b714-257ca4cb4361,sirinyaparham@gmail.com,did:privy:clyoloknj01u5zd6pvqvx59r2,SIRINYA PAR,pickle,false,,https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/811pngimgcomearthPNG32png,"[],Programming,JavaScript,Writing,Design,Art",,0x46392daEDB35d6a7c498408d489366ddF2DeBb71
+344af871-a57b-4dd3-a17c-425b90ea613a,project195percent@gmail.com,did:privy:clukhpe7k0465u262i62zglmc,abhinav,project195,false,On a mission to tokenize carbon credits,,[],[],0xB0C3C8c05199FA6c955C65df08025AF76EF211Df
+370beded-3aa6-433b-947e-24c6837525ff,austin@soildao.io,did:privy:cm004250y00m79h779lnot5p3,Austin Hill Shaw,austinhillshaw,false,Loved and loving man,,"Writing,Design","[],Health,Network Civilizations,Education,Climate Change,Community Coordination",0x8437BF6F137766b2fe8C1d1544E15780C5dc1aCE
+389c0391-8b07-4930-b901-8c54e93cf15d,justin.knoll@gmail.com,did:privy:clygmesvu0489koh4askvb0az,Justin F. Knoll,jknoll,false,,,[],[],0xdd54cC1284457480BD9eceDE468F0EE01dB4de2c
+3a8974c4-c98c-477c-9a0c-c9f0de1059d9,luisdv26@gmail.com,did:privy:clrlessmr00ofl80gl9hsgbmv,Luis,luisgonzales,false,"Roatan local who loves this project. ",,[],[],0xF9649E032cF877700F09603D00a6b56a5F2F0DEA
+3b38f4fa-bc74-4b4d-9362-32b725718a4e,rajswaraj.r+testing@gmail.com,did:privy:cltss1nma00r1kjl140o8mbud,swarajtest,swarajthisistest,true,hey,,"JavaScript,Translation","Climate Change,Community Coordination",0x5F3f374256c0BA5d833184E74A48dD326DB2Dd14
+3dd8a542-69f1-44d3-8f3d-594508736bf0,dipanshuhappy@gmail.com,did:privy:cloczujqx04dfmn0flbw8sd99,Dipanshu,dipanshuhappy,true,I am a good boy,,[],[],0xd9ee3059F3d85faD72aDe7f2BbD267E73FA08D7F
+3edf1342-d3c2-4981-8b6d-93745ab4198a,elinorrennie@gmail.com,did:privy:clzm9wiau01at26c6pj1l7nq1,Ellie Rennie,ellie,false,,,[],[],0x6b1bD33e87cf3F06Efd5E76246B4314D32E71a07
+3f1572d3-a57e-42e4-8d64-ae05fa5b5691,noahchonlee+test@gmail.com,did:privy:cltsru7qn05hjyo3uf9e2q3xm,Noah But For Tests,testingmyaccount1noah,false,testing this out,,[],[],0x8df49481a368a3E0F3518198eE8E7e7BdfE142EA
+466d5d02-c66e-4997-9c61-21c3a175541b,naomismith@tuta.io,did:privy:clygmc95t03l5f37pracn9j9i,Naomi Smith,noms,false,,,[],[],0xE2923e6560b56fc87DF1260a7f1D7105A2ed2035
+467d717c-fa09-4cc9-9da3-60bc6bc39760,Shinafxt2000@gmail.com,did:privy:clq9bt3eo00bcjp0f30jepxq9,Shina,shina,false,-,,[],[],0x54948734849b57eEa9590d092C3df0B2fF0546D6
+4bf9f260-10d1-4bf3-bdfe-0938bc7567c6,Brewster@archive.org,did:privy:clygmba8c015zcygswww2cp32,Brewster kahle,brewster,false,,,[],[],0xC9FA5AC25639276016C70894fe3354479c738F51
+4dc22e92-de96-4d78-aecc-3ee702186e1a,d@a.com,did:privy:clx0554wd04qafrurm4v8x0d7,dddd,dddd,false,,,[],[],0x8b5E4bA136D3a483aC9988C20CBF0018cC687E6f
+4e0e190e-3eed-4cbf-85dd-26354e601bc9,yihaotian@gmail.com,did:privy:clut9sab90kxkiijyqekdb3vk,Haotian Yi,pinguis,false,,,[],[],0xE8c8f12cCB61fD25EcC5E391E99f69a971526C99
+50c3c638-c690-4780-b1b5-65823d6dc6bc,dev@gmail.com,did:privy:clrdnhsju032sib0f4jkslwjg,Dev Test,dev,true,asdfjkl;,,[],[],0x598B7Cd048e97E1796784d92D06910F359dA5913
+52971c24-00ab-43bf-8904-adb3d00d2e6e,yardenack@gmail.com,did:privy:clygmaa9i02dld8vaqg8v7zo2,Yar,yar,false,,,[],[],0xfB2e0D69062ef6BE1bf5f8165Aee063100dCBc8D
+53fb310a-3ce1-499f-b7e6-bd79756f9bf9,xyz@yahoo.com,did:privy:clruimvnh02w9jv0o9icvh88f,xyz,xyx,false,lfg,,[],[],0xB7FF4742e6E929e210f17c48E6a56df54BdAD1d0
+54fdc5a9-75e8-4346-af9a-43e40ab98135,gg@j.com,did:privy:clx04ntlt00gvr51b8ajybgfn,vvv,v,true,,,[],[],0x8b5E4bA136D3a483aC9988C20CBF0018cC687E6f
+55b25a73-cde7-45f3-aba6-04b9f3ffbfe3,padictoria@gmail.com,did:privy:clrdxysu7042fl90fmh7q69yb,"Victoria ",victoriaforest,false,"Pilates instructor, longevity workouts ",,[],[],0xb287d3403aA0227382230783bE8F4123a96FB470
+5a0b24a9-7486-43b5-8d6a-684baebc26a2,minorityprogrammers@gmail.com,did:privy:cm0eaxj8k0638pn8v9kgqbhle,AIPGF,plug,false,,,[],[],0x4642124cA807ABDD18447bEF2846C95d2D99C6C9
+5a602374-33e6-4a26-9400-fba2a413e682,zetarazzy@gmail.com,did:privy:clwidi3yj0g3m12jl14kbexjg,Razzy DM,razzydm,false,BeHold,https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/196FBIMG17163698766346346jpg,[],[],0x8418C33C9DfBda6123aF5df75C7A76c42F25fD31
+5f69b6a7-eb5c-44b1-b865-1d78627d6d29,francesca@zkpass.org,did:privy:clr3r565400bflc0fjf61vgcl,Francesca,clinicaltrialsvitalia,false,"Inquiring Minds, Holistic Paths: Exploring the Human Condition through Innovative Tech",,[],[],0xaA28E9dFC441Bc4c1adD5d9182C87B1acBFcD246
+645bb963-10f8-4dbb-a4b7-65970e097bd0,Isabelleki002@gmail.com,did:privy:clygmbysh0ef39qb14kbdc4ea,Isabelle Ki,isabelleki,false,,,[],[],0x665D848D0eDC6F15Ba69221DCb22A94F2137F18C
+659ccb64-c5a7-4d09-9482-f4075ea76c7d,zf@sirodoht.com,did:privy:cm06y9dct016l112yh8amykl0,Theodore Keloglou,sirodoht,false,,,[],[],0x866cF2C47a0d0445F12567bc2429f31B83451B24
+66f6c970-e5d2-4103-a93f-b634784eaadc,swarajcaptain@gmail.com,did:privy:cltrx0v9n03bnx2xc71isbql9,swaraj test,sawrajtestingthis,false,swaraj,,[],[],0xb6A95b3Fc70Cbea4069e1370a93E4a0D8E3c9B40
+672167ce-16f3-443b-b356-c3599ae175c7,yashlunagaria@gmail.com,did:privy:clr566zj001qyk10ggucppodk,Yash Lunagaria,yashluna,false,Chasing ikigai,,[],[],0x1b55174da19EAF62BDa96FfcEc35B09B7B40D6b9
+6859341a-b828-4367-b03a-f73daa46fd4e,justina@3box.io,did:privy:clzjnmktc0bixvwj07h2ez76y,Justina,justina,false,,,[],[],0x56f2eBB4FD27c2BF91Cf15d91cb3B2A757EF64aC
+69da4866-835f-4756-b0ef-747dc43a523f,jean@ipe.city,did:privy:clqhyqgoq001gjs0fdrl3nfrg,Jean,jean,false,Building Ipê City,,[],[],0xfB9fD53172A09BB0691a1ADECc35a30d99adA235
+6ae6e06e-3dda-43fd-8ecf-9cc98892c6eb,noahcremean@gmail.com,did:privy:clpocafkr00n1l30f30t6pne5,"My name ",testingitout,true,Hi,https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/2190d4508348bc2f3cdb843abb4935d4d845b7dcamv2webp,Research,Open-Source,0x2d2Aa1E3B4e131138d55F91b7C29805cF07616b8
+6d8e70d3-c95f-43b1-9844-cdfb1e811242,Cassox@gmail.com,did:privy:clqmzi8nv008vkw0fvn0dbdnc,Jeffrey Tibbetts,cassox,false,Non-medical consumer implant design and body modification artist,,[],[],0x3D3c0B40daaED87D75FeB611BB5ac66Ebaa2E4Ae
+6e291151-a55c-4a24-9e21-5e8067401e62,VaporAviator@gmail.com,did:privy:clt82feav09zb203c94l46sbd,VaporAviator,vaporaviator,false,Inventor for the better world.,,[],[],0xD00F24c1d859edBc23311E802C32B76274367e8D
+6e557123-6216-4621-b372-aff86c2448f3,daniel.ospinabotero@gmail.com,did:privy:clzl0zlv400c79ylgkt2ktfdw,Danielo,mrjackalop,false,,,[],[],0x16e1E05bC65cb17c51e64AE6043DAFe92467F954
+70eb659d-76c0-432e-8746-179e83b9502a,techlitus@gmail.com,did:privy:cluk4qgb40175ykfddjkeljm2,Andre,techlit,false,"We are a 501(c)3 nonprofit that aims to teach computer science, public speaking, and finance to underprivileged  students worldwide. ",,[],[],0xa315B231d213A38933fFD708A09f26cdc95dc65f
+74633faf-448a-4630-8011-0c65c5ce5859,michellekellywu@gmail.com,did:privy:clr9dixlj00ddl70f34snxj2n,michelle,michelle,false,michelle,https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/526IMG_2972.jpeg,[],[],0xF4a404C0757c40213c2Ba7cAa138Ee2f14db372d
+777a0a15-ec51-45a9-a107-84f1064e8cd5,s.a.hewat@gmail.com,did:privy:clskwd8gn05ev517d276xg4kr,Simon Hewat,sahewat,false,,,[],[],0x7F8bD47f61ed6937689921Cb85a9f21F7c61E1a3
+7ad913d2-00f5-4827-9d1c-1288096fa2cc,illajical@gmail.com,did:privy:cm037slsv062djih60cadqtsd,Omolaja Olaiya,slckrvsn,false,,,[],[],0x49d031f92E6c89C097f533fE96C1617F343B0bed
+844dbb77-3f0c-4a99-9b48-c3ad79786c5a,andre.poghosyan@gmail.com,did:privy:clx3sm0qa05tjbgzlgzw9a71o,Andre Poghosyan,andrep,false,"Hello! I'm the Chief Financial Officer (CFO) for TechLit, a 501(c)3 nonprofit with a dedicated mission to
+teach computer science and speaking skills to under-resourced communities.",,[],[],0xDDc12a8A2A40f13cD1d39959f400077fbCe94C80
+868a7132-3e3c-46dd-93e5-c3251cafdbf0,tyler.wakefield.410@gmail.com,did:privy:clzraaf3o004xqgd3ifv42090,"Tyler ",t_wake,false,,,[],[],0x85cA0724f1D46AD4D9be014256A727d35cc10d73
+86f41643-a73f-4c83-aa4d-555a0cb5c785,TheHashSlayer@gmail.com,did:privy:clxyy2csg018lbqc8xvee9nyx,mekail,mekail,false,Cliff diver gone governance maxi,,[],[],0x537AFb1bB98386D41Fe5f4472C505d6BAec9e3D2
+8735b072-2102-4aef-b64a-ace0b33feaf5,ThomasColwell@proton.me,did:privy:cm169e8oj01uppxsmk3xf7mov,Smiley Face,smileyface,false,,,[],[],0xfe37b74be206C3ADF8f342f56B86Eec97c0F0394
+8874da72-a26b-4080-b0d4-e38a2b14a12c,iamgorgasiagian@gmail.com,did:privy:clzl5ut5i00nx5s4tpbpjd93d,Gorga Siagian,gorgasiagian,false,,,[],[],0x04145F4Fd42b2D63D273A49D298a65A151bE4Cb0
+8915598d-cdcf-41db-b998-fc14e0a86060,laurenkatalinich@gmail.com,did:privy:clzlkwwzv008h4xxlv2iz6rko,Lauren Katalinich,laurk,false,,,[],[],0x0B0385d3Bd65EF9C9549Fa347099BCd600CBbB0e
+8fb04682-82a2-4735-9a24-5d1d258df6bf,avinashburri08@gmail.com,did:privy:clq9vnceu00f2jt0fla0aww8n,Avinash Burri,avinash,false,Nil,,[],[],0xDba6b1e01286C11bDf253E15d05898951325805E
+9200b724-e24a-4785-a07d-26c70bb0783d,accounts@9wizards.com,did:privy:clzh4x6cj02g7emjvirewwgdv,Ryan Taylor,adjyleak,false,https://x.com/zkav_club,https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/7751000021737png,[],[],0xB577b578C06A6007A15Ca0842098Df18EE4B05bc
+92700a55-c784-426e-a3ac-62bcb549b177,leahmccuan@gmail.com,did:privy:clygmbemd041nt9ilbg6h5p7h,sylven,sylvenrazedusk,false,,,[],[],0xB89BFF49F933e43a884e82990EE5485884010D4F
+92c61c48-68d6-4e33-9709-cf7d0c8954fe,anuthaemaaail@gmail.com,did:privy:clygkhrf60265ta7jer7tokp6,Testing out anothaaa,testthisoutanutha,false,,,[],[],0xC0Da70b27D6908f17E73Fd85dA106965deB1942c
+9aa8f416-a9f0-4c20-9b32-9b28af1a7f41,Elizasunmi@gmail.com,did:privy:clun16fso02toyjg5cn6fzd69,Elizabeth,ecremean,false,,,[],[],0x93dAB4c51aEf06C576C4383bFAd3c383BA5ba649
+9ff95938-4a97-4b23-909f-a1438508acf8,jasonhartgrave@gmail.com,did:privy:clr6imj01002fjh0fpx2pt7um,Jason,mind4u2cn,false,"Network  State Maximalist with a side of DeSci, Daos, and ❤️",,[],[],0x9141dFE96Aa7175Cfa84aE9b357f5515d4E02320
+a005a923-a230-4d88-ba3c-19aa4ce72d2b,Wendyhanamura1@gmail.com,did:privy:clygs0hxp0bedy2lbi9qmla28,Wendy hanamura,wendyflower,false,,,[],[],0x5AaC4C6877120cC69Fc43166662A16042CB5F433
+a3c52e7e-8e21-47ce-893e-88c75570cba7,patricia@opencivics.co,did:privy:clzj373k70am0yuz60luji7aj,Patricia Parkinson,pparkinson,false,,,[],[],0x733Fe4b4D26168532c668231d725C46C315c14b1
+a69bda09-3a52-4ad8-ade8-de536e60229d,syntonikka@gmail.com,did:privy:clygmaewj0cvnf0vpg0ohttii,Nico,syntonkkka,false,,,[],[],0xE143daBEeA4Dc8d753B3de8239A6796943C93e7e
+a968e336-44e8-44ce-bc18-f53810eddd41,shizudio.eth@gmail.com,did:privy:clqfaqc5101fji50fyj25ihln,"shina ",shizudio,false,Trying out viaprize!,,[],[],0xd7dA52eC53025C7cD40f22B793D468ab9B3E1d01
+ae54ca75-5fcb-445f-b612-4519e34f487a,mjm@maearth.com,did:privy:cm1p9k9s702t5gzaju5pfyqk7,Ma Earth,maearth,false,,,[],[],0x617B7ab789bafF8B7c4d641d18e2fc42d1e1666e
+af0963e4-344d-4c4c-92c1-18c9aac4bfff,aleksandar.abusamra@gmail.com,did:privy:clygmb71y0iny7fne602uz0o5,Abu,abuxyz,false,,,[],[],0xf17E138133B9846EfFE8A8579079c29E5e6E570D
+b4b943e7-ec27-4b31-84cc-c1f664198703,niklas@vitalia.city,did:privy:clqe284ud00h7l00fh5hq8yr6,Niklas Anzinger,niklasanzinger,false,Vitalia & Infinita VC,,[],[],0x500c4E7c01A1ccC9246D9fFe558fB6B72bd8F7b3
+b4bd89b6-c855-481d-b451-de85fff85a60,renee.daoscience@gmail.com,did:privy:cltbo5g0t0021ogjk11h00g0g,ren,reneedaos,false,,,[],[],0x44571D865D879bA75d8eaBb4a08c01Cc3Fc36D3F
+b4e71180-10b7-4ea7-b56d-d28b04dbcdd4,kelseyfaith2024@gmail.com,did:privy:clrvvfjyx02yojr0pqao44irs,kelseyfaith24,kelseyfaith24,false,Nature & Community,,[],[],0xA48d2Eda9EA81D5d127396b508aF378e025Fd258
+b5c0574b-eb29-4074-b1da-e4ada2e09b1a,mikejolamoses@gmail.com,did:privy:clskix9jz02rjlms9s900776l,Michael Jola-Moses,jmm,false,Frontend web developer,,[],[],0x5a63058CF05E99Fe08039A74b9238Df71044fa9b
+b7938c99-019b-42f5-8477-0cb2e3c691af,benjaminparish6@gmail.com,did:privy:clzh8h53t023vf2nw0h7hxkm2,Ani Peter Benjamin,vortex,false,,,[],[],0x717d295240218528771AF05f6d1985095F0B1ac7
+b7a62560-b547-49ee-8e24-82424c5504ba,noahchon1@gmail.com,did:privy:clq3569kx004ol30fgt8vevee,NsForum Team,noahstestaccount,true,Some Forum Folks,,,,0x2863CB2E1F88C031f7D87Adf93e5fE97FB44434a
+ba68c5f9-a26e-4362-801f-95051c114c5c,thenvnsahu@gmail.com,did:privy:clri3jrw80261la0f2i8zgf7q,Naveen,nvnx,false,super shadowy self-taught coder,,[],[],0xECfC94a0DDfa90c35De3d91cf96792CE81e2808C
+c0a91429-3705-4d1e-b96d-e896b41513b8,otienot75@gmail.com,did:privy:clypwb2hm09k3hgjfdyl2i53a,Tony,garfield,false,,,[],[],0x702d67039dC68C972e8aCA4E346a99421Bf52497
+c1d024d0-769b-4aa2-b126-ab61360129f2,webmans@gmail.com,did:privy:clt9m8s6j0awxmq9x6x16yx8c,Mike chen,keeplooking,false,An crypto angel investor.,,[],[],0x3a7A2554b98577ef723424bB3e0aB99b80eD4C12
+c44e9aed-f09c-4280-9165-b69a75c61592,sianoi@web3savannah.io,did:privy:clz33dq42046z17rzsi2mneh3,Sianoi Kimari,sianoi,false,,,[],[],0x1589570179e9c08EF62CC14d6160D7CD199B60F2
+c57564cf-f92c-4457-a462-7af736f9a39d,geko5443@gmail.com,did:privy:clzt1owiq01onux76kzxizl8y,Nate,nate,false,,,[],[],0xCa199A8BcD0dd45c964d54fD1741ACf16fc364B8
+c772fd0e-452d-4ce6-8467-3b1b3b2c8bf1,rgordones@gmail.com,did:privy:cm01v2vbm03z0p54ad8kqapg4,Roosevelt,gordonestv,false,"Technology enthusiast, privacy and financial security activist - Knowledge will set us free!",https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/552photo20230905144253jpg,"[],Writing,Translation,Art","[],Open-Source,Education,Community Coordination",0xEFdaA1291A91967beAd9ef7D59FFDD21691720Df
+c81882a9-e4f1-4cd2-a967-d206e4c4153b,noahcremean@berkeley.edu,did:privy:clv0wygaj018n7596nr72fhx1,Just another Test,justanothertestaccount,false,Some testing to do,,[],[],0x50f7Dcc34AA156b7F15a513f49D81043524Bd071
+cc8bebdd-84d4-4ad4-a716-3ae737075408,virginiamann1174@gmail.com,did:privy:clrb2rqvf013vig0f8ej1ntas,Virginia C Mann,vmann2024,false,I love to read.,,[],[],0x31865db1A864C6DAd2c0D02E72eFeE8cebda26E2
+cd14e113-b80e-4197-89df-bc5237f7a937,jonason@protonmail.ch,did:privy:clu9okvgf0c0x11el1e5lcz3t,haessig,jonas,false,"Philosopher, Historian of Knowledge, Librarian",https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/2631663126058977.jpg,"[],Design,Writing,Research,AI,Python,Translation","[],Open-Source,Education,Community Coordination,Network Civilizations",0x8F688936bA025d4d16950299a2809549f595e853
+cda75bf9-7250-41ed-98db-82a2ed89bdd9,brian.li.101@gmail.com,did:privy:cluelsoz902l5147yyq9m7ppz,Brian Li,bli,false,,,[],[],0x88F667664E61221160ddc0414868eF2f40e83324
+ce0e71f2-c084-4600-a9d9-88ec73498c8d,lightandluck@protonmail.com,did:privy:clygdf51h01n0xgg33nhwjacu,kev,lightandluck,false,human,,[],[],0x536E60acd899455701B2a22d7D493BF65DD3bEC2
+d362cfbb-b7ce-4acd-9d43-63b1772a8250,ajiboladavid0963@gmail.com,did:privy:cltcxrpko04l3we4bnqspvuxk,David Ajibola,david,false,,,[],[],0xc2F85BE6D2987Ba7759E9FAD354EA4C9713b86a0
+d498b358-de16-43c9-acd3-47a457d19971,raphaelgonzalez1837@gmail.com,did:privy:clygmc57n0aj1yidfrkosd8da,Raffa Gonzalez,raffa,false,,,[],[],0xfDf14AC67FFEf595c3AD9b00cE2AA1C7653bc6a9
+d5a10dc3-63b6-4f21-b0d4-40e15e33c8f5,testtest200526@gmail.com,did:privy:clqjrd7800111jm0fx6dz2whu,Dipanshu CoinBase Test,,false,"Nothing much ",,[],[],0x70C0911B994770fc56Bccab8e0E00e90177a74c1
+dcc22ef5-ce07-418e-9dd6-9768958a3085,test@gmail.com,did:privy:clpxz9ihq00djk00f2h06nto6,whizzy,swaraj,true,....,https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/183liang-xing-art-anime-vzglyad.jpg,"Python,Design,Translation,Real estate",,0x725a687163699e172DebC4763A4b87156B87a9e2
+dfa2f503-9574-49b3-b636-297580e1f39e,rajswaraj.r@gmail.com,did:privy:cloqudkar00fxl30f73lunvlm,swaraj,whizzy,true,,,[],[],0xE2f56D8193C3dF51aF1Ee790faE5354a101D9e50
+e2fd45cd-55b2-4164-a675-e4fbed514baa,aryanlearn7762@gmail.com,did:privy:cm03zbf8600v112cypk5w75wr,Aryan Tiwari,arry123,false,,,[],[],0x9971CFA9d33861A6c70Ea10FE429254f57e20988
+e9376bcf-b304-4b0f-9921-c1617c19b7fc,james@gmail.com,did:privy:cm1ot4hbi0b7z12urbwkh4j91,james,kingjames,false,,,[],[],0x65741138F6B2629D34aBA703Aec18bf799016820
+eb578024-81b5-44aa-b1c0-c7cce51bbaa1,rachitkhurana40@gmail.com,did:privy:clycxvgaf00fdmmmxb287wb2q,Rachit Khurana,notnotrachit,false,MLSA  | Full Stack Developer | Django | Pythonista | Student | Programmer | Tech Enthusiast | Learner | Linux 🖤,,[],[],0xA494365Aa26a75A2C03d92b43B295b5A20f10e89
+ec0d7003-f445-4281-829e-e6d21b6932ab,shikharbhardwaj1810@gmail.com,did:privy:cm0h0vjt902ojpb61rqrb9c05,Shikhar Bhardwaj,torquesaint,false,,,[],[],0x78CdA7E7B12222660a9079506Cb00094352677fE
+ed53f0be-0f92-4eab-8c8d-bcef7c7226c2,ada.cyborg42@gmail.com,did:privy:clsdm4h2x0030ohtvs2d3yzma,Ada Cyborg,adacyborg,false,Supporting good causes!,,[],[],0x3538B1D9911FE3B3D8cFa649b37A5141Bb71308A
+ed817e1b-201c-4555-b23a-604dd7450338,aitheric@protonmail.com,did:privy:clrfuaat000eml50f1e2mczua,Tristan Roberts,aitheric,false,Desci fanboy,,[],[],0x262b4F07e42BBc33F597fcf0d854e9DAFaf3D469
+ef5e9aa4-7de0-49d8-922b-b3c3531ff81f,leilanireyes12@gmail.com,did:privy:clygmcjn303pn5w4pikbafgt1,Leilani,lanidelrey,false,,,[],[],0x6d151AE77EDB1AF9e8f2Ab40D5346d3D146F6986
+f015c3d5-4e65-4769-bd53-a78fe64c4317,m.anungoo13@gmail.com,did:privy:clygmb42v0hgian10skzrqt05,anu,anu,false,,,[],[],0xBCEB21a62A4Aca5CE302A701765885C014170B7C
+f195dd52-8295-468a-b3b4-4e10da215a2f,artem@harmonica.chat,did:privy:cm02gvptg06g1s6e298f4rs1a,Artem Zhiganov,zhiganov,false,,,[],[],0x52efcAbfEE378D675a50644f4A2C05B741b009c1
+f1c7a2cb-1676-40d5-9c48-378ac3fa3d1e,noahchonlee@gmail.com,did:privy:clnfhmdei0gsql50f80tcmka8,Noah Chon Lee,noahchonlee,true,Founder of viaPrize,https://uofqdqrrquswprylyzby.supabase.co/storage/v1/object/public/campaigns/946IMG_1970.JPG,"Writing,Research,AI,Meta","Network Civilizations,Community Coordination,Open-Source",0x850a146D7478dAAa98Fc26Fd85e6A24e50846A9d
+f307ec1e-ffba-4717-8650-a545c7988a97,armanderete@gmail.com,did:privy:cm0d3spc001wd895f626o1aas,ForkinWisdom,forkinwisdom,false,,,[],[],0x19EFa68CfBd896CE43C5A956329e17084C2b0761
+f31cb4bf-a70a-4a20-a65d-767f5d56c366,gages-pampas.0e@icloud.com,did:privy:clriqql9o02nvjn0fr3j820wc,"raj ",swarajmobile,false,"I am viaprize dev ",,[],[],0x69aE76cA2b0C724800F131F184da37783A3F6317
+f38326bc-71f1-4792-9ab5-1da0a50e0624,mnithin1422@gmail.com,did:privy:clq0pwem80064l10farfxulg3,Nithin Mengani,nithin,false,ffff,,[],[],0x0780b4b3d323F0588280f352eC2BeBa9481b88ff
+f45f2d91-9bf4-44a7-bd42-80c30994e9de,devansh76@gmail.com,did:privy:cm2g0fw1704c1acsjosf43o9f,Devansh,thedevanshmehta,false,,,[],[],0xEF9471E502D0f21a3303F38d6692Be47c2Cd66fe
+f6bcc775-a960-49b2-873e-99609a2fd96a,jpatriciorosales@gmail.com,did:privy:cls0k380r00bpl20nxv5zxjp2,Patricio,poli,false,"Vivo en Argentina, en la ciudad de San Pedro.  Tengo 36 años. Soy docente de nivel secundario y soy parte de una organizacion social y ambiental que trabaja con las personas que recuperan material reciclable en el basural a cielo abierto de mi ciudad.  Hemos conformado una cooperativa de trabajo y nuestro sueño es contar con una planta de reciclado propia para que puedan seguir trabajando en el reciclado, evitando el trabajo en basurales.  ",,[],[],0x64E9bFcF0475bc3b2e57Ff17c071244Ff092a617
+fba4b9a2-68fc-47e7-ad48-94007b5d039c,tabufili.uhuholi@gotgel.org,did:privy:cls934dsr01xl9dgdjymxyr7p,musterman,max,false,I want to check this website out,,[],[],0x06d29407182B59e3b3259aaE5aE72EDCA6aEb608

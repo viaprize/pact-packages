@@ -157,7 +157,7 @@ export const prizeRouter = createTRPCRouter({
       ctx.viaprize.prizes.getCacheTag('DEPLOYED_PRIZES'),
       async () => {
         const a = await ctx.viaprize.prizes.getDeployedPrizes()
-        console.log(a)
+
         return a
       },
     )

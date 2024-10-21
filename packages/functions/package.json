@@ -6,6 +6,7 @@
     "@aws-sdk/client-scheduler": "^3.651.1",
     "@aws-sdk/lib-dynamodb": "catalog:",
     "@viaprize/core": "workspace:*",
+    "csv-parser": "^3.0.0",
     "date-fns": "^3.6.0",
     "loops": "^3.3.0",
     "stripe": "^17.2.0",
