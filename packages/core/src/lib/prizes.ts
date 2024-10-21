@@ -24,7 +24,6 @@ import {
   prizesToContestants,
   submissions,
   users,
-  votes,
 } from '../database/schema'
 import { CacheTag } from './cache-tag'
 import { CONTRACT_CONSTANTS_PER_CHAIN, type ValidChainIDs } from './constants'

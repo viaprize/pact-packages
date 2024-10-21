@@ -50,7 +50,6 @@ export const usersRelations = relations(users, ({ many }) => ({
   wallets: many(wallets),
   prizes: many(prizes),
   prizeComments: many(prizeComments),
-  votes: many(submissions),
   submission: many(submissions),
   contestants: many(prizesToContestants),
   activities: many(activities),

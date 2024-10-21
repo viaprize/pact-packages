@@ -9,7 +9,6 @@ import {
 } from 'drizzle-orm/pg-core'
 import { prizes } from './prizes'
 import { users } from './users'
-import { votes } from './votes'
 
 export const submissions = pgTable('submissions', {
   submissionHash: varchar('id', { length: 255 }).primaryKey(),
@@ -47,7 +46,6 @@ export const submissionRelations = relations(submissions, ({ one, many }) => ({
     fields: [submissions.username],
     references: [users.username],
   }),
-  votes: many(votes),
 }))
 
 export type SubmissionInsert = typeof submissions.$inferInsert
