@@ -44,13 +44,13 @@ export default async function FetchGitcoins({
           imageURL={
             application.project.metadata.bannerImg
               ? `https://gitcoin.mypinata.cloud/ipfs/${application.project.metadata.bannerImg}`
-              : 'https://placehold.jp/24/3d4070/ffffff/600x300.jpg?text=Image%20not%20Found'
+              : '/bgimagenotfound.jpg'
           }
           title={application.project.metadata.title}
           description={application.project.metadata.description}
           raised={application.totalAmountDonatedInUsd}
           contributors={application.uniqueDonorsCount}
-          link={`/${params.roundslug}/${application.id}`}
+          link={`${params.roundslug}/${application.id}`}
           application={application}
           logoURL={`https://gitcoin.mypinata.cloud/ipfs/${application.project.metadata.logoImg}`}
         />

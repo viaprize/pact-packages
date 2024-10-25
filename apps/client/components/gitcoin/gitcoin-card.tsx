@@ -161,7 +161,7 @@ export default function GitcoinCard({
       </Button>
 
       <div className="absolute top-2 right-2">
-        <CopyButton value={`https://www.viaprize.org/qf/${round?.roundSlug}/${link}`}>
+        <CopyButton value={`https://qf.viaprize.org/${link}`}>
           {({ copied, copy }) => (
             <Tooltip label={copied ? 'Copied' : 'Share URL'} withArrow>
               <ActionIcon

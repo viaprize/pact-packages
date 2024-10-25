@@ -32,6 +32,11 @@ export default withBundleAnalyzer({
         
       },
       {
+        protocol:'https',
+        hostname:'gitcoin.mypinata.cloud',
+    
+      },
+      {
         protocol: 'https',
         hostname: 'img.freepik.com',
         port: '',
