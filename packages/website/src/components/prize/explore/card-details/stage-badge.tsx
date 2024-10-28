@@ -14,7 +14,6 @@ export default function StageButton({ stage }: StageButtonProps) {
           text: 'Not Started',
           color: 'bg-gray-100 text-gray-800',
           emoji: '⏳',
-          indicator: <Clock className="w-4 h-4 text-gray-500" />,
         }
       case 'SUBMISSIONS_OPEN':
         return {
@@ -33,40 +32,38 @@ export default function StageButton({ stage }: StageButtonProps) {
           text: 'Voting Open',
           color: 'bg-blue-100 text-blue-800',
           emoji: '🗳️',
-          indicator: <Circle className="w-4 h-4 text-blue-500 fill-current" />,
         }
       case 'DISPUTE_AVAILABLE':
         return {
           text: 'Dispute Available',
           color: 'bg-yellow-100 text-yellow-800',
           emoji: '⚖️',
-          indicator: <AlertCircle className="w-4 h-4 text-yellow-500" />,
         }
       case 'DISPUTE_ACTIVE':
         return {
           text: 'Dispute Active',
           color: 'bg-orange-100 text-orange-800',
           emoji: '🔥',
-          indicator: (
-            <span className="relative flex h-3 w-3">
-              <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500" />
-            </span>
-          ),
+          //   indicator: (
+          //     <span className="relative flex h-3 w-3">
+          //       <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75" />
+          //       <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500" />
+          //     </span>
+          //   ),
         }
       case 'WON':
         return {
           text: 'Won',
           color: 'bg-purple-100 text-purple-800',
           emoji: '🏆',
-          indicator: <CheckCircle className="w-4 h-4 text-purple-500" />,
+          //   indicator: <CheckCircle className="w-4 h-4 text-purple-500" />,
         }
       case 'REFUNDED':
         return {
           text: 'Refunded',
           color: 'bg-red-100 text-red-800',
-          emoji: '💰',
-          indicator: <XCircle className="w-4 h-4 text-red-500" />,
+          emoji: '⛔',
+          //   indicator: <XCircle className="w-4 h-4 text-red-500" />,
         }
       default:
         return {
@@ -88,12 +85,10 @@ export default function StageButton({ stage }: StageButtonProps) {
         'relative',
       )}
     >
-      <div className="flex items-center space-x-2 ">
+      <div className="flex items-center space-x-2">
         <span>{emoji}</span>
         <span>{text}</span>
-        <span className="flex items-center justify-center w-5 h-5 self-end">
-          {indicator}
-        </span>
+        {indicator}
       </div>
     </div>
   )
