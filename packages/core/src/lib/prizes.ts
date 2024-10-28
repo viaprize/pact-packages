@@ -131,6 +131,9 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
               },
             },
           },
+          columns: {
+            email: true,
+          },
         },
       },
       columns: {
@@ -406,6 +409,7 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
         author: {
           columns: {
             email: true,
+            username: true,
           },
         },
       },

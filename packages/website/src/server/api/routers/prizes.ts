@@ -287,6 +287,10 @@ export const prizeRouter = createTRPCRouter({
       console.log({ submitterAddress })
       const user = userSessionSchema.parse(ctx.session.user)
       const prize = await ctx.viaprize.prizes.getPrizeById(input.prizeId)
+      const funders = await ctx.viaprize.prizes.getFundersByContractAddress(
+        prize.primaryContractAddress ?? '',
+      )
+      console.log({ funders })
       if (!submitterAddress) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
@@ -340,12 +344,12 @@ export const prizeRouter = createTRPCRouter({
           })
           bus.publish(Resource.EventBus.name, Events.Emails.submissionCreated, {
             prizeTitle: prize.title,
-            proposer: '',
-            contestant: '',
-            funder: '',
-            submissionTitle: '',
-            dateReceived: Date.now().toString(),
-            tags: [],
+            proposer: prize.author.email ?? '',
+            contestant: user.email,
+            prizeContractAddress: prize.primaryContractAddress ?? '',
+            contestantName: user.username,
+            proposerName: prize.author.username ?? '',
+            dateReceived: new Date().toISOString(),
           })
         },
       )

@@ -268,17 +268,21 @@ export const handler = bus.subscriber(
         break
       }
       case 'emails.submissionCreated': {
+        const funders = await viaprize.prizes.getFundersByContractAddress(
+          event.properties.prizeContractAddress,
+        )
+        const funderEmails = funders
+          .map((funder) => funder.user?.email)
+          .join(',')
         try {
           const toProposer = await email.sendTransactionalEmail({
             transactionalId: 'cm2d03ghr045310133l4kncat',
             email: event.properties.proposer,
             dataVariables: {
-              proposer: event.properties.proposer,
+              proposer: event.properties.proposerName,
               prizeTitle: event.properties.prizeTitle,
-              submissionTitle: event.properties.submissionTitle,
               dateReceived: event.properties.dateReceived,
-              contestant: event.properties.contestant,
-              tags: event.properties.tags[event.properties.tags.length],
+              contestantName: event.properties.contestantName,
             },
           })
           console.log('toProposer email response:', toProposer)
@@ -288,24 +292,20 @@ export const handler = bus.subscriber(
             email: event.properties.contestant,
             dataVariables: {
               prizeTitle: event.properties.prizeTitle,
-              submissionTitle: event.properties.submissionTitle,
               dateReceived: event.properties.dateReceived,
-              contestant: event.properties.contestant,
-              tags: event.properties.tags[event.properties.tags.length],
+              contestant: event.properties.contestantName,
             },
           })
           console.log('toContestant email response:', toContestant)
 
           const toFunder = await email.sendTransactionalEmail({
             transactionalId: 'cm2d07of401reyaib0gdmbs07',
-            email: event.properties.funder,
+            email: funderEmails,
             dataVariables: {
-              funder: event.properties.funder,
               prizeTitle: event.properties.prizeTitle,
-              submissionTitle: event.properties.submissionTitle,
               dateReceived: event.properties.dateReceived,
-              contestant: event.properties.contestant,
-              tags: event.properties.tags[event.properties.tags.length],
+              proposerName: event.properties.proposerName,
+              contestantName: event.properties.contestantName,
             },
           })
           console.log('toFunder email response:', toFunder)
