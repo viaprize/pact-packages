@@ -15,7 +15,7 @@ const DeadlineMessage: React.FC<{
   message?: string
 }> = ({ textColor, message }) => {
   return (
-    <div className={`flex items-center ${textColor}`}>
+    <div className={`flex ${textColor}`}>
       <IconCalendarDue className="mr-2" />
       <span>{message}</span>
     </div>

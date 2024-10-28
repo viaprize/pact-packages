@@ -1,5 +1,6 @@
 'use client'
 
+import { IconWallet } from '@tabler/icons-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@viaprize/ui/avatar'
 import { Button } from '@viaprize/ui/button'
 import {
@@ -15,6 +16,7 @@ import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
 import { FaUserAlt } from 'react-icons/fa'
 import { RiDashboardHorizontalFill } from 'react-icons/ri'
+import { useAccount, useDisconnect } from 'wagmi'
 
 export default function Navbar({
   session,
@@ -23,6 +25,9 @@ export default function Navbar({
 }) {
   const [prevScrollPos, setPrevScrollPos] = useState(0)
   const [visible, setVisible] = useState(true)
+  const { isConnected } = useAccount()
+
+  const { disconnectAsync } = useDisconnect()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,6 +53,16 @@ export default function Navbar({
               <h1 className="text-2xl font-bold">viaPrize</h1>
             </Link>
             <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
+              {isConnected ? (
+                <Button
+                  onClick={async () => {
+                    await disconnectAsync()
+                  }}
+                >
+                  <IconWallet className=" mr-2 h-25 w-25 flex-shrink-0 text-primary-foreground" />{' '}
+                  Disconnect Wallet
+                </Button>
+              ) : null}
               <Button variant="ghost" className="text-foreground">
                 Explore Prizes
               </Button>
@@ -87,7 +102,9 @@ export default function Navbar({
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button variant="default">Login</Button>
+                <Link href="/login">
+                  <Button variant="default">Login</Button>
+                </Link>
               )}
             </div>
           </div>
