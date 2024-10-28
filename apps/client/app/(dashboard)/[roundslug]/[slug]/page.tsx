@@ -8,6 +8,7 @@ import DetailCard from './detail-card';
 import ImageTitleCard from './image-title-card';
 import SocialCard from './social-card';
 
+export const dynamic = 'force-dynamic';
 export default async function GitcoinApplication({
   params,
 }: {
