@@ -14,7 +14,7 @@ export default async function PrizeDetails({
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       <FetchPrize params={params} />
     </div>
   )

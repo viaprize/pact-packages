@@ -48,7 +48,7 @@ export default async function FetchExplorePrize({
     <section>
       <div className="flex w-full justify-between items-center p-6">
         <h2 className="font-semibold">{activePrizes} Active Prizes</h2>
-        <div className="flex space-x-3">
+        {/* <div className="flex space-x-3">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="secondary">
@@ -65,26 +65,15 @@ export default async function FetchExplorePrize({
           <Button variant="secondary">
             <IconArrowsSort className="mr-2" /> Sort by
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <section
-        className="grid gap-3 pb-3 px-7"
-        style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}
+        className="grid gap-4 pb-3 px-7"
+        style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}
       >
         {deployedPrizes?.map((prize) => (
-          <ExploreCard
-            badges={prize.skillSets}
-            key={prize.id}
-            funds={prize.funds ?? 0}
-            imageUrl={prize.imageUrl ?? ''}
-            title={prize.title}
-            prizeStage={prize.stage ?? 'NOT_STARTED'}
-            numberOfContestants={prize.numberOfContestants ?? 0}
-            numberOfFunders={prize.numberOfFunders ?? 0}
-            numberOfComments={prize.numberOfComments ?? 0}
-            href={`/prize/${prize.slug}`}
-          />
+          <ExploreCard key={prize.id} {...prize} />
         ))}
 
         {data.reverse().map((prize) => {

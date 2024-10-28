@@ -232,9 +232,7 @@ export default function DonateCard({
         >
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="card-anonymously" id="card-anonymously" />
-            <Label htmlFor="card-anonymously">
-              Donate with Card Anonymously
-            </Label>
+            <Label htmlFor="card-anonymously">Donate with Card</Label>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -242,14 +240,11 @@ export default function DonateCard({
               value="crypto-anonymously"
               id="crypto-anonymously"
             />
-            <Label htmlFor="crypto-anonymously">
-              Donate with Wallet Anonymously
-            </Label>
+            <Label htmlFor="crypto-anonymously">Donate with Wallet</Label>
           </div>
           <div className="mt-4 p-4 bg-muted rounded-lg">
             <p className="text-sm text-muted-foreground mb-2">
-              If you don't want to do anonymous donations and want to have
-              voting rights, please log in.
+              Log in to have voting rights on the winner
             </p>
             <Link href="/login">
               <Button variant="outline">Log In</Button>
@@ -376,7 +371,7 @@ export default function DonateCard({
               <div className="grid gap-4 py-4">
                 {!session?.user && (
                   <div className="font-semibold">
-                    *Anonymous Donation without voting rights
+                    Donation without voting rights
                   </div>
                 )}
                 {renderDonationOptions()}

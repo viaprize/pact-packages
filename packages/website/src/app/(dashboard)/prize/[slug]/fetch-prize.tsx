@@ -18,10 +18,12 @@ import type { Submissions } from '@/types/submissions'
 
 import { IconArrowLeft } from '@tabler/icons-react'
 import { Button } from '@viaprize/ui/button'
+import { ScrollArea } from '@viaprize/ui/scroll-area'
 import { Separator } from '@viaprize/ui/separator'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { Suspense } from 'react'
+import PrizeDetailsSkeleton from './detail-prize-skeleton'
 
 export default function FetchPrize({
   params: { slug },
@@ -35,10 +37,9 @@ export default function FetchPrize({
   }
 
   return (
-    <Suspense fallback={<LoaderCircle />}>
+    <Suspense fallback={<PrizeDetailsSkeleton />}>
       <div className="lg:flex h-full">
-        <div className="w-full space-y-3 md:w-[75%] h-full lg:max-h-screen overflow-auto border-r-2">
-
+        <ScrollArea className="w-full   md:w-[75%] h-full  border-r-[0.5px] border-border">
           <Details
             {...prize}
             authorUsername={prize.authorUsername}
@@ -53,7 +54,7 @@ export default function FetchPrize({
           />
 
           {prize.primaryContractAddress && session && session.user.isAdmin ? (
-            <>
+            <div className="p-3 space-x-3">
               <StartSubmissionButton
                 prizeContractAddress={prize.primaryContractAddress}
               />
@@ -66,10 +67,10 @@ export default function FetchPrize({
               <EarlyDisputeButton
                 prizeContractAddress={prize.primaryContractAddress}
               />
-            </>
+            </div>
           ) : null}
-        </div>
-        <div className="w-full lg:w-[25%] mt-5 mx-3 space-y-5 lg:max-h-screen lg:overflow-auto">
+        </ScrollArea>
+        <div className="w-full lg:w-[25%] mt-5 mx-3 space-y-5  lg:overflow-auto">
           <Winners
             submissions={prize.submissions as Submissions}
             prizeStage={prize.stage}

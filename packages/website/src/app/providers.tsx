@@ -5,6 +5,7 @@ import {
   RainbowKitAuthenticationProvider,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit'
+import { AppProgressBar as ProgressBar } from 'next-nprogress-bar'
 
 import {
   SessionProvider,
@@ -32,6 +33,12 @@ export function Providers({
 }) {
   return (
     <WagmiProvider config={wagmiConfig} initialState={initialState}>
+      <ProgressBar
+        height="4px"
+        color="#17824d"
+        options={{ showSpinner: false }}
+        shallowRouting
+      />
       <TRPCReactProvider>
         <SessionProvider>
           <WalletProvider>{children}</WalletProvider>

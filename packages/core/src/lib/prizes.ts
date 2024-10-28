@@ -73,7 +73,7 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
       .select({ total: sum(prizes.funds) })
       .from(prizes)
     console.log(totalFunds[0]?.total, 'total')
-    return totalFunds[0]?.total || 0
+    return totalFunds[0]?.total || '0'
   }
   async getFundersByPrizeId(prizeId: string) {
     const funders = await this.db.query.donations.findMany({
@@ -182,7 +182,13 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
     const countPrize = await this.db
       .select({ count: count() })
       .from(prizes)
-      .where(eq(prizes.proposalStage, 'APPROVED'))
+      .where(
+        or(
+          eq(prizes.stage, 'SUBMISSIONS_OPEN'),
+          eq(prizes.stage, 'VOTING_OPEN'),
+          eq(prizes.stage, 'NOT_STARTED'),
+        ),
+      )
     return countPrize[0]?.count || 0
   }
 
@@ -534,7 +540,7 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
       await trx
         .update(prizes)
         .set({
-          numberOfComments: sql`${prizes.numberOfComments} + 1`,
+          numberOfContestants: sql`${prizes.numberOfContestants} + 1`,
         })
         .where(eq(prizes.id, prizeId))
     })

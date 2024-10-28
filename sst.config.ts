@@ -1,5 +1,4 @@
 /// <reference path="./.sst/platform/config.d.ts" />
-import { PAYMENT_SECRET_KEY } from './infra/secrets'
 export default $config({
   app(input) {
     return {

@@ -54,6 +54,7 @@
     "lucide-react": "^0.427.0",
     "next": "^14.2.4",
     "next-auth": "5.0.0-beta.20",
+    "next-nprogress-bar": "^2.3.14",
     "nuqs": "^1.19.3",
     "pino-pretty": "^11.2.2",
     "pnpm": "^9.10.0",

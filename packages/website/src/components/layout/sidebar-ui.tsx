@@ -196,7 +196,7 @@ export const SidebarButton = ({
   return (
     <Button
       className={cn(
-        'group/sidebar flex items-center w-full  justify-start gap-3 p-3 py-3 rounded-md text-primary-foreground ',
+        'group/sidebar flex items-center w-full  justify-start gap-3 p-3 py-5 rounded-md text-primary-foreground ',
         className,
       )}
       variant={variant}
