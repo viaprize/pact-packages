@@ -10,16 +10,18 @@ import { Badge } from '@viaprize/ui/badge'
 import { Card, CardContent } from '@viaprize/ui/card'
 import { Separator } from '@viaprize/ui/separator'
 import ToolTipSimple from '@viaprize/ui/tooltip-simple'
+import { FaSackDollar } from 'react-icons/fa6'
 
 import Image from 'next/image'
 import Link from 'next/link'
+import StageButton from './stage-badge'
 
 export default function ExploreCard(props: selectPrizeType) {
   const { tooltip, text } = getStageInfo(props.stage)
 
   return (
     <Link href={`/prize/${props.slug}`} className="block">
-      <Card className=" h-full flex flex-col   hover:bg-muted-foreground/10">
+      <Card className=" h-full flex flex-col">
         <Image
           src={props.imageUrl ?? ''}
           width={1250}
@@ -28,14 +30,16 @@ export default function ExploreCard(props: selectPrizeType) {
           objectFit="cover"
           className="h-fit w-full rounded-t-md aspect-video object-cover"
         />
-        <CardContent className="p-3 space-y-6">
+        <CardContent className="p-6 space-y-4">
           <div className="flex items-center justify-between ">
-            <div className="text-lg  lg:text-xl text-primary/80 font-medium">
-              {props.funds} USD
+            <div className="text-lg  lg:text-2xl text-primary/80 font-bold flex  items-baseline">
+              {props.funds.toFixed(2)}{' '}
+              <span className="font-medium text-zinc-500 ml-[3px]"> USD</span>
             </div>
-            <Badge className="px-2 py-1  lowercase font-semibold">
+            {/* <Badge className="px-2 py-1  lowercase font-semibold">
               {formatUnderscoreString(props.stage ?? '')}
-            </Badge>
+            </Badge> */}
+            <StageButton stage={props.stage} />
           </div>
           <Separator className="my-3" />
           <h1 className="font-medium text-card-foreground/80 hover:underline">
@@ -43,15 +47,12 @@ export default function ExploreCard(props: selectPrizeType) {
           </h1>
           <div className="mt-1 lg:mt-3 flex flex-wrap gap-2">
             {props.skillSets?.map((badge) => (
-              <Badge
-                key={badge}
-                className="bg-primary/20 text-primary/70 hover:bg-primary/30 shadow-none"
-              >
+              <Badge key={badge} className="bg-[#f1f4f9] font-normal ">
                 {formatUnderscoreString(badge)}
               </Badge>
             ))}
           </div>
-          <div className="flex h-5 items-center justify-between text-sm text-muted-foreground mt-5 ">
+          <div className="flex h-5 items-center  justify-between text-sm text-[#2a2a2a] mt-5 ">
             <ToolTipSimple content="Number of contestants">
               <div className="flex items-center">
                 <IconUsersGroup size={20} className="mr-1" />
