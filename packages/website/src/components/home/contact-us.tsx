@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import type * as z from 'zod'
 
 import { api } from '@/trpc/react'
 import { Button } from '@viaprize/ui/button'
@@ -18,21 +18,14 @@ import {
 } from '@viaprize/ui/form'
 import { Input } from '@viaprize/ui/input'
 import { Textarea } from '@viaprize/ui/textarea'
-
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: 'Name must be at least 2 characters.',
-  }),
-  email: z.string().email({
-    message: 'Please enter a valid email address.',
-  }),
-  message: z.string().min(10, {
-    message: 'Message must be at least 10 characters.',
-  }),
-  newsletter: z.boolean().default(false),
-})
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { formSchema } from './contactform-schema'
+import { handleFormSubmit } from './handleContact-form'
 
 export default function ContactSection() {
+  const [isLoading, setIsLoading] = useState(false)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,6 +50,20 @@ export default function ContactSection() {
     console.log(values)
   }
 
+  const onSubmitForm = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true)
+    toast.promise(handleFormSubmit(values), {
+      loading: 'Submitting...',
+      success: 'Submitted successfully',
+      error: 'Something went wrong',
+    })
+    setTimeout(() => {
+      toast.dismiss()
+    }, 3000)
+    form.reset()
+    setIsLoading(false)
+  }
+
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
@@ -72,7 +79,7 @@ export default function ContactSection() {
           <div className="md:w-1/2">
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(onSubmitForm)}
                 className="space-y-6"
               >
                 <FormField
@@ -147,7 +154,7 @@ export default function ContactSection() {
                     </FormItem>
                   )}
                 />
-                <Button className="w-full" type="submit">
+                <Button disabled={isLoading} className="w-full" type="submit">
                   Submit
                 </Button>
               </form>

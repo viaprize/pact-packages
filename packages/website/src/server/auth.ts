@@ -9,7 +9,7 @@ import Resend from 'next-auth/providers/resend'
 import { viaprize } from './viaprize'
 
 import type { DefaultSession } from 'next-auth'
-import { e } from 'node_modules/nuqs/dist/serializer-BZD8Ur_m'
+
 import { z } from 'zod'
 
 export const userSessionSchema = z.object({
@@ -46,51 +46,6 @@ declare module 'next-auth' {
   }
 }
 
-const SiweProvider = Credentials({
-  name: 'siwe',
-  credentials: {
-    message: { label: 'Message', type: 'text' },
-    signedMessage: { label: 'Signed Message', type: 'text' },
-  },
-
-  async authorize(credentials, req) {
-    console.log('credentials', credentials)
-    if (!credentials?.signedMessage || !credentials?.message) {
-      return null
-    }
-
-    console.log('Verifying', credentials.message)
-    const siwe = new SiweMessage(JSON.parse(credentials.message as string))
-    const result = await siwe.verify({
-      signature: credentials.signedMessage as string,
-      domain: new URL(req.url).host,
-      nonce: cookies().get('authjs.csrf-token')?.value.split('|')[0] ?? '1',
-    })
-
-    if (!result.success) throw new CredentialsSignin('Invalid Signature')
-
-    const user = await viaprize.users.getUserByWalletAddress(
-      result.data.address,
-    )
-
-    if (user) {
-      return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      }
-    }
-    const userId = await viaprize.users.createUserFromWalletAddress({
-      network: 'optimism',
-      walletAddress: result.data.address.toLowerCase(),
-    })
-
-    return {
-      id: userId,
-    }
-  },
-})
-
 export const { auth, handlers, signIn, signOut, unstable_update } = NextAuth({
   providers: [
     Google,
@@ -98,7 +53,6 @@ export const { auth, handlers, signIn, signOut, unstable_update } = NextAuth({
       from: 'support@auth.viaprize.org',
     }),
     Github,
-    SiweProvider,
   ],
   callbacks: {
     jwt: async ({ token }) => {

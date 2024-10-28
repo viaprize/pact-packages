@@ -12,6 +12,7 @@ const cache = new Cache()
 
 export const handler = bus.subscriber(
   [
+    Events.Activity.Create,
     Events.Wallet.Transaction,
     Events.Wallet.StartSubmission,
     Events.Wallet.EndVoting,
@@ -38,6 +39,9 @@ export const handler = bus.subscriber(
       `================================================ Processing ${event.type} event =========================================`,
     )
     switch (event.type) {
+      case 'activity.create':
+        await viaprize.activities.createActivity(event.properties)
+        break
       case 'wallet.transaction': {
         console.log(event.properties.transactions)
         const hash = await viaprize.wallet.sendTransaction(
@@ -56,10 +60,7 @@ export const handler = bus.subscriber(
           const prize = await viaprize.prizes.getPrizeById(
             event.properties.prizeId,
           )
-          await viaprize.prizes.addPrizeActivity({
-            activity: 'Created a prize',
-            username: prize.authorUsername,
-          })
+
           if (prize?.submissionDurationInMinutes) {
             await bus.publish(
               Resource.EventBus.name,

@@ -32,8 +32,6 @@
   "dependencies": {
     "axios": "^1.7.7",
     "dotenv": "16.4.5",
-    "loops": "^3.3.0",
-    "sib-api-v3-sdk": "^8.5.0",
-    "sst": "3.2.12"
+    "sst": "3.2.28"
   }
 }

@@ -20,9 +20,11 @@ export const getChain = (chainId: ValidChainIds) => {
       throw new Error('Invalid chain ID')
   }
 }
+export function getValueFromDonation(donation: typeof donations.$inferSelect) {
+  return donation.valueInToken / 10 ** donation.decimals
+}
 
 export function getTextFromDonation(donation: typeof donations.$inferSelect) {
-  const value =
-    Number.parseFloat(donation.valueInToken) / 10 ** donation.decimals
+  const value = donation.valueInToken / 10 ** donation.decimals
   return `${value} ${donation.token}`
 }

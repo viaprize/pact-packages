@@ -20,8 +20,8 @@ export default function StayTuned() {
         />
       </div>
       <div className="w-full lg:w-[30%]">
-        <div className="text-2xl font-medium">Stay tuned!</div>
-        <div className="mt-2 text-slate-400">
+        <div className="text-2xl font-medium text-primary">Stay tuned!</div>
+        <div className="mt-2 ">
           Get the latest articles and business updates that you need to know,
           you'll even get special recommendations weekly.
         </div>

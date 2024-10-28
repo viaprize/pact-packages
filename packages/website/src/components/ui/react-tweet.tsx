@@ -238,7 +238,7 @@ export const MagicTweet = ({
   return (
     <div
       className={cn(
-        'relative flex h-full w-full  flex-col gap-2 overflow-hidden rounded-lg  p-4 bg-card',
+        'relative flex h-full w-full  flex-col gap-2 overflow-hidden rounded-lg  p-4 bg-card shadow-sm  border-[0.5px] border-border',
         className,
       )}
       {...props}

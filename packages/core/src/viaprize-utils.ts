@@ -6,7 +6,11 @@ import type { ValidChainIDs } from './lib/constants'
 import { Events, type Viaprize } from './viaprize'
 
 export * as ViaprizeUtils from './viaprize-utils'
-
+export async function publishActivity(
+  properties: typeof Events.Activity.Create.$input,
+) {
+  await bus.publish(Resource.EventBus.name, Events.Activity.Create, properties)
+}
 export async function publishDeployedPrizeCacheDelete(
   viaprize: Viaprize,
   slug?: string | null,

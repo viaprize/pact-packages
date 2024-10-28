@@ -40,7 +40,7 @@ export default function Winners({
                 className="text-primary"
                 key={`btn-${winner.submissionHash}`}
               >
-                ${winner.won} <span className="text-black">Won</span>
+                ${winner.won.toFixed(2)} <span className="text-black">Won</span>
               </div>
             </>
           )

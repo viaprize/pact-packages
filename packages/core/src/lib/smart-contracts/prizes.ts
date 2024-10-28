@@ -35,6 +35,16 @@ export class PrizesBlockchain extends Blockchain {
     r: `0x${string}`,
     ethSignedMessageHash: `0x${string}`,
   ) {
+    console.log({
+      spender,
+      reserveAddress,
+      amount,
+      deadline,
+      v,
+      s,
+      r,
+      ethSignedMessageHash,
+    })
     const data = encodeFunctionData({
       abi: RESERVE_FUND_ABI,
       functionName: 'fundUsingUsdc',

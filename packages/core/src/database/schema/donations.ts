@@ -6,6 +6,7 @@ import {
   pgEnum,
   pgMaterializedView,
   pgTable,
+  real,
   serial,
   text,
   timestamp,
@@ -28,7 +29,7 @@ export const recipientTypeEnum = pgEnum('recipientTypeEnum', [
 export const donationTypeEnum = pgEnum('donationTypeEnum', ['PAYMENT', 'GIFT'])
 export const donations = pgTable('donations', {
   id: serial('id').primaryKey(),
-  valueInToken: numeric('amount').notNull().default('0'),
+  valueInToken: real('valueInToken').notNull().default(0),
   token: varchar('token').notNull(),
   decimals: integer('decimals').notNull().default(6),
   tokenType: donationTokenTypeEnum('tokenType').notNull().default('TOKEN'),
@@ -49,6 +50,7 @@ export const donations = pgTable('donations', {
   totalRefunded: numeric('totalRefunded').notNull().default('0'),
   username: varchar('username').references(() => users.username, {
     onDelete: 'set null',
+    onUpdate: 'cascade',
   }),
   createdAt: timestamp('createdAt', {
     mode: 'date',

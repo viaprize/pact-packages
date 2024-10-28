@@ -239,7 +239,11 @@ export default function BountyCreationForm() {
                   Next
                 </Button>
               ) : (
-                <Button type="submit" disabled={creatingPrize}>
+                <Button
+                  type="submit"
+                  disabled={creatingPrize}
+                  loading={creatingPrize}
+                >
                   Create Bounty
                 </Button>
               )}

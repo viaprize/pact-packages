@@ -24,12 +24,15 @@ import {
   prizesToContestants,
   submissions,
   users,
-  votes,
 } from '../database/schema'
 import { CacheTag } from './cache-tag'
 import { CONTRACT_CONSTANTS_PER_CHAIN, type ValidChainIDs } from './constants'
 import { PrizesBlockchain } from './smart-contracts/prizes'
-import { getTextFromDonation, stringToSlug } from './utils'
+import {
+  getTextFromDonation,
+  getValueFromDonation,
+  stringToSlug,
+} from './utils'
 
 const CACHE_TAGS = {
   PENDING_PRIZES: { value: 'pending-prizes', requiresSuffix: false },
@@ -70,7 +73,7 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
       .select({ total: sum(prizes.funds) })
       .from(prizes)
     console.log(totalFunds[0]?.total, 'total')
-    return totalFunds[0]?.total || 0
+    return totalFunds[0]?.total || '0'
   }
   async getFundersByPrizeId(prizeId: string) {
     const funders = await this.db.query.donations.findMany({
@@ -79,13 +82,29 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
         user: true,
       },
     })
-    const finalFunders = funders.map((funder) => {
-      return {
-        ...funder,
-        donationText: getTextFromDonation(funder),
+
+    const funderMap: { [key: string]: (typeof funders)[number] } = {}
+    funders.forEach((funder) => {
+      if (funder.username) {
+        const funderKey = `${funder.username}-${funder.token}-${funder.decimals}`
+        if (funderMap[funderKey]) {
+          // Merge donation values if same username, token, and decimals
+          const existingFunder = funderMap[funderKey]
+          existingFunder.valueInToken += funder.valueInToken
+        } else {
+          // Add new funder to the map
+          funderMap[funderKey] = { ...funder }
+        }
+      } else {
+        // If no username, just add the funder as is with a unique key
+        funderMap[`no-username-${funder.id}`] = { ...funder }
       }
     })
-    return finalFunders
+
+    return Object.values(funderMap).map((f) => ({
+      ...f,
+      donationText: getTextFromDonation(f),
+    }))
   }
 
   async getSubmittersByPrizeId(prizeId: string) {
@@ -163,7 +182,13 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
     const countPrize = await this.db
       .select({ count: count() })
       .from(prizes)
-      .where(eq(prizes.proposalStage, 'APPROVED'))
+      .where(
+        or(
+          eq(prizes.stage, 'SUBMISSIONS_OPEN'),
+          eq(prizes.stage, 'VOTING_OPEN'),
+          eq(prizes.stage, 'NOT_STARTED'),
+        ),
+      )
     return countPrize[0]?.count || 0
   }
 
@@ -522,7 +547,7 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
       await trx
         .update(prizes)
         .set({
-          numberOfComments: sql`${prizes.numberOfComments} + 1`,
+          numberOfContestants: sql`${prizes.numberOfContestants} + 1`,
         })
         .where(eq(prizes.id, prizeId))
     })

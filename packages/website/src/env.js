@@ -21,7 +21,7 @@ export const env = createEnv({
     CHAIN_ID: z.string().default('10'),
     WALLET_API_KEY: z.string(),
     RPC_URL: z.string(),
-    PAYMENT_URL: z.string(),
+    PAYMENT_URL: z.string().default('http://localhost:3000'),
     LOOPS_API_KEY: z.string(),
   },
 

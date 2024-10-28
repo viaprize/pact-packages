@@ -29,11 +29,11 @@ export default function ListStory() {
           key={item.title}
           className="lg:flex items-center justify-between space-y-4 lg:space-y-0"
         >
-          <div className="w-full lg:w-[40%] space-y-2 text-center lg:text-left">
-            <div className="text-2xl lg:text-4xl font-medium text-slate-700">
+          <div className="w-full lg:w-[45%] space-y-2 text-center lg:text-left p-2">
+            <div className="text-2xl lg:text-4xl font-medium text-primary text-start">
               {item.title}
             </div>
-            <div className="text-md lg:text-lg text-slate-400 font-medium">
+            <div className="text-md lg:text-lg  font-medium text-start">
               {item.description}
             </div>
           </div>

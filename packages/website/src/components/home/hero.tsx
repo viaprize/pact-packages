@@ -4,10 +4,11 @@ import { Card, CardFooter, CardHeader } from '@viaprize/ui/card'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import StatsCard from './card'
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full   min-h-screen max-w-screen-2xl mx-auto flex flex-col justify-center gap-5 items-center">
+    <section className="relative w-full container pt-[80px]  min-h-screen max-w-screen-2xl mx-auto flex flex-col justify-center gap-5 items-center">
       <Image
         src="/hero/test.svg"
         alt="Hero"
@@ -39,44 +40,7 @@ export default function HeroSection() {
           </Button>
         </div>
       </AnimatedGroup>
-      {/* <div className="grid grid-cols-5 grid-rows-9  gap-3 ">
-        <Card className="relative justify-between flex flex-col overflow-hidden col-start-1 col-span-1 row-start-1 row-end-6">
-          <div className="absolute h-full top-0 inset-x-0 bg-gradient-to-b from-black/80 via-black/10 to-black z-10 pointer-events-none" />
-          <Image
-            src="https://images.unsplash.com/photo-1645902718798-4e5d55ec767c"
-            alt="ukraine"
-            width="1920"
-            height="1080"
-            className="absolute  h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-          />
-          <CardHeader className="z-10 relative text-white">
-            <h1 className="text-3xl">$3k +</h1>
-            <p className="text-sm">Deliver Medical Supplies in Ukraine</p>
-          </CardHeader>
-          <CardFooter className="items-center flex justify-between gap-8 relative z-10 w-full">
-            <ArrowRight className="text-primary size-16" />
-            <h4 className="text-3xl text-white leading-8 w-fit">
-              A Life Saved
-            </h4>
-          </CardFooter>
-        </Card>
-        <Card className="col-start-1 row-start-6 col-span-1 row-end-9">
-          test
-        </Card>
-        <Card className="col-start-2 row-start-3  row-end-9 ">test</Card>
-        <Card className="col-start-3 row-start-5 col-span-1 row-end-9">
-          test
-        </Card>
-        <Card className="col-start-4 row-start-3 col-span-1 row-end-9">
-          test
-        </Card>
-        <Card className="col-start-5 col-span-1 row-start-1 row-end-6">
-          test
-        </Card>
-        <Card className="col-start-5 row-start-6 col-span-1 row-end-9 ">
-          test
-        </Card>
-      </div> */}
+      <StatsCard />
     </section>
   )
 }

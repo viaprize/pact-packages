@@ -69,23 +69,22 @@ export default function Details({
             imageUrl ||
             'https://placehold.jp/24/3d4070/ffffff/1280x720.png?text=No%20Image'
           }
-          quality={100}
-          width={150}
-          height={100}
-          className="w-full lg:w-auto rounded-md object-cover"
+          width={250}
+          height={200}
+          className="h-full lg:w-auto rounded-md object-cover aspect-video"
           alt="Image"
         />
 
         <div className="w-full">
           <h1 className="text-2xl">{title}</h1>
 
-          <h3 className="text-lg text-primary flex items-center mt-1">
+          <div className="text-lg text-primary flex items-center mt-1">
             <Avatar className="mr-2">
               <AvatarImage src={authorImage ?? undefined} alt={authorName} />
               <AvatarFallback>{authorName.substring(0, 2)}</AvatarFallback>
             </Avatar>
-            {authorName}
-          </h3>
+            <span>{authorName}</span>
+          </div>
 
           <Badge variant="secondary" className="mt-2 text-sm text-primary">
             {formatUnderscoreString(stage || '')}
@@ -127,31 +126,31 @@ export default function Details({
         </div>
 
         <div className="w-full">
-          <DonateCard
-            contractAddress={primaryContractAddress ?? ''}
-            projectImage={imageUrl ?? ''}
-            funds={funds}
-            projectName={title}
-          />
+          {stage === 'NOT_STARTED' ||
+          stage === 'VOTING_OPEN' ||
+          stage === 'SUBMISSIONS_OPEN' ? (
+            <DonateCard
+              contractAddress={primaryContractAddress ?? ''}
+              projectImage={imageUrl ?? ''}
+              funds={funds}
+              projectName={title}
+            />
+          ) : null}
         </div>
       </div>
       <Separator className="my-2" />
       <div className="px-3 w-full">
         <div className="w-full lg:flex lg:items-center lg:justify-between  space-y-2 lg:space-y-0">
-          <h1 className="text-lg text-primary">About this Prize</h1>
+          <h1 className="text-2xl font-semibold ml-2 text-primary">
+            About this Prize
+          </h1>
           <div className="space-x-2 ">
             {skillSets?.map((badge) => (
-              <Badge
-                key={badge}
-                variant="outline"
-                className="text-muted-foreground"
-              >
-                {formatUnderscoreString(badge)}
-              </Badge>
+              <Badge key={badge}>{formatUnderscoreString(badge)}</Badge>
             ))}
           </div>
         </div>
-        <p className="border p-2 mt-3 rounded-md">{description}</p>
+        <p className="p-2 mt-3 rounded-md whitespace-pre-wrap">{description}</p>
       </div>
     </>
   )

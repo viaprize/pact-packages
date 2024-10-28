@@ -1,11 +1,9 @@
-import type {
-  APIGatewayProxyEventV2,
-  APIGatewayProxyHandlerV2,
-} from 'aws-lambda'
+import type { APIGatewayProxyHandlerV2 } from 'aws-lambda'
+import { et } from 'date-fns/locale'
 import Stripe from 'stripe'
-import { sepolia } from 'viem/chains'
 import { z } from 'zod'
 
+export const WEBHOOK_TAG = 'V2_VIAPRIZE'
 export const checkoutMetadataSchema = z.object({
   type: z.enum(['prize']).default('prize'),
   spender: z.string(),
@@ -15,6 +13,7 @@ export const checkoutMetadataSchema = z.object({
   chainId: z.string().default('10'),
   amount: z.string(),
   ethSignedMessage: z.string().optional(),
+  tag: z.string().optional(),
   username: z.string().optional(),
 })
 const stripeCheckoutSchema = z.object({
@@ -55,10 +54,14 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, ctx) => {
     metadata: {
       type: body.checkoutMetadata.type,
       spender: body.checkoutMetadata.spender,
+      username: body.checkoutMetadata.username ?? null,
       deadline: body.checkoutMetadata.deadline,
       signature: body.checkoutMetadata.signature ?? null,
       backendId: body.checkoutMetadata.backendId,
       chainId: body.checkoutMetadata.chainId.toString(),
+      ethSignedMessage: body.checkoutMetadata.ethSignedMessage ?? null,
+
+      tag: body.checkoutMetadata.tag ?? WEBHOOK_TAG,
       amount: body.checkoutMetadata.amount
         ? body.checkoutMetadata.amount.toString()
         : '0',

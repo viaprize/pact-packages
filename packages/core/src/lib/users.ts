@@ -39,6 +39,26 @@ export class Users extends CacheTag<typeof CACHE_TAGS> {
       .set(data as any)
       .where(eq(users.id, id))
   }
+  async getUserByEmail(email: string) {
+    return await this.db.query.users.findFirst({
+      columns: {
+        username: true,
+        email: true,
+        image: true,
+        name: true,
+        isAdmin: true,
+      },
+      with: {
+        wallets: {
+          columns: {
+            address: true,
+            key: true,
+          },
+        },
+      },
+      where: eq(users.email, email),
+    })
+  }
   async getUserById(id: string) {
     return await this.db.query.users.findFirst({
       columns: {
@@ -58,17 +78,6 @@ export class Users extends CacheTag<typeof CACHE_TAGS> {
       },
       where: eq(users.id, id),
     })
-  }
-
-  async emailExists(email: string) {
-    const result = await this.db
-      .select({
-        email: users.email,
-      })
-      .from(users)
-      .where(eq(users.email, email))
-      .limit(1)
-    return result.length > 0
   }
 
   async usernameExists(username: string) {
@@ -205,6 +214,7 @@ export class Users extends CacheTag<typeof CACHE_TAGS> {
           columns: {
             address: true,
             network: true,
+            key: true,
           },
         },
         prizes: true,

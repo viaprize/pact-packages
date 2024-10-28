@@ -25,7 +25,7 @@ interface OldCardProps {
 export default function OldPrizeCard(props: OldCardProps) {
   return (
     <Link href={props.href} className="block">
-      <Card className="p-3 flex flex-row h-full md:flex-col space-x-3 lg:space-x-0 hover:bg-muted-foreground/10">
+      <Card className="p-3 flex  h-full flex-col space-x-0 hover:bg-muted-foreground/10">
         <div className="">
           <Image
             src={props.imageUrl}
@@ -33,12 +33,12 @@ export default function OldPrizeCard(props: OldCardProps) {
             height={1250}
             alt=""
             objectFit="cover"
-            className="h-20 md:h-40 w-full rounded-md"
+            className="h-fit w-full rounded-md aspect-video object-cover"
           />
         </div>
 
-        <div className="">
-          <div className="flex items-center justify-between lg:mt-5">
+        <div className="pt-5">
+          <div className="flex items-center justify-between ">
             <div className="text-lg  lg:text-xl text-primary/80 font-medium">
               {props.funds}
             </div>
@@ -49,7 +49,7 @@ export default function OldPrizeCard(props: OldCardProps) {
               {props.prizeStage}
             </Badge>
           </div>
-          <Separator className="h-3px my-3 hidden md:block" />
+          <Separator className="my-3" />
           <h1 className="font-medium text-card-foreground/80 hover:underline">
             {props.title}
           </h1>

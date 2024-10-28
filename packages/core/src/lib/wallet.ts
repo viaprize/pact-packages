@@ -173,6 +173,10 @@ export class Wallet extends Blockchain {
         console.log(`Transaction hash: ${(res as any).hash}`)
         return (res as any).hash as string
       })
+      .catch((e) => {
+        console.error(e)
+        throw e
+      })
     const receipt = await this.blockchainClient.waitForTransactionReceipt({
       hash: transactionHash as `0x${string}`,
     })
@@ -184,9 +188,11 @@ export class Wallet extends Blockchain {
     // Get the wallet address
     const res: { address: string } = (await (
       await fetch(
-        this.url + `/${type}${addressType === 'signer' ? '/signer' : ''}`,
+        this.url +
+          `/${type}${addressType === 'signer' ? '/signer' : '/address'}`,
       )
     ).json()) as any
+
     return res.address
   }
 }

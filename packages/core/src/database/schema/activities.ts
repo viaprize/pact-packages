@@ -7,8 +7,9 @@ import {
   timestamp,
   varchar,
 } from 'drizzle-orm/pg-core'
+import { createInsertSchema } from 'drizzle-zod'
 import { nanoid } from 'nanoid'
-import { users } from './users'
+import { insertUserSchema, users } from './users'
 export const activities = pgTable('activities', {
   id: varchar('id')
     .$default(() => nanoid(10))
@@ -28,7 +29,7 @@ export const activities = pgTable('activities', {
     .$default(() => new Date())
     .notNull(),
 })
-
+export const insertActivitySchema = createInsertSchema(activities)
 export const activitiesRelations = relations(activities, ({ one }) => ({
   user: one(users, {
     fields: [activities.username],

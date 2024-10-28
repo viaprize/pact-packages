@@ -39,7 +39,7 @@ export default function VisionaryFunderCard({
         </div>
 
         <div className="text-muted-foreground text-lg font-normal mt-5 mb-2">
-          Funders ({numberOfFunders})
+          Funders ({funders?.length ?? numberOfFunders})
         </div>
         {funders?.map((funder) => (
           <div

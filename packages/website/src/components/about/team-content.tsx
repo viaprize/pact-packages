@@ -51,7 +51,7 @@ const team = [
     name: 'Aryan Tiwari',
     role: 'Senior Developer',
     imageUrl:
-      'https://media.licdn.com/dms/image/v2/D5603AQFeq7AYzsUPdA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1725629825687?e=1730937600&v=beta&t=F6pxRADJCGX6MGnPQ4NAkmVf1TsVrI_E9U7YwfaJS4o',
+      'https://media.licdn.com/dms/image/v2/D5603AQGsnS_CgdZSrg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1727976181403?e=1735171200&v=beta&t=u3fZwphHDRTywRmzQ82Zmj9uuAgWw6iuXd99gTT3iAA',
     twitter: 'https://x.com/arry_tiwari',
     linkedin: 'https://www.linkedin.com/in/arrytiwari/',
     github: 'https://twitter.com/aryan',
@@ -61,10 +61,10 @@ const team = [
 export default function TeamContent() {
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="text-center text-2xl lg:text-4xl font-medium text-slate-700">
+      <div className="text-center text-2xl lg:text-4xl font-medium text-primary">
         The Team Assembles
       </div>
-      <div className=" text-md lg:text-lg text-slate-400 font-medium text-center w-full lg:w-[70%] mt-2">
+      <div className=" text-md lg:text-lg  font-medium text-center w-full lg:w-[70%] mt-2">
         Thanks to {'>'}2000 individuals donating to us, Noah funded
         “meta-prizes” for building features in our open-source code base. 30+
         developers worldwide contributed, especially Dipanshu, Nithin, Swaraj,
@@ -76,7 +76,7 @@ export default function TeamContent() {
             key={member.name}
             className="w-full flex flex-col items-center rounded-md py-4 bg-background shadow-md border"
           >
-            <Avatar className=" w-20 h-20 rounded-full">
+            <Avatar className=" w-20 h-20  rounded-full">
               <AvatarImage src={member.imageUrl} alt={member.name} />
               <AvatarFallback>{member.name}</AvatarFallback>
             </Avatar>

@@ -10,14 +10,16 @@ export default function EarlyDisputeButton({
 }) {
   const { mutateAsync: endDisputeEarly, isPending } =
     api.prizes.endDisputeEarly.useMutation()
+  const util = api.useUtils()
 
   return (
     <Button
-      onClick={async () =>
+      onClick={async () => {
         await endDisputeEarly({
           contractAddress: prizeContractAddress,
         })
-      }
+        await util.prizes.getPrizeBySlug.invalidate()
+      }}
       disabled={isPending}
     >
       End Dispute

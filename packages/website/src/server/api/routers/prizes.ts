@@ -35,7 +35,7 @@ export const prizeRouter = createTRPCRouter({
   getFunders: publicProcedure
     .input(z.object({ prizeId: z.string(), slug: z.string() }))
     .query(async ({ ctx, input }) => {
-      const funders = withCache(
+      const funders = await withCache(
         ctx,
         ctx.viaprize.prizes.getCacheTag('FUNDERS_SLUG_PRIZE', input.slug),
         async () =>
@@ -49,6 +49,14 @@ export const prizeRouter = createTRPCRouter({
       const contestants = await ctx.viaprize.prizes.getContestants(input)
       return contestants
     }),
+  getTotalFunds: publicProcedure.query(async ({ ctx }) => {
+    const total = await withCache(
+      ctx,
+      ctx.viaprize.prizes.getCacheTag('TOTAL_PRIZE_POOL'),
+      async () => await ctx.viaprize.prizes.getTotalFunds(),
+    )
+    return total
+  }),
   getPrizeActivities: publicProcedure.query(async ({ ctx }) => {
     const totalPrizePool =
       (Number(
@@ -139,12 +147,17 @@ export const prizeRouter = createTRPCRouter({
   getPrizeBySlug: publicProcedure
     .input(z.string())
     .query(async ({ input, ctx }) => {
-      const prize = await withCache(
-        ctx,
-        ctx.viaprize.prizes.getCacheTag('SLUG_PRIZE', input),
-        async () => await ctx.viaprize.prizes.getPrizeBySlug(input),
-      )
-      return prize
+      try {
+        const prize = await withCache(
+          ctx,
+          ctx.viaprize.prizes.getCacheTag('SLUG_PRIZE', input),
+          async () => await ctx.viaprize.prizes.getPrizeBySlug(input),
+        )
+        return prize
+      } catch (e) {
+        console.log(e)
+        return null
+      }
     }),
   getDeployedPrizes: publicProcedure.query(async ({ ctx }) => {
     const prizes = await withCache(
@@ -152,7 +165,7 @@ export const prizeRouter = createTRPCRouter({
       ctx.viaprize.prizes.getCacheTag('DEPLOYED_PRIZES'),
       async () => {
         const a = await ctx.viaprize.prizes.getDeployedPrizes()
-        console.log(a)
+
         return a
       },
     )
@@ -209,6 +222,11 @@ export const prizeRouter = createTRPCRouter({
               contractAddress: events[0].args.viaPrizeAddress,
               prizeId: input.prizeId,
             })
+            await ViaprizeUtils.publishActivity({
+              activity: 'Created a prize',
+              username: prize.authorUsername,
+              link: `/prize/${prize.slug}`,
+            })
           }
         },
       )
@@ -239,6 +257,10 @@ export const prizeRouter = createTRPCRouter({
         authorUsername: user.username,
         proposerAddress: user.wallet.address,
       })
+      await ViaprizeUtils.publishActivity({
+        activity: 'Created a prize proposal',
+        username: user.username,
+      })
       await bus.publish(Resource.EventBus.name, Events.Cache.Delete, {
         key: ctx.viaprize.prizes.getCacheTag('PENDING_PRIZES'),
       })
@@ -261,6 +283,7 @@ export const prizeRouter = createTRPCRouter({
       console.log({ submitterAddress })
       const user = userSessionSchema.parse(ctx.session.user)
       const prize = await ctx.viaprize.prizes.getPrizeById(input.prizeId)
+      const user = userSessionSchema.parse(ctx.session.user)
       if (!submitterAddress) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
@@ -324,6 +347,12 @@ export const prizeRouter = createTRPCRouter({
         },
       )
       if (txHash) {
+        await ViaprizeUtils.publishActivity({
+          activity: 'Created a submission',
+          username: user.username,
+          link: `/prize/${prize.slug}`,
+        })
+
         await ViaprizeUtils.publishDeployedPrizeCacheDelete(
           viaprize,
           prize.slug,
@@ -437,6 +466,71 @@ export const prizeRouter = createTRPCRouter({
       await ViaprizeUtils.publishDeployedPrizeCacheDelete(viaprize, prize.slug)
       return txReceipt
     }),
+  addUsdcFundsFiatForUser: protectedProcedure
+    .input(
+      z.object({
+        amount: z.number(),
+        successUrl: z.string(),
+        cancelUrl: z.string(),
+        spender: z.string(),
+        hash: z.string().optional(),
+        signature: z.string().optional(),
+        deadline: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      console.log('Donation with card')
+      let signature = input.signature
+      let hash = input.hash
+      const user = userSessionSchema.parse(ctx.session.user)
+      console.log({ input })
+      if (user.wallet.key && !input.signature && !input.hash) {
+        const res = await ctx.viaprize.wallet.signUsdcTransactionForCustodial({
+          deadline: input.deadline,
+          key: user.wallet.key,
+          spender: input.spender as `0x${string}`,
+          value: input.amount,
+        })
+        signature = res.signature
+        hash = res.hash
+      }
+
+      if (!signature || !hash) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'You must sign the transaction to donate',
+          cause: 'User did not  sign the transaction',
+        })
+      }
+      const prize = await ctx.viaprize.prizes.getPrizeByContractAddress(
+        input.spender,
+      )
+
+      const checkoutUrl = (
+        await (
+          await fetch(`${env.PAYMENT_URL}/payment/checkout`, {
+            method: 'POST',
+            body: JSON.stringify({
+              title: prize.title,
+              imageUrl: prize.imageUrl,
+              successUrl: input.successUrl,
+              cancelUrl: input.cancelUrl,
+              checkoutMetadata: {
+                spender: prize.primaryContractAddress,
+                deadline: input.deadline.toString(),
+                backendId: prize.id,
+                chainId: '10',
+                amount: input.amount.toString(),
+                username: user.username,
+                signature: signature,
+                ethSignedMessage: hash,
+              },
+            }),
+          })
+        ).json()
+      ).url as string
+      return checkoutUrl
+    }),
   addUsdcFundsFiatForAnonymousUser: publicProcedure
     .input(
       z.object({
@@ -526,7 +620,9 @@ export const prizeRouter = createTRPCRouter({
           await ctx.viaprize.prizes.addUsdcFunds({
             recipientAddress: prize.primaryContractAddress as `0x${string}`,
             donor: 'Anonymous',
-            valueInToken: fundsAddedEvents[0]?.args.amount.toString(),
+            valueInToken: Number.parseInt(
+              fundsAddedEvents[0]?.args.amount.toString(),
+            ),
             isFiat: false,
           })
           await ViaprizeUtils.publishDeployedPrizeCacheDelete(
@@ -593,7 +689,9 @@ export const prizeRouter = createTRPCRouter({
             recipientAddress: prize.primaryContractAddress as `0x${string}`,
             username: ctx.session.user.username,
             donor: ctx.session.user.name ?? 'Anonymous',
-            valueInToken: fundsAddedEvents[0]?.args.amount.toString(),
+            valueInToken: Number.parseFloat(
+              fundsAddedEvents[0]?.args.amount.toString(),
+            ),
             isFiat: false,
             prizeId: prize.id,
           })
@@ -603,6 +701,11 @@ export const prizeRouter = createTRPCRouter({
           )
         },
       )
+      await ViaprizeUtils.publishActivity({
+        activity: `Donated ${input.amount / 1_000_000} USD`,
+        username: user.username,
+        link: `/prize/${prize.slug}`,
+      })
       await bus.publish(Resource.EventBus.name, Events.Emails.Donated, {
         email: user.email,
         prizeTitle: prize.title,

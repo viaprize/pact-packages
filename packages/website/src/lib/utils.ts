@@ -7,6 +7,7 @@ import {
   differenceInHours,
   differenceInMinutes,
   differenceInSeconds,
+  format,
 } from 'date-fns'
 import { encodePacked, hashTypedData, keccak256 } from 'viem'
 
@@ -116,7 +117,11 @@ export const usdcSignTypeHash = (
     hash: hashTypedData(usdcSign as any),
   }
 }
-
+export function formatDate(dateStr?: string) {
+  if (!dateStr) return 'N/A'
+  const date = new Date(dateStr)
+  return format(date, 'MMMM dd, yyyy HH:mm') // e.g., January 1, 2024 23:59
+}
 export function voteMessageHash(
   submission: string,
   amount: number,
