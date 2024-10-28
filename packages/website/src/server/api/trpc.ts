@@ -52,7 +52,6 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 }
 
 type CacheableFunction<T> = () => Promise<T>
-console.log('NODE_ENV', process.env.NODE_ENV)
 
 export async function withCache<T>(
   ctx: Awaited<ReturnType<typeof createTRPCContext>>,
@@ -61,9 +60,7 @@ export async function withCache<T>(
   expireAt = 3600,
 ): Promise<T | null> {
   const shouldCache = process.env.NODE_ENV === 'production'
-  console.log(env.DATABASE_URL, 'DATAABSE URL')
-  console.log('shouldCache', shouldCache)
-  console.log(process.env.NODE_ENV)
+
   if (shouldCache) {
     // Try to get the value from the cache
     const value = await ctx.cacheClient.get(tag)
