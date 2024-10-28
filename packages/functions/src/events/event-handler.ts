@@ -237,15 +237,31 @@ export const handler = bus.subscriber(
       }
       case 'emails.donated': {
         try {
-          const response = await email.sendTransactionalEmail({
+          const toFunder = await email.sendTransactionalEmail({
             transactionalId: 'cm28t5iav00ueo4s7f9dltleh',
-            email: event.properties.email,
+            email: event.properties.funder,
             dataVariables: {
               prizeTitle: event.properties.prizeTitle,
               donationAmount: event.properties.donationAmount,
+              date: event.properties.date,
+              totalFunds: event.properties.totalFunds,
             },
           })
-          console.log('donation email response', { response })
+          console.log('donation email response', { toFunder })
+
+          const toProposer = await email.sendTransactionalEmail({
+            transactionalId: 'cm2d1zq76000g3inurcjmv4oi',
+            email: event.properties.proposer,
+            dataVariables: {
+              prizeTitle: event.properties.prizeTitle,
+              proposer: event.properties.proposerName,
+              donator: event.properties.funderName,
+              donationAmount: event.properties.donationAmount,
+              date: event.properties.date,
+              totalFunds: event.properties.totalFunds,
+            },
+          })
+          console.log('donation email response', { toProposer })
         } catch (error) {
           console.error('the error while sending donation email....', error)
         }
@@ -302,12 +318,13 @@ export const handler = bus.subscriber(
         break
       }
       case 'emails.prizeCreated': {
+        console.log('prize created email event', event)
         try {
           const response = await email.sendTransactionalEmail({
             transactionalId: 'cm2d1d0sr00ir6d50bj1i3cbw',
             email: event.properties.email,
             dataVariables: {
-              prizeTitle: event.properties.prizeTitle,
+              proposalTitle: event.properties.prizeTitle,
             },
           })
           console.log('prize created email response:', response)

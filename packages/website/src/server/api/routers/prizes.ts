@@ -233,12 +233,16 @@ export const prizeRouter = createTRPCRouter({
       await bus.publish(Resource.EventBus.name, Events.Cache.Delete, {
         key: ctx.viaprize.prizes.getCacheTag('PENDING_PRIZES'),
       })
-      if (prize.author.email) {
-        await bus.publish(Resource.EventBus.name, Events.Emails.prizeCreated, {
-          email: prize.author.email,
-          prizeTitle: prize.title,
-        })
-      }
+      console.log('proposer email............', prize.author.email)
+      await bus.publish(Resource.EventBus.name, Events.Emails.prizeCreated, {
+        email: prize.author.email ?? 'support@viaprize.org',
+        prizeTitle: prize.title,
+      })
+      // if (prize.author.email) {
+
+      // } else {
+      // 	console.log("author email is not found.....", prize.author.email);
+      // }
       return txHash
     }),
 
@@ -283,7 +287,6 @@ export const prizeRouter = createTRPCRouter({
       console.log({ submitterAddress })
       const user = userSessionSchema.parse(ctx.session.user)
       const prize = await ctx.viaprize.prizes.getPrizeById(input.prizeId)
-      const user = userSessionSchema.parse(ctx.session.user)
       if (!submitterAddress) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
@@ -707,9 +710,14 @@ export const prizeRouter = createTRPCRouter({
         link: `/prize/${prize.slug}`,
       })
       await bus.publish(Resource.EventBus.name, Events.Emails.Donated, {
-        email: user.email,
+        funder: user.email,
+        proposer: prize.author.email ?? '',
+        proposerName: prize.author.username ?? '',
+        funderName: user.username,
         prizeTitle: prize.title,
-        donationAmount: input.amount,
+        donationAmount: input.amount / 1000000,
+        date: new Date().toISOString(),
+        totalFunds: prize.funds + input.amount / 1000000,
       })
       return txHash
     }),

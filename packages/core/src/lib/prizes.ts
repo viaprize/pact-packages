@@ -373,6 +373,14 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
     console.log(contractAddress)
     const prize = await this.db.query.prizes.findFirst({
       where: eq(prizes.primaryContractAddress, contractAddress),
+      with: {
+        author: {
+          columns: {
+            email: true,
+            username: true,
+          },
+        },
+      },
     })
     console.log(prize)
     if (!prize) {
