@@ -18,15 +18,19 @@ import { Input } from '@viaprize/ui/input'
 import { motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
+import { toast } from 'sonner' // Import sonner toast
 import { useAccount, useSignMessage } from 'wagmi'
 import { readContract } from 'wagmi/actions'
 import { util } from 'zod'
+
+import { LoaderIcon } from 'lucide-react'
 
 interface VoteDialogProps {
   maxVotes: number
   submissionHash: string
   contractAddress: string
 }
+
 export default function VoteDialog({
   maxVotes,
   contractAddress,
@@ -40,54 +44,58 @@ export default function VoteDialog({
   const { signMessageAsync } = useSignMessage()
   const isCustodial = !!session?.user.wallet?.key
   const utils = api.useUtils()
+
   const handleVote = async () => {
-    if (!session) {
-      throw new Error('User not authenticated')
-    }
+    try {
+      if (!session) throw new Error('User not authenticated')
 
-    console.log('Voted', voteCount)
-    const finalVotes = Math.floor(voteCount * 1_000_000)
-    let signature: `0x${string}` | undefined
-    if (!isCustodial) {
-      if (!address) {
-        throw new Error('No Wallet Connected')
+      console.log('Voted', voteCount)
+      const finalVotes = Math.floor(voteCount * 1_000_000)
+      let signature: `0x${string}` | undefined
+
+      if (!isCustodial) {
+        if (!address) throw new Error('No Wallet Connected')
+        if (
+          session.user.wallet?.address.toLowerCase() !== address.toLowerCase()
+        ) {
+          throw new Error(
+            `Connect wallet with this address ${session.user.wallet?.address}`,
+          )
+        }
+
+        const nonce = await readContract(wagmiConfig, {
+          abi: PRIZE_V2_ABI,
+          address: contractAddress as `0x$string`,
+          functionName: 'nonce',
+        })
+
+        signature = await signMessageAsync({
+          message: {
+            raw: voteMessageHash(
+              submissionHash,
+              finalVotes,
+              Number.parseInt(nonce.toString() ?? '0') + 1,
+              contractAddress,
+            ) as `0x$string`,
+          },
+        })
       }
-      if (
-        session.user.wallet?.address.toLowerCase() !== address.toLowerCase()
-      ) {
-        throw new Error(
-          `Connect wallet with this address ${session.user.wallet?.address}`,
-        )
-      }
 
-      const nonce = await readContract(wagmiConfig, {
-        abi: PRIZE_V2_ABI,
-        address: contractAddress as `0x$string`,
-        functionName: 'nonce',
+      await addVotes.mutateAsync({
+        amountInUSDC: finalVotes,
+        contractAddress,
+        submissionHash,
+        signature: signature,
       })
-      signature = await signMessageAsync({
-        message: {
-          raw: voteMessageHash(
-            submissionHash,
-            finalVotes,
-            Number.parseInt(nonce.toString() ?? '0') + 1,
-            contractAddress,
-          ) as `0x$string`,
-        },
-      })
+
+      toast.success('Vote added successfully!')
+      console.log('Vote added')
+
+      await utils.prizes.getPrizeBySlug.invalidate()
+      await utils.prizes.getTotalVotingDetail.invalidate()
+    } catch (error) {
+      toast.error('Failed to add vote')
     }
-    await addVotes.mutateAsync({
-      amountInUSDC: finalVotes,
-      contractAddress,
-      submissionHash,
-      signature: signature,
-    })
-    console.log('Vote added')
-    await new Promise((r) => setTimeout(r, 2000))
-
-    await utils.prizes.getPrizeBySlug.invalidate()
-
-    await utils.prizes.getTotalVotingDetail.invalidate()
   }
 
   return (
@@ -122,7 +130,14 @@ export default function VoteDialog({
                 className="w-full"
                 disabled={voteCount > maxVotes || addVotes.isPending}
               >
-                Vote
+                {addVotes.isPending ? (
+                  <div className="flex items-center">
+                    <LoaderIcon className="mr-2" />
+                    Voting...
+                  </div>
+                ) : (
+                  'Vote'
+                )}
               </Button>
             )}
           </motion.div>
