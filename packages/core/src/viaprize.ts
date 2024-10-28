@@ -10,7 +10,6 @@ import {
   type ValidChainIDs,
 } from './lib/constants'
 import { Donations } from './lib/donations'
-import { IndexerEvents } from './lib/indexer-events'
 import { Prizes } from './lib/prizes'
 import { Users } from './lib/users'
 import { Wallet } from './lib/wallet'
@@ -20,7 +19,6 @@ export class Viaprize {
   donations: Donations
   prizes: Prizes
   users: Users
-  indexerEvents: IndexerEvents
   database: ViaprizeDatabase
   constants
   wallet: Wallet
@@ -44,7 +42,7 @@ export class Viaprize {
       this.config.chainId,
       this.config.wallet.rpcUrl,
     )
-    this.indexerEvents = new IndexerEvents(this.database)
+
     this.activities = new Activities(this.database)
     this.constants =
       CONTRACT_CONSTANTS_PER_CHAIN[this.config.chainId as ValidChainIDs]

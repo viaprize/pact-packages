@@ -1,3 +1,4 @@
+import { env } from '@/env'
 /**
  * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
  * 1. You want to modify request context (see Part 1).
@@ -51,6 +52,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 }
 
 type CacheableFunction<T> = () => Promise<T>
+console.log('NODE_ENV', process.env.NODE_ENV)
 
 export async function withCache<T>(
   ctx: Awaited<ReturnType<typeof createTRPCContext>>,
@@ -58,24 +60,31 @@ export async function withCache<T>(
   cacheableFunction: CacheableFunction<T>,
   expireAt = 3600,
 ): Promise<T | null> {
-  // Try to get the value from the cache
-  const value = await ctx.cacheClient.get(tag)
+  const shouldCache = process.env.NODE_ENV === 'production'
+  console.log(env.DATABASE_URL, 'DATAABSE URL')
+  console.log('shouldCache', shouldCache)
+  console.log(process.env.NODE_ENV)
+  if (shouldCache) {
+    // Try to get the value from the cache
+    const value = await ctx.cacheClient.get(tag)
 
-  if (value) {
-    // If value exists in cache, parse and return it
-    return JSON.parse(value) as T
+    if (value) {
+      // If value exists in cache, parse and return it
+      return JSON.parse(value) as T
+    }
+
+    // No cache hit, call the provided function
+    const result = await cacheableFunction()
+
+    await bus.publish(Resource.EventBus.name, Events.Cache.Set, {
+      key: tag,
+      value: JSON.stringify(result),
+      ttl: expireAt,
+      type: 'dynamodb',
+    })
+    return result
   }
-
-  // No cache hit, call the provided function
-  const result = await cacheableFunction()
-
-  await bus.publish(Resource.EventBus.name, Events.Cache.Set, {
-    key: tag,
-    value: JSON.stringify(result),
-    ttl: expireAt,
-    type: 'dynamodb',
-  })
-  return result
+  return await cacheableFunction()
 }
 
 /**
