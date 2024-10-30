@@ -3,9 +3,9 @@
 import { cn } from '@viaprize/ui'
 import { Card } from '@viaprize/ui/card'
 import { Award, CheckCircle2, Circle, HandCoins, Medal } from 'lucide-react'
+import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { BorderBeam } from '../ui/border-beam'
-import Image from 'next/image'
 
 const steps = [
   {
