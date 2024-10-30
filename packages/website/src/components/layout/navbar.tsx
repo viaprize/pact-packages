@@ -84,7 +84,7 @@ export default function Navbar({
                         alt={session.user.username}
                       />
                       <AvatarFallback>
-                        {session.user.username?.substring(0, 2)}
+                        {session.user.name?.substring(0, 2)}
                       </AvatarFallback>
                     </Avatar>
                   </DropdownMenuTrigger>
