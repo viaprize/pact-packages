@@ -15,7 +15,7 @@ const steps = [
         submission deadline.
       </p>
     ),
-    image: '/hero/step1.png',
+    image: '/hero/step2howtofund.png',
     icon: <Award className="size-10" />,
   },
   {
@@ -26,7 +26,7 @@ const steps = [
         prize pool.
       </p>
     ),
-    image: '/hero/step2.png',
+    image: '/hero/step2howtofund.png',
     icon: <HandCoins className="size-10" />,
   },
   {
