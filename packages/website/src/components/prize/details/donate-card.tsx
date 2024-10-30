@@ -324,9 +324,9 @@ export default function DonateCard({
 
   return (
     <>
-      <Card className="w-full p-4 lg:flex items-center space-y-3 lg:space-y-0">
-        <div className="w-full lg:w-[60%]">
-          <div className="text-2xl text-primary font-medium">{funds}</div>
+      <Card className="w-full p-4 lg:flex lg:space-x-3 items-center space-y-3 lg:space-y-0">
+        <div className="w-full lg:w-[60%] ">
+          <div className="text-2xl text-primary font-medium">{funds} USD</div>
           <div>Total Raised</div>
         </div>
         <div className="w-full space-y-2">
