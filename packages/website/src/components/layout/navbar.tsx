@@ -95,7 +95,7 @@ export default function Navbar({
       </nav>
 
       {/* Mobile Bottom Bar */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-50">
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-50">
         <div className="flex justify-around items-center h-[70px]">
           <Button
             variant="ghost"
@@ -140,7 +140,7 @@ export default function Navbar({
             </Link>
           </Button>
         </div>
-      </div>
+      </nav>
     </>
   )
 }

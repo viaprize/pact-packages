@@ -5,6 +5,7 @@ import { Card } from '@viaprize/ui/card'
 import { Award, CheckCircle2, Circle, HandCoins, Medal } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { BorderBeam } from '../ui/border-beam'
+import Image from 'next/image'
 
 const steps = [
   {
@@ -37,32 +38,32 @@ const steps = [
         judges can vote for a refund.
       </p>
     ),
-    image: '/hero/step3.png',
+    image: '/hero/step2.png',
     icon: <Medal className="size-10" />,
   },
 ]
 
 export default function StepsForFunders() {
-  const [currentStep, setCurrentStep] = useState(0)
+  const [currentStep, setCurrentStep] = useState(3)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
-  useEffect(() => {
-    // Clear any existing timer
-    if (timerRef.current) {
-      clearTimeout(timerRef.current)
-    }
-    // Set up a new timer for 4 seconds
-    timerRef.current = setTimeout(() => {
-      setCurrentStep((prevStep) => (prevStep + 1) % steps.length)
-    }, 4000)
+  // useEffect(() => {
+  //   // Clear any existing timer
+  //   if (timerRef.current) {
+  //     clearTimeout(timerRef.current)
+  //   }
+  //   // Set up a new timer for 4 seconds
+  //   timerRef.current = setTimeout(() => {
+  //     setCurrentStep((prevStep) => (prevStep + 1) % steps.length)
+  //   }, 5000)
 
-    // Clean up on unmount
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current)
-      }
-    }
-  }, [currentStep])
+  //   // Clean up on unmount
+  //   return () => {
+  //     if (timerRef.current) {
+  //       clearTimeout(timerRef.current)
+  //     }
+  //   }
+  // }, [currentStep])
 
   const handleStepClick = (index: number) => {
     setCurrentStep(index)
@@ -135,7 +136,7 @@ export default function StepsForFunders() {
           colorTo="#008000"
           borderWidth={3}
         />
-        <img
+        <Image
           src={steps[currentStep]?.image ?? ''}
           alt={`Step ${currentStep + 1}`}
           width={600}
