@@ -10,7 +10,7 @@ export default async function Home() {
     <main className="overflow-hidden">
       <HeroSection />
       <IdeaMarket />
-      <StepsForFunders />
+      {/* <StepsForFunders /> */}
       <Testimonials />
       <ContactSection />
     </main>

@@ -30,7 +30,7 @@ export default async function StatsCard() {
     {
       number:
         totalFunds !== null
-          ? '$' + (Number.parseFloat(totalFunds) + 65000).toString()
+          ? '$' + (Number.parseFloat(totalFunds) + 65000).toFixed(2).toString()
           : '$50K+',
       description: 'Total contribution',
       grid: 'col-span-1 md:col-span-1 md:row-span-2  lg:col-start-2 lg:row-start-2 lg:row-span-2',
