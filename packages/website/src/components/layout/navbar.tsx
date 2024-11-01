@@ -44,7 +44,7 @@ export default function Navbar({
     <>
       {/* Desktop Navbar */}
       <nav
-        className={`bg-background rounded-md  border-[0.5px] border-border transition-all duration-300 ${visible ? 'sticky top-0' : 'fixed top-[-80px]'} z-50`}
+        className={` rounded-md   border-border transition-all duration-300 ${visible ? 'sticky top-0' : 'fixed top-[-80px]'} z-50`}
       >
         <div className="px-6 lg:px-8 ">
           <div className="flex justify-between h-16">
@@ -63,7 +63,10 @@ export default function Navbar({
                   Disconnect Wallet
                 </Button>
               ) : null}
-              <Button variant="ghost" className="text-foreground">
+              <Button
+                variant="outline"
+                className="text-foreground border-[0.5px] bg-transparent h-10 hover:bg-slate-100/10 hover:text-green-800"
+              >
                 Explore Prizes
               </Button>
               {/* <Button variant="ghost" className="text-foreground">

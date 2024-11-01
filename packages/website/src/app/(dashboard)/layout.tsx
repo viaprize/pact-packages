@@ -1,8 +1,5 @@
-import Header from '@/components/layout/header'
 import Navbar from '@/components/layout/navbar'
-import SideNavbarConfigure from '@/components/layout/sidenavbar-configure'
 import { auth } from '@/server/auth'
-import { ScrollArea } from '@viaprize/ui/scroll-area'
 import { redirect } from 'next/navigation'
 import type React from 'react'
 
