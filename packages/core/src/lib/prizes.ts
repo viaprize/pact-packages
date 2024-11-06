@@ -20,6 +20,7 @@ import {
   type insertDonationSchema,
   type insertPrizeType,
   prizeComments,
+  prizeEmbeddings,
   prizes,
   prizesToContestants,
   submissions,
@@ -66,6 +67,13 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
     this.db = viaprizeDb.database
     this.chainId = chainId
     this.blockchain = new PrizesBlockchain(rpcUrl, chainId)
+  }
+
+  async putEmbeddingForPrize(prizeId: string, embedding: number[]) {
+    await this.db.insert(prizeEmbeddings).values({
+      embedding: embedding,
+      prizeId: prizeId,
+    })
   }
 
   async getTotalFunds() {

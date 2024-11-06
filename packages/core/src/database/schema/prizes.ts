@@ -1,15 +1,15 @@
 import { relations } from 'drizzle-orm'
 import {
-  decimal,
+  index,
   integer,
   json,
-  numeric,
   pgEnum,
   pgTable,
   real,
   text,
   timestamp,
   varchar,
+  vector,
 } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { nanoid } from 'nanoid'
@@ -98,6 +98,10 @@ export const prizesRelations = relations(prizes, ({ one, many }) => ({
     fields: [prizes.authorUsername],
     references: [users.username],
   }),
+  prizeEmbeddings: one(prizeEmbeddings, {
+    fields: [prizes.id],
+    references: [prizeEmbeddings.prizeId],
+  }),
   contestants: many(prizesToContestants),
   submissions: many(submissions),
   secondaryContractAddresses: many(wallets),
@@ -116,3 +120,32 @@ export const selectPrizeSchema = createSelectSchema(prizes, {
 })
 export type selectPrizeType = z.infer<typeof selectPrizeSchema>
 export type insertPrizeType = z.infer<typeof insertPrizeSchema>
+
+export const prizeEmbeddings = pgTable(
+  'prizeEmbeddings',
+  {
+    prizeId: text('prizeId')
+      .references(() => prizes.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .primaryKey(),
+    embedding: vector('embedding', { dimensions: 1536 }),
+  },
+  (table) => ({
+    embeddingIndex: index('embeddingIndex').using(
+      'hnsw',
+      table.embedding.op('vector_cosine_ops'),
+    ),
+  }),
+)
+
+export const prizeEmbeddingsRelations = relations(
+  prizeEmbeddings,
+  ({ one }) => ({
+    prize: one(prizes, {
+      fields: [prizeEmbeddings.prizeId],
+      references: [prizes.id],
+    }),
+  }),
+)

@@ -1,8 +1,9 @@
+import { generateEmbedding } from '@/server/utils/open-ai'
 import { questionSchema } from '@/types/prize-form'
 import { openai } from '@ai-sdk/openai'
 import { generateObject } from 'ai'
 import { z } from 'zod'
-import { createTRPCRouter, protectedProcedure } from '../trpc'
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 
 export const prizesAiRouter = createTRPCRouter({
   generateInitialQuestion: protectedProcedure
@@ -170,4 +171,19 @@ export const prizesAiRouter = createTRPCRouter({
       })
       return result.object
     }),
+  generateEmbeddings: publicProcedure.query(async ({ ctx }) => {
+    const test = await ctx.viaprize.database.database.query.prizes.findFirst()
+    const embedded = `
+      Title: ${test?.title}
+      Description: ${test?.description}
+      Start Voting Date: ${test?.startVotingDate}
+      Start Submission Date: ${test?.startSubmissionDate}
+      Submission Duration: ${test?.submissionDurationInMinutes} minutes
+      Voting Duration: ${test?.votingDurationInMinutes} minutes
+      Author: ${test?.authorUsername}
+      priority: ${test?.priorities}
+      skillSets: ${test?.skillSets}
+    `
+    return await generateEmbedding(embedded)
+  }),
 })
