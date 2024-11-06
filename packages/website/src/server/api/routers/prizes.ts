@@ -3,10 +3,7 @@ import { userSessionSchema } from '@/server/auth'
 import { viaprize } from '@/server/viaprize'
 import { TRPCError } from '@trpc/server'
 import { insertPrizeSchema } from '@viaprize/core/database/schema/prizes'
-import {
-  PRIZE_FACTORY_ABI,
-  PRIZE_V2_ABI,
-} from '@viaprize/core/lib/abi'
+import { PRIZE_FACTORY_ABI, PRIZE_V2_ABI } from '@viaprize/core/lib/abi'
 import { Events } from '@viaprize/core/viaprize'
 import { ViaprizeUtils } from '@viaprize/core/viaprize-utils'
 import { Resource } from 'sst'

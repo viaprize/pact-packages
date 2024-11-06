@@ -13,4 +13,3 @@ export const generateEmbedding = async (value: string): Promise<number[]> => {
 
   return embedding
 }
-
