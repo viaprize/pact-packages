@@ -1,25 +1,13 @@
 import { env } from '@/env'
-import { usdcSignType } from '@/lib/utils'
-import { wagmiConfig } from '@/lib/wagmi'
 import { userSessionSchema } from '@/server/auth'
 import { viaprize } from '@/server/viaprize'
 import { TRPCError } from '@trpc/server'
 import { insertPrizeSchema } from '@viaprize/core/database/schema/prizes'
-import {
-  ERC20_PERMIT_ABI,
-  PRIZE_FACTORY_ABI,
-  PRIZE_V2_ABI,
-} from '@viaprize/core/lib/abi'
-import {
-  CONTRACT_CONSTANTS_PER_CHAIN,
-  type ValidChainIDs,
-} from '@viaprize/core/lib/constants'
+import { PRIZE_FACTORY_ABI, PRIZE_V2_ABI } from '@viaprize/core/lib/abi'
 import { Events } from '@viaprize/core/viaprize'
 import { ViaprizeUtils } from '@viaprize/core/viaprize-utils'
-import { revalidatePath } from 'next/cache'
 import { Resource } from 'sst'
 import { bus } from 'sst/aws/bus'
-import { parseSignature } from 'viem'
 import { z } from 'zod'
 import {
   adminProcedure,
