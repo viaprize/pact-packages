@@ -9,8 +9,8 @@ import { Button } from '@viaprize/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@viaprize/ui/card'
 import { Input } from '@viaprize/ui/input'
 import { ScrollArea } from '@viaprize/ui/scroll-area'
-import { Bot, ChevronDown, DollarSign, Search, Trophy, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { Bot, ChevronDown, DollarSign, Loader, Search, Trophy, X } from 'lucide-react'
+import { useEffect, useState, useRef } from 'react'
 
 type Message = {
   role: 'bot' | 'user'
@@ -33,6 +33,8 @@ export default function PrizeChatbot() {
 
   const checkPrizes = api.prizes.ai.checkForSimilarPrizes.useMutation()
 
+  const scrollRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowArrow(false)
@@ -41,13 +43,24 @@ export default function PrizeChatbot() {
     return () => clearTimeout(timer)
   }, [])
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: 'smooth'
+      })
+    }
+  }, [messages, prizes]) // Scroll when messages or prizes update
+
   const handleSend = async () => {
     if (input.trim()) {
+      const currentInput = input
+      setInput('') // Clear input immediately
       setIsLoading(true)
-      setMessages((prev) => [...prev, { role: 'user', content: input }])
+      setMessages((prev) => [...prev, { role: 'user', content: currentInput }])
 
       try {
-        const results = await checkPrizes.mutateAsync({ text: input })
+        const results = await checkPrizes.mutateAsync({ text: currentInput })
 
         if (results && results.length > 0) {
           setPrizes(results)
@@ -80,7 +93,6 @@ export default function PrizeChatbot() {
         ])
       } finally {
         setIsLoading(false)
-        setInput('')
       }
     }
   }
@@ -183,7 +195,7 @@ export default function PrizeChatbot() {
           </CardHeader>
 
           <CardContent className="flex-grow overflow-hidden p-3">
-            <ScrollArea className="h-full pr-2">
+            <ScrollArea className="h-full pr-2" ref={scrollRef}>
               {messages.map((message, index) => (
                 <div
                   key={`${message.content}-${index}`}
@@ -196,11 +208,10 @@ export default function PrizeChatbot() {
                     </Avatar>
                   )}
                   <div
-                    className={`rounded-lg p-2 max-w-[80%] ${
-                      message.role === 'user'
-                        ? 'bg-primary text-primary-foreground ml-2'
-                        : 'bg-muted'
-                    }`}
+                    className={`rounded-lg p-2 max-w-[80%] ${message.role === 'user'
+                      ? 'bg-primary text-primary-foreground ml-2'
+                      : 'bg-muted'
+                      }`}
                   >
                     <p className="text-sm">{message.content}</p>
                   </div>
@@ -229,11 +240,16 @@ export default function PrizeChatbot() {
                 type="text"
                 placeholder="Type your message..."
                 value={input}
+                disabled={isLoading}
                 onChange={(e) => setInput(e.target.value)}
                 className="text-sm"
               />
-              <Button type="submit" size="icon" className="h-8 w-8">
-                <Search className="h-4 w-4" />
+              <Button type="submit" size="icon" className="h-8 w-8" disabled={isLoading}>
+                {isLoading ? (
+                  <Loader className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Search className="h-4 w-4" />
+                )}
               </Button>
             </form>
           </CardFooter>
