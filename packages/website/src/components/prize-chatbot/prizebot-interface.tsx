@@ -9,8 +9,16 @@ import { Button } from '@viaprize/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@viaprize/ui/card'
 import { Input } from '@viaprize/ui/input'
 import { ScrollArea } from '@viaprize/ui/scroll-area'
-import { Bot, ChevronDown, DollarSign, Loader, Search, Trophy, X } from 'lucide-react'
-import { useEffect, useState, useRef } from 'react'
+import {
+  Bot,
+  ChevronDown,
+  DollarSign,
+  Loader,
+  Search,
+  Trophy,
+  X,
+} from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 type Message = {
   role: 'bot' | 'user'
@@ -47,7 +55,7 @@ export default function PrizeChatbot() {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         top: scrollRef.current.scrollHeight,
-        behavior: 'smooth'
+        behavior: 'smooth',
       })
     }
   }, [messages, prizes]) // Scroll when messages or prizes update
@@ -208,10 +216,11 @@ export default function PrizeChatbot() {
                     </Avatar>
                   )}
                   <div
-                    className={`rounded-lg p-2 max-w-[80%] ${message.role === 'user'
-                      ? 'bg-primary text-primary-foreground ml-2'
-                      : 'bg-muted'
-                      }`}
+                    className={`rounded-lg p-2 max-w-[80%] ${
+                      message.role === 'user'
+                        ? 'bg-primary text-primary-foreground ml-2'
+                        : 'bg-muted'
+                    }`}
                   >
                     <p className="text-sm">{message.content}</p>
                   </div>
@@ -244,7 +253,12 @@ export default function PrizeChatbot() {
                 onChange={(e) => setInput(e.target.value)}
                 className="text-sm"
               />
-              <Button type="submit" size="icon" className="h-8 w-8" disabled={isLoading}>
+              <Button
+                type="submit"
+                size="icon"
+                className="h-8 w-8"
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <Loader className="h-4 w-4 animate-spin" />
                 ) : (
