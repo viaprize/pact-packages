@@ -3,7 +3,12 @@ import { questionSchema } from '@/types/prize-form'
 import { openai } from '@ai-sdk/openai'
 import { generateObject } from 'ai'
 import { z } from 'zod'
-import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from '../trpc'
 
 export const prizesAiRouter = createTRPCRouter({
   generateInitialQuestion: protectedProcedure
@@ -171,19 +176,29 @@ export const prizesAiRouter = createTRPCRouter({
       })
       return result.object
     }),
-  generateEmbeddings: publicProcedure.query(async ({ ctx }) => {
-    const test = await ctx.viaprize.database.database.query.prizes.findFirst()
-    const embedded = `
-      Title: ${test?.title}
-      Description: ${test?.description}
-      Start Voting Date: ${test?.startVotingDate}
-      Start Submission Date: ${test?.startSubmissionDate}
-      Submission Duration: ${test?.submissionDurationInMinutes} minutes
-      Voting Duration: ${test?.votingDurationInMinutes} minutes
-      Author: ${test?.authorUsername}
-      priority: ${test?.priorities}
-      skillSets: ${test?.skillSets}
-    `
-    return await generateEmbedding(embedded)
-  }),
+  checkForSimilarPrizes: protectedProcedure
+    .input(z.object({ text: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const embeddings = await generateEmbedding(input.text)
+      const prizes = await ctx.viaprize.prizes.searchPrizes(embeddings)
+      return prizes
+    }),
+  // generateEmbeddings: adminProcedure.query(async ({ ctx }) => {
+  //   const prizes = await ctx.viaprize.database.database.query.prizes.findMany()
+  //   for (const prize of prizes) {
+  //     const embedded = `
+  //     Title: ${prize.title}
+  //     Description: ${prize.description}
+  //     Start Voting Date: ${prize.startVotingDate}
+  //     Start Submission Date: ${prize.startSubmissionDate}
+  //     Submission Duration: ${prize.submissionDurationInMinutes} minutes
+  //     Voting Duration: ${prize.votingDurationInMinutes} minutes
+  //     Author: ${prize.authorUsername}
+  //     priority: ${prize.priorities}
+  //     skillSets: ${prize.skillSets}
+  //   `
+  //     const embedding = await generateEmbedding(embedded)
+  //     await ctx.viaprize.prizes.putEmbeddingForPrize(prize.id, embedding)
+  //   }
+  // }),
 })
