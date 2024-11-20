@@ -22,9 +22,9 @@ export default async function FetchProfile({
     <>
       <div className="relative">
         <div className="absolute inset-0  bg-gradient-to-r from-green-300 to-green-500 z-0 h-[45%]" />
-        <Button variant="outline" className="ml-2 mt-2 mb-4 z-10 relative">
+        {/* <Button variant="outline" className="ml-2 mt-2 mb-4 z-10 relative">
           <IconArrowLeft className="mr-1" size={20} /> Back
-        </Button>
+        </Button> */}
         <div className="w-full flex justify-center items-center z-10 relative ">
           <div className="max-w-[90%] w-[900px]  rounded-xl z-10 relative bg-background">
             <div className="p-5">

@@ -2,7 +2,10 @@
 import { useAuth } from '@/hooks/useAuth'
 import { api } from '@/trpc/react'
 import { Button } from '@viaprize/ui/button'
+import { LoaderIcon } from 'lucide-react'
 import React from 'react'
+import { toast } from 'sonner'
+
 export default function EarlyDisputeButton({
   prizeContractAddress,
 }: {
@@ -12,17 +15,26 @@ export default function EarlyDisputeButton({
     api.prizes.endDisputeEarly.useMutation()
   const util = api.useUtils()
 
+  const handleEndDisputeEarly = async () => {
+    try {
+      await endDisputeEarly({ contractAddress: prizeContractAddress })
+      await util.prizes.getPrizeBySlug.invalidate()
+      toast.success('Dispute ended successfully!')
+    } catch (error) {
+      toast.error('Failed to end dispute')
+    }
+  }
+
   return (
-    <Button
-      onClick={async () => {
-        await endDisputeEarly({
-          contractAddress: prizeContractAddress,
-        })
-        await util.prizes.getPrizeBySlug.invalidate()
-      }}
-      disabled={isPending}
-    >
-      End Dispute
+    <Button onClick={handleEndDisputeEarly} disabled={isPending}>
+      {isPending ? (
+        <div className="flex items-center">
+          <LoaderIcon className="mr-2" />
+          Ending Dispute...
+        </div>
+      ) : (
+        'End Dispute'
+      )}
     </Button>
   )
 }

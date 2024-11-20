@@ -33,6 +33,7 @@ import { LoaderIcon, Trophy } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 const formSchema = z.object({
@@ -64,14 +65,20 @@ export default function SubmissionDialog({
     },
   })
   const addSubmission = api.prizes.addSubmission.useMutation()
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values)
-    await addSubmission.mutateAsync({
-      prizeId,
-      submissionText: values.description,
-      projectLink: values.link || undefined,
-    })
-    await utils.prizes.getPrizeBySlug.invalidate()
+    try {
+      await addSubmission.mutateAsync({
+        prizeId,
+        submissionText: values.description,
+        projectLink: values.link || undefined,
+      })
+      toast.success('Submission successful!')
+      await utils.prizes.getPrizeBySlug.invalidate()
+      setIsOpen(false)
+    } catch (error) {
+      toast.error('Submission failed. Please try again.')
+    }
   }
 
   useEffect(() => {
@@ -82,6 +89,7 @@ export default function SubmissionDialog({
     window.addEventListener('resize', checkIfMobile)
     return () => window.removeEventListener('resize', checkIfMobile)
   }, [])
+
   const { session } = useAuth()
 
   const Content = () => (
@@ -92,9 +100,12 @@ export default function SubmissionDialog({
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <Label>
-            Your wallet ID for receiving is {session?.user.wallet?.address}
-          </Label>
+          {!session?.user.wallet?.key ? (
+            <Label>
+              Your wallet ID for receiving is {session?.user.wallet?.address}
+            </Label>
+          ) : null}
+
           <FormField
             control={form.control}
             name="description"
@@ -131,7 +142,14 @@ export default function SubmissionDialog({
             className="w-full"
             disabled={addSubmission.isPending}
           >
-            Submit Entry
+            {addSubmission.isPending ? (
+              <div className="flex items-center">
+                <LoaderIcon className="mr-2" />
+                Submitting Entry....
+              </div>
+            ) : (
+              'Submit Entry'
+            )}
           </Button>
         </form>
       </Form>

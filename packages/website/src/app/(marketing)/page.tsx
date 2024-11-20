@@ -7,10 +7,10 @@ import Testimonials from '@/components/home/testimonials'
 
 export default async function Home() {
   return (
-    <main className="">
+    <main className="overflow-hidden">
       <HeroSection />
       <IdeaMarket />
-      <StepsForFunders />
+      {/* <StepsForFunders /> */}
       <Testimonials />
       <ContactSection />
     </main>

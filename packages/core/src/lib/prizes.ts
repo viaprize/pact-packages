@@ -1,9 +1,11 @@
 import {
   and,
   asc,
+  cosineDistance,
   count,
   desc,
   eq,
+  gt,
   gte,
   inArray,
   lte,
@@ -20,6 +22,7 @@ import {
   type insertDonationSchema,
   type insertPrizeType,
   prizeComments,
+  prizeEmbeddings,
   prizes,
   prizesToContestants,
   submissions,
@@ -66,6 +69,26 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
     this.db = viaprizeDb.database
     this.chainId = chainId
     this.blockchain = new PrizesBlockchain(rpcUrl, chainId)
+  }
+
+  async putEmbeddingForPrize(prizeId: string, embedding: number[]) {
+    await this.db.insert(prizeEmbeddings).values({
+      embedding: embedding,
+      prizeId: prizeId,
+    })
+  }
+
+  async searchPrizes(embeddings: number[]) {
+    const similarity = sql<number>`1 - (${cosineDistance(prizeEmbeddings.embedding, embeddings)})`
+    const similarPrizes = await this.db.query.prizeEmbeddings.findMany({
+      where: gt(similarity, 0.5),
+      orderBy: desc(similarity),
+      limit: 4,
+      with: {
+        prize: true,
+      },
+    })
+    return similarPrizes.map((p) => p.prize)
   }
 
   async getTotalFunds() {

@@ -23,6 +23,7 @@ module.exports = {
         none: "0 0 rgb(0, 0 / 0, 0)",
       },
       colors: {
+        badge: "hsl(var(--badge)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

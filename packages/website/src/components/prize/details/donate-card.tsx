@@ -28,10 +28,12 @@ import { api } from '@/trpc/react'
 import { Input } from '@viaprize/ui/input'
 import { Label } from '@viaprize/ui/label'
 import { RadioGroup, RadioGroupItem } from '@viaprize/ui/radio-group'
+import { LoaderIcon } from 'lucide-react' // Import LoaderIcon
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { useAccount, useSignTypedData } from 'wagmi'
 import { readContract } from 'wagmi/actions'
 
@@ -131,11 +133,15 @@ export default function DonateCard({
         v: Number.parseInt(rsv.v?.toString() ?? '0'),
         contractAddress: contractAddress,
       })
+
+      toast.success('Donation successful! Thank you for your contribution.')
       router.refresh()
     } catch (e) {
       console.log(e)
+      toast.error('Donation failed. Please try again.')
     }
   }
+
   const handleCardDonation = async () => {
     console.log('Donation with card')
     try {
@@ -169,10 +175,14 @@ export default function DonateCard({
         deadline: finalDeadline,
       })
       window.open(url, '_blank')
+
+      toast.success('Donation successful! Thank you for your contribution.')
     } catch (e) {
       console.error(e)
+      toast.error('Donation failed. Please try again.')
     }
   }
+
   const handleCardDonationAnonymously = async () => {
     console.log('Donation with card anonymously')
 
@@ -186,10 +196,14 @@ export default function DonateCard({
       })
       console.log({ url })
       window.open(url, '_blank')
+
+      toast.success('Donation successful! Thank you for your contribution.')
     } catch (e) {
       console.error(e)
+      toast.error('Donation failed. Please try again.')
     }
   }
+
   const handleCryptoDonation = async () => {
     console.log('Donation with wallet')
 
@@ -216,8 +230,11 @@ export default function DonateCard({
         contractAddress: contractAddress,
       })
       await utils.prizes.getPrizeBySlug.invalidate()
+
+      toast.success('Donation successful! Thank you for your contribution.')
     } catch (e) {
       console.log(e)
+      toast.error('Donation failed. Please try again.')
     } finally {
       window.location.reload()
     }
@@ -280,17 +297,53 @@ export default function DonateCard({
           <Button
             onClick={handleCardDonationAnonymously}
             disabled={addUsdcFundsFiatForAnonymousUser.isPending}
+            className="w-full"
           >
-            Donate ${amount}
+            {addUsdcFundsFiatForAnonymousUser.isPending ? (
+              <div className="flex items-center">
+                <LoaderIcon className="mr-2" />
+                Processing...
+              </div>
+            ) : (
+              `Donate $${amount}`
+            )}
           </Button>
         )
       case 'card':
         return session?.user.wallet?.key ? (
-          <Button onClick={handleCardDonation}>Donate ${amount}</Button>
+          <Button
+            onClick={handleCardDonation}
+            disabled={addUsdcFundsFiatForUser.isPending}
+            className="w-full"
+          >
+            {addUsdcFundsFiatForUser.isPending ? (
+              <div className="flex items-center">
+                <LoaderIcon className="mr-2" />
+                Processing...
+              </div>
+            ) : (
+              `Donate $${amount}`
+            )}
+          </Button>
         ) : isConnected ? (
-          <Button onClick={handleCardDonation}>Donate ${amount}</Button>
+          <Button
+            onClick={handleCardDonation}
+            disabled={addUsdcFundsFiatForUser.isPending}
+            className="w-full"
+          >
+            {addUsdcFundsFiatForUser.isPending ? (
+              <div className="flex items-center">
+                <LoaderIcon className="mr-2" />
+                Processing...
+              </div>
+            ) : (
+              `Donate $${amount}`
+            )}
+          </Button>
         ) : (
-          <Button onClick={openConnectModal}>Connect Wallet</Button>
+          <Button onClick={openConnectModal} className="w-full">
+            Connect Wallet
+          </Button>
         )
       case 'custodial':
         return (
@@ -298,24 +351,48 @@ export default function DonateCard({
             Donate ${amount}
           </Button>
         )
+
       case 'crypto':
         return isConnected ? (
           <Button
             onClick={handleCryptoDonation}
             disabled={addUsdcFundsForUsers.isPending}
+            className="w-full"
           >
-            Donate ${amount}
+            {addUsdcFundsForUsers.isPending ? (
+              <div className="flex items-center">
+                <LoaderIcon className="mr-2" />
+                Processing...
+              </div>
+            ) : (
+              `Donate $${amount}`
+            )}
           </Button>
         ) : (
-          <Button onClick={openConnectModal}>Connect Wallet</Button>
+          <Button onClick={openConnectModal} className="w-full">
+            Connect Wallet
+          </Button>
         )
       case 'crypto-anonymously':
         return isConnected ? (
-          <Button onClick={handleCryptoDonationAnonymously}>
-            Donate ${amount}
+          <Button
+            onClick={handleCryptoDonationAnonymously}
+            disabled={addUsdcFundsForUsersAnonymously.isPending}
+            className="w-full"
+          >
+            {addUsdcFundsForUsersAnonymously.isPending ? (
+              <div className="flex items-center">
+                <LoaderIcon className="mr-2" />
+                Processing...
+              </div>
+            ) : (
+              `Donate $${amount}`
+            )}
           </Button>
         ) : (
-          <Button onClick={openConnectModal}>Connect Wallet</Button>
+          <Button onClick={openConnectModal} className="w-full">
+            Connect Wallet
+          </Button>
         )
       default:
         return null
@@ -324,9 +401,9 @@ export default function DonateCard({
 
   return (
     <>
-      <Card className="w-full p-4 lg:flex items-center space-y-3 lg:space-y-0">
-        <div className="w-full lg:w-[60%]">
-          <div className="text-2xl text-primary font-medium">{funds}</div>
+      <Card className="w-full p-4 lg:flex lg:space-x-3 items-center space-y-3 lg:space-y-0">
+        <div className="w-full lg:w-[60%] ">
+          <div className="text-2xl text-primary font-medium">{funds} USD</div>
           <div>Total Raised</div>
         </div>
         <div className="w-full space-y-2">
