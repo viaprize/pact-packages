@@ -194,7 +194,7 @@ export default function BountyCreationForm() {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full  mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">Create Prize</CardTitle>
       </CardHeader>

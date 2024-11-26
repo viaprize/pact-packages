@@ -1,5 +1,6 @@
 'use client'
 
+import { IconWallet } from '@tabler/icons-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@viaprize/ui/avatar'
 import { Button } from '@viaprize/ui/button'
 import {
@@ -15,6 +16,7 @@ import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
 import { FaUserAlt } from 'react-icons/fa'
 import { RiDashboardHorizontalFill } from 'react-icons/ri'
+import { useAccount, useDisconnect } from 'wagmi'
 
 export default function Navbar({
   session,
@@ -23,6 +25,9 @@ export default function Navbar({
 }) {
   const [prevScrollPos, setPrevScrollPos] = useState(0)
   const [visible, setVisible] = useState(true)
+  const { isConnected } = useAccount()
+
+  const { disconnectAsync } = useDisconnect()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,7 +44,7 @@ export default function Navbar({
     <>
       {/* Desktop Navbar */}
       <nav
-        className={`bg-background rounded-md  border-[0.5px] border-border transition-all duration-300 ${visible ? 'sticky top-0' : 'fixed top-[-80px]'} z-50`}
+        className={` rounded-md   border-border transition-all duration-300 ${visible ? 'sticky top-0' : 'fixed top-[-80px]'} z-50`}
       >
         <div className="px-6 lg:px-8 ">
           <div className="flex justify-between h-16">
@@ -48,7 +53,20 @@ export default function Navbar({
               <h1 className="text-2xl font-bold">viaPrize</h1>
             </Link>
             <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
-              <Button variant="ghost" className="text-foreground">
+              {isConnected ? (
+                <Button
+                  onClick={async () => {
+                    await disconnectAsync()
+                  }}
+                >
+                  <IconWallet className=" mr-2 h-25 w-25 flex-shrink-0 text-primary-foreground" />{' '}
+                  Disconnect Wallet
+                </Button>
+              ) : null}
+              <Button
+                variant="outline"
+                className="text-foreground border-[0.5px] bg-transparent h-10 hover:bg-slate-100/10 hover:text-green-800"
+              >
                 Explore Prizes
               </Button>
               {/* <Button variant="ghost" className="text-foreground">
@@ -69,7 +87,7 @@ export default function Navbar({
                         alt={session.user.username}
                       />
                       <AvatarFallback>
-                        {session.user.username?.substring(0, 2)}
+                        {session.user.name?.substring(0, 2)}
                       </AvatarFallback>
                     </Avatar>
                   </DropdownMenuTrigger>
@@ -87,7 +105,9 @@ export default function Navbar({
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button variant="default">Login</Button>
+                <Link href="/login">
+                  <Button variant="default">Login</Button>
+                </Link>
               )}
             </div>
           </div>
@@ -95,7 +115,7 @@ export default function Navbar({
       </nav>
 
       {/* Mobile Bottom Bar */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-50">
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-background border-t z-50">
         <div className="flex justify-around items-center h-[70px]">
           <Button
             variant="ghost"
@@ -140,7 +160,7 @@ export default function Navbar({
             </Link>
           </Button>
         </div>
-      </div>
+      </nav>
     </>
   )
 }

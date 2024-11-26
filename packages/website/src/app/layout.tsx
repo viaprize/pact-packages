@@ -2,6 +2,7 @@ import '@/styles/globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
 import '@viaprize/ui/globals.css'
 
+import PrizeChatbot from '@/components/prize-chatbot/prizebot-interface'
 import { GeistSans } from 'geist/font/sans'
 import type { Metadata } from 'next'
 import getConfig from 'next/config'
@@ -27,7 +28,10 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <Toaster />
-        <Providers initialState={initialState}>{children}</Providers>
+        <Providers initialState={initialState}>
+          {children}
+          <PrizeChatbot />
+        </Providers>
       </body>
     </html>
   )

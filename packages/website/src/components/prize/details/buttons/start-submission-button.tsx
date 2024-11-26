@@ -2,7 +2,10 @@
 import { useAuth } from '@/hooks/useAuth'
 import { api } from '@/trpc/react'
 import { Button } from '@viaprize/ui/button'
+import { LoaderIcon } from 'lucide-react'
 import React from 'react'
+import { toast } from 'sonner'
+
 export default function StartSubmissionButton({
   prizeContractAddress,
 }: {
@@ -11,16 +14,25 @@ export default function StartSubmissionButton({
   const { mutateAsync: startSubmission, isPending } =
     api.prizes.startSubmission.useMutation()
 
+  const handleStartSubmission = async () => {
+    try {
+      await startSubmission({ contractAddress: prizeContractAddress })
+      toast.success('Submission started successfully!')
+    } catch (error) {
+      toast.error('Failed to start submission')
+    }
+  }
+
   return (
-    <Button
-      onClick={async () =>
-        await startSubmission({
-          contractAddress: prizeContractAddress,
-        })
-      }
-      disabled={isPending}
-    >
-      Start Submission
+    <Button onClick={handleStartSubmission} disabled={isPending}>
+      {isPending ? (
+        <div className="flex items-center">
+          <LoaderIcon className="mr-2" />
+          Ending Submission...
+        </div>
+      ) : (
+        'Start Submission'
+      )}
     </Button>
   )
 }

@@ -1,6 +1,6 @@
 {
-  "id": "d70c31b8-2cbb-4d5b-a47a-1c77d47767ab",
-  "prevId": "0404c579-1dfc-43b5-8a7b-4ed792e1ae36",
+  "id": "36278868-fc7d-47f4-9fc4-c822361cdb59",
+  "prevId": "d70c31b8-2cbb-4d5b-a47a-1c77d47767ab",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -378,6 +378,55 @@
           "columnsTo": ["username"],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.prizeEmbeddings": {
+      "name": "prizeEmbeddings",
+      "schema": "",
+      "columns": {
+        "prizeId": {
+          "name": "prizeId",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "embedding": {
+          "name": "embedding",
+          "type": "vector(1536)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "embeddingIndex": {
+          "name": "embeddingIndex",
+          "columns": [
+            {
+              "expression": "embedding",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "vector_cosine_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "hnsw",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "prizeEmbeddings_prizeId_prizes_id_fk": {
+          "name": "prizeEmbeddings_prizeId_prizes_id_fk",
+          "tableFrom": "prizeEmbeddings",
+          "tableTo": "prizes",
+          "columnsFrom": ["prizeId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},

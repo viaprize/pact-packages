@@ -1,8 +1,14 @@
+import { generateEmbedding } from '@/server/utils/open-ai'
 import { questionSchema } from '@/types/prize-form'
 import { openai } from '@ai-sdk/openai'
 import { generateObject } from 'ai'
 import { z } from 'zod'
-import { createTRPCRouter, protectedProcedure } from '../trpc'
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from '../trpc'
 
 export const prizesAiRouter = createTRPCRouter({
   generateInitialQuestion: protectedProcedure
@@ -170,4 +176,29 @@ export const prizesAiRouter = createTRPCRouter({
       })
       return result.object
     }),
+  checkForSimilarPrizes: protectedProcedure
+    .input(z.object({ text: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const embeddings = await generateEmbedding(input.text)
+      const prizes = await ctx.viaprize.prizes.searchPrizes(embeddings)
+      return prizes
+    }),
+  // generateEmbeddings: adminProcedure.query(async ({ ctx }) => {
+  //   const prizes = await ctx.viaprize.database.database.query.prizes.findMany()
+  //   for (const prize of prizes) {
+  //     const embedded = `
+  //     Title: ${prize.title}
+  //     Description: ${prize.description}
+  //     Start Voting Date: ${prize.startVotingDate}
+  //     Start Submission Date: ${prize.startSubmissionDate}
+  //     Submission Duration: ${prize.submissionDurationInMinutes} minutes
+  //     Voting Duration: ${prize.votingDurationInMinutes} minutes
+  //     Author: ${prize.authorUsername}
+  //     priority: ${prize.priorities}
+  //     skillSets: ${prize.skillSets}
+  //   `
+  //     const embedding = await generateEmbedding(embedded)
+  //     await ctx.viaprize.prizes.putEmbeddingForPrize(prize.id, embedding)
+  //   }
+  // }),
 })
