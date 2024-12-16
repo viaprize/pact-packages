@@ -9,7 +9,6 @@ export class ViaprizeDatabase {
   database: ViaprizeClientDatabase
 
   constructor({ databaseUrl }: { databaseUrl: string }) {
-    console.log('Connecting to database', databaseUrl)
     this.database = drizzle(postgres(databaseUrl), {
       schema,
     })

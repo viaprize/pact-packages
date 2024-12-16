@@ -30,7 +30,7 @@ export default function Component({ session }: { session: Session | null }) {
     if (!session) {
       return (
         <Link href="/login">
-          <Button variant="default">Login</Button>
+          <Button variant="default">Login / Sign up</Button>
         </Link>
       )
     }
@@ -93,7 +93,7 @@ export default function Component({ session }: { session: Session | null }) {
   }
 
   return (
-    <nav className="fixed top-0 right-0 left-0 overflow-x-hidden z-[999] flex justify-between bg-background/40 backdrop-blur-lg items-center py-4 px-8">
+    <nav className="fixed top-0 right-0 left-0 overflow-x-hidden z-[999]  flex justify-between bg-background/40 backdrop-blur-lg items-center py-4 px-8">
       <Link href="/" className="flex items-center space-x-4">
         <Image src="/viaprizeBg.png" alt="Logo" width={32} height={32} />
         <h1 className="text-2xl font-bold">viaPrize</h1>

@@ -38,18 +38,6 @@ export default function ContactSection() {
 
   const subscribe = api.loops.subscribe.useMutation()
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Here you would typically send the form data to your backend
-    if (values.newsletter) {
-      subscribe.mutate({
-        email: values.email,
-        subscribeToNewsletter: values.newsletter,
-        firstname: values.name,
-      })
-    }
-    console.log(values)
-  }
-
   const onSubmitForm = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
     toast.promise(handleFormSubmit(values), {
@@ -65,7 +53,7 @@ export default function ContactSection() {
   }
 
   return (
-    <section className="py-12">
+    <section className="py-12 mt-7">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row md:space-x-8">
           <div className="md:w-1/2 mb-8 md:mb-0">
