@@ -4,6 +4,7 @@ import { viaprize } from '@/server/viaprize'
 import { TRPCError } from '@trpc/server'
 import { insertPrizeSchema } from '@viaprize/core/database/schema/prizes'
 import { PRIZE_FACTORY_ABI, PRIZE_V2_ABI } from '@viaprize/core/lib/abi'
+import { CONTRACT_CONSTANTS_PER_CHAIN } from '@viaprize/core/lib/constants'
 import { Events } from '@viaprize/core/viaprize'
 import { ViaprizeUtils } from '@viaprize/core/viaprize-utils'
 import { Resource } from 'sst'
@@ -456,6 +457,7 @@ export const prizeRouter = createTRPCRouter({
       let signature = input.signature
       let hash = input.hash
       const user = userSessionSchema.parse(ctx.session.user)
+      CONTRACT_CONSTANTS_PER_CHAIN
       console.log({ input })
       if (user.wallet.key && !input.signature && !input.hash) {
         const res = await ctx.viaprize.wallet.signUsdcTransactionForCustodial({
@@ -478,24 +480,32 @@ export const prizeRouter = createTRPCRouter({
       const prize = await ctx.viaprize.prizes.getPrizeByContractAddress(
         input.spender,
       )
+      const constants = CONTRACT_CONSTANTS_PER_CHAIN[10]
 
       const checkoutUrl = (
         await (
-          await fetch(`${env.PAYMENT_URL}/payment/checkout`, {
+          await fetch(`${env.PAYMENT_URL}/0/checkout`, {
+            headers: {
+              'x-api-key': env.NORMIE_TECH_API_KEY,
+            },
             method: 'POST',
             body: JSON.stringify({
-              title: prize.title,
-              imageUrl: prize.imageUrl,
-              successUrl: input.successUrl,
-              cancelUrl: input.cancelUrl,
-              checkoutMetadata: {
-                spender: prize.primaryContractAddress,
-                deadline: input.deadline.toString(),
-                backendId: prize.id,
-                chainId: '10',
-                amount: input.amount.toString(),
+              name: prize.title,
+              images: [prize.imageUrl],
+              amount: (input.amount / 1_000_000) * 100,
+              success_url: input.successUrl,
+              chainId: 10,
+              extraMetadata: {
+                prizeId: prize.id,
                 username: user.username,
+              },
+              metadata: {
+                contractAddress: input.spender,
+                userAddress: user.wallet.address,
+                deadline: input.deadline,
                 signature: signature,
+                tokenAddress: constants.USDC,
+                amountApproved: input.amount,
                 ethSignedMessage: hash,
               },
             }),

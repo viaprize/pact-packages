@@ -21,8 +21,9 @@ export const env = createEnv({
     CHAIN_ID: z.string().default('10'),
     WALLET_API_KEY: z.string(),
     RPC_URL: z.string(),
-    PAYMENT_URL: z.string().default('http://localhost:3000'),
+    PAYMENT_URL: z.string().default(''),
     LOOPS_API_KEY: z.string(),
+    NORMIE_TECH_API_KEY: z.string(),
   },
 
   /**
@@ -34,6 +35,7 @@ export const env = createEnv({
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
     NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: z.string(),
     NEXT_PUBLIC_CHAIN_ID: z.string().default('10'),
+    NEXT_PUBLIC_NORMIE_TECH_API_KEY: z.string(),
   },
 
   /**
@@ -58,6 +60,9 @@ export const env = createEnv({
     NEXT_PUBLIC_CHAIN_ID: process.env.NEXT_PUBLIC_CHAIN_ID,
     PAYMENT_URL: process.env.PAYMENT_URL,
     LOOPS_API_KEY: process.env.LOOPS_API_KEY,
+    NORMIE_TECH_API_KEY: process.env.NORMIE_TECH_API_KEY,
+    NEXT_PUBLIC_NORMIE_TECH_API_KEY:
+      process.env.NEXT_PUBLIC_NORMIE_TECH_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

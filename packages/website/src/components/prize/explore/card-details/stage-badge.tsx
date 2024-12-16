@@ -18,8 +18,9 @@ export default function StageButton({ stage }: StageButtonProps) {
       case 'SUBMISSIONS_OPEN':
         return {
           text: 'Submissions Open',
-          color: 'bg-green-100 text-green-800',
-          emoji: '📝',
+          color: 'bg-green-100 text-green-800 ',
+
+
           indicator: (
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
@@ -83,9 +84,10 @@ export default function StageButton({ stage }: StageButtonProps) {
         'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
         color,
         'relative',
+        'mx-3'
       )}
     >
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 text-xs">
         <span>{emoji}</span>
         <span>{text}</span>
         {indicator}

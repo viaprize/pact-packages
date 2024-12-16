@@ -384,7 +384,6 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
     await this.db
       .update(prizes)
       .set({
-        stage: 'REFUNDED',
         totalRefunded: totalRefunded,
       })
       .where(

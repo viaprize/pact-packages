@@ -19,6 +19,7 @@
     "drizzle-zod": "^0.5.1",
     "nanoid": "^5.0.7",
     "next-auth": "^4.24.7",
+    "openapi-fetch": "^0.13.0",
     "pnpm": "^9.10.0",
     "postgres": "^3.4.4",
     "slugify": "^1.6.6",

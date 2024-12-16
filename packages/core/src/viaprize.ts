@@ -161,6 +161,19 @@ export const Events = {
       z.object({ eventId: z.string() }),
     ),
   },
+  Fiat: {
+    Refund: defineEvent(
+      'fiat.refund',
+      z.object({
+        transactionId: z.string(),
+        refundAmountInCents: z.number(),
+        isFullyRefunded: z.boolean(),
+        isPartiallyRefunded: z.boolean(),
+        totalRefunded: z.number(),
+        paymentId: z.string(),
+      }),
+    ),
+  },
   Emails: {
     Newsletter: defineEvent(
       'emails.newsletter',

@@ -13,6 +13,7 @@ import {
   DATABASE_URL,
   LOOPS_API_KEY,
   NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
+  NORMIE_TECH_API_KEY,
   OPENAI_API_KEY,
   RPC_URL,
   WALLET_API_KEY,
@@ -44,7 +45,8 @@ export const website = new sst.aws.Nextjs('website', {
     LOOPS_API_KEY,
   ],
   environment: {
-    PAYMENT_URL: router.url,
+    PAYMENT_URL:
+      'https://84i54kd5nk.execute-api.us-east-1.amazonaws.com/v1/viaprize',
     AUTH_SECRET: AUTH_SECRET.value,
     DATABASE_URL: DATABASE_URL.value,
     AUTH_GITHUB_ID: AUTH_GITHUB_ID.value,
@@ -61,5 +63,7 @@ export const website = new sst.aws.Nextjs('website', {
     WALLET_API_KEY: WALLET_API_KEY.value,
     OPENAI_API_KEY: OPENAI_API_KEY.value,
     LOOPS_API_KEY: LOOPS_API_KEY.value,
+    NORMIE_TECH_API_KEY: NORMIE_TECH_API_KEY.value,
+    NEXT_PUBLIC_NORMIE_TECH_API_KEY: NORMIE_TECH_API_KEY.value,
   },
 })

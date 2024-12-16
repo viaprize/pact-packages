@@ -74,6 +74,14 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "NormieTechApiKey": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "NormieTechSecretKey": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "OpenAiApiKey": {
       "type": "sst.sst.Secret"
       "value": string

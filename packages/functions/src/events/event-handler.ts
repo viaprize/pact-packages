@@ -1,3 +1,4 @@
+import { normieTechClient } from '@viaprize/core/normie-tech'
 import { Events } from '@viaprize/core/viaprize'
 import { ViaprizeUtils } from '@viaprize/core/viaprize-utils'
 import { addDays, addMinutes, addSeconds, isBefore, subMinutes } from 'date-fns'
@@ -33,6 +34,8 @@ export const handler = bus.subscriber(
     Events.Emails.Welcome,
     Events.Emails.prizeCreated,
     Events.Emails.Donated,
+
+    Events.Fiat.Refund,
   ],
   async (event) => {
     console.log(
@@ -112,9 +115,6 @@ export const handler = bus.subscriber(
         break
       case 'cache.delete':
         await cache.delete(event.properties.key)
-        break
-      case 'indexer.confirmEvent':
-        await viaprize.indexerEvents.createEvent(event.properties.eventId)
         break
 
       case 'prize.scheduleStartSubmission': {
@@ -251,6 +251,22 @@ export const handler = bus.subscriber(
           console.error('the error while sending donation email....', error)
         }
         break
+      }
+
+      case 'fiat.refund': {
+        const response = await normieTechClient.POST('/v1/viaprize/0/refund', {
+          body: {
+            refundAmountInCents: event.properties.refundAmountInCents,
+            transactionId: event.properties.transactionId,
+          },
+          params: {
+            header: {
+              // biome-ignore lint/suspicious/noExtraNonNullAssertion: <explanation>
+              // biome-ignore lint/style/noNonNullAssertion: <explanation>
+              'x-api-key': process.env.NORMIE_TECH_API_KEY!!,
+            },
+          },
+        })
       }
     }
   },
