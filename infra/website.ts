@@ -45,8 +45,7 @@ export const website = new sst.aws.Nextjs('website', {
     LOOPS_API_KEY,
   ],
   environment: {
-    PAYMENT_URL:
-      'https://84i54kd5nk.execute-api.us-east-1.amazonaws.com/v1/viaprize',
+    PAYMENT_URL: 'https://api.normietech.com/v1/viaprize',
     AUTH_SECRET: AUTH_SECRET.value,
     DATABASE_URL: DATABASE_URL.value,
     AUTH_GITHUB_ID: AUTH_GITHUB_ID.value,

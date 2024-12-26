@@ -63,12 +63,15 @@ export default function Navbar({
                   Disconnect Wallet
                 </Button>
               ) : null}
-              <Button
-                variant="outline"
-                className="text-foreground border-[0.5px] bg-transparent h-10 hover:bg-slate-100/10 hover:text-green-800"
-              >
-                Explore Prizes
-              </Button>
+              <Link href="/prize">
+                <Button
+                  variant="outline"
+                  className="text-foreground border-[0.5px] bg-transparent h-10 hover:bg-slate-100/10 hover:text-green-800"
+                >
+                  Explore Prizes
+                </Button>
+              </Link>
+
               {/* <Button variant="ghost" className="text-foreground">
                 Activities
               </Button> */}

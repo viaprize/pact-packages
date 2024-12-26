@@ -5,6 +5,7 @@ import { TRPCError } from '@trpc/server'
 import { insertPrizeSchema } from '@viaprize/core/database/schema/prizes'
 import { PRIZE_FACTORY_ABI, PRIZE_V2_ABI } from '@viaprize/core/lib/abi'
 import { CONTRACT_CONSTANTS_PER_CHAIN } from '@viaprize/core/lib/constants'
+import { normieTechClient } from '@viaprize/core/normie-tech'
 import { Events } from '@viaprize/core/viaprize'
 import { ViaprizeUtils } from '@viaprize/core/viaprize-utils'
 import { Resource } from 'sst'
@@ -481,38 +482,34 @@ export const prizeRouter = createTRPCRouter({
         input.spender,
       )
       const constants = CONTRACT_CONSTANTS_PER_CHAIN[10]
-
-      const checkoutUrl = (
-        await (
-          await fetch(`${env.PAYMENT_URL}/0/checkout`, {
-            headers: {
-              'x-api-key': env.NORMIE_TECH_API_KEY,
-            },
-            method: 'POST',
-            body: JSON.stringify({
-              name: prize.title,
-              images: [prize.imageUrl],
-              amount: (input.amount / 1_000_000) * 100,
-              success_url: input.successUrl,
-              chainId: 10,
-              extraMetadata: {
-                prizeId: prize.id,
-                username: user.username,
-              },
-              metadata: {
-                contractAddress: input.spender,
-                userAddress: user.wallet.address,
-                deadline: input.deadline,
-                signature: signature,
-                tokenAddress: constants.USDC,
-                amountApproved: input.amount,
-                ethSignedMessage: hash,
-              },
-            }),
-          })
-        ).json()
-      ).url as string
-      return checkoutUrl
+      const url = await normieTechClient.POST('/v1/viaprize/0/checkout', {
+        params: {
+          header: {
+            'x-api-key': env.NORMIE_TECH_API_KEY,
+          },
+        },
+        body: {
+          name: prize.title,
+          images: [prize.imageUrl ?? 'https://placehold.jp/150x150.png'],
+          amount: (input.amount / 1_000_000) * 100,
+          success_url: input.successUrl,
+          chainId: 10,
+          extraMetadata: {
+            prizeId: prize.id,
+            username: user.username,
+          },
+          metadata: {
+            contractAddress: input.spender,
+            userAddress: user.wallet.address,
+            deadline: input.deadline,
+            signature: signature,
+            tokenAddress: constants.USDC,
+            amountApproved: input.amount,
+            ethSignedMessage: hash,
+          },
+        },
+      })
+      return url.data?.url
     }),
   addUsdcFundsFiatForAnonymousUser: publicProcedure
     .input(

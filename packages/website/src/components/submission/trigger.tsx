@@ -64,6 +64,7 @@ export default function SubmissionDialog({
       link: '',
     },
   })
+
   const addSubmission = api.prizes.addSubmission.useMutation()
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -99,7 +100,7 @@ export default function SubmissionDialog({
         <h3 className="text-lg font-semibold">Prize: ${totalFunds}</h3>
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form className="space-y-4">
           {!session?.user.wallet?.key ? (
             <Label>
               Your wallet ID for receiving is {session?.user.wallet?.address}
@@ -138,7 +139,8 @@ export default function SubmissionDialog({
           />
 
           <Button
-            type="submit"
+            onClick={form.handleSubmit(onSubmit)}
+
             className="w-full"
             disabled={addSubmission.isPending}
           >

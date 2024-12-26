@@ -8,14 +8,7 @@ type ExtraMetadata = {
     prizeId: string
     username: string
 }
-// components['']
-// contractAddress: input.spender,
-// userAddress: user.wallet.address,
-// deadline: input.deadline,
-// signature: signature,
-//                 tokenAddress: constants.USDC,
-//                     amountApproved: input.amount,
-//                         ethSignedMessage: hash,
+
 export async function GET(request: NextRequest) {
 
     const transactionId = request.nextUrl.searchParams.get('transactionId')
