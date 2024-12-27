@@ -1,3 +1,24 @@
+export const NONCE_ABI = [
+  {
+    constant: true,
+    inputs: [
+      {
+        name: 'owner',
+        type: 'address',
+      },
+    ],
+    name: 'nonces',
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const
 export const PRIZE_FACTORY_ABI = [
   {
     anonymous: false,

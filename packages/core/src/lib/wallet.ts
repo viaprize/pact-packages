@@ -1,3 +1,6 @@
+import Safe from '@safe-global/protocol-kit'
+import type { MetaTransactionData } from '@safe-global/safe-core-sdk-types'
+import { Resource } from 'sst'
 import {
   http,
   type Abi,
@@ -6,14 +9,22 @@ import {
   type ParseEventLogsReturnType,
   type TransactionReceipt,
   createPublicClient,
+  createWalletClient,
+  hashTypedData,
   parseEventLogs,
 } from 'viem'
-import { call, waitForTransactionReceipt } from 'viem/actions'
-import { PRIZE_FACTORY_ABI } from './abi'
+import {
+  generatePrivateKey,
+  privateKeyToAccount,
+  privateKeyToAddress,
+} from 'viem/accounts'
+import { NONCE_ABI, PRIZE_FACTORY_ABI } from './abi'
+import { CONTRACT_CONSTANTS_PER_CHAIN, type ValidChainIDs } from './constants'
+import { AESCipher } from './encryption'
 import { Blockchain } from './smart-contracts/blockchain'
-import { getChain } from './utils'
+import { getChain, usdcSignType, voteMessageHash } from './utils'
 
-export type WalletType = 'reserve' | 'gasless'
+export type WalletType = 'gasless'
 export type AddressType = 'signer' | 'vault'
 
 type TransactionData = {
@@ -23,24 +34,29 @@ type TransactionData = {
 }
 
 export class Wallet extends Blockchain {
-  url: string
-  walletApiKey: string
+  private secretKey: string
+  private gaslessKey: `0x${string}`
+  private cipher: AESCipher
   constructor(
-    url: string,
     rpcUrl: string,
-    chainId: number,
-    walletApiKey: string,
+    chainId: ValidChainIDs,
+    secretKey: string,
+    gaslessKey: `0x${string}`,
   ) {
     super(rpcUrl, chainId)
-    this.walletApiKey = walletApiKey
-    this.url = url
+    this.secretKey = secretKey
+
+    this.gaslessKey = gaslessKey
+    this.cipher = new AESCipher(this.secretKey)
   }
   async generateWallet() {
-    // Generate a wallet
-    const res: { address: string; key: string } = (await (
-      await fetch(this.url + '/wallet/generate')
-    ).json()) as any
-    return res
+    const privateKey = generatePrivateKey()
+    const address = privateKeyToAddress(privateKey)
+
+    return {
+      address,
+      key: this.cipher.encrypt(privateKey),
+    }
   }
   async withTransactionEvents<
     abi extends Abi | readonly unknown[],
@@ -96,31 +112,49 @@ export class Wallet extends Blockchain {
     encryptedKey: `0x${string}`
     submissionHash: `0x${string}`
   }) {
-    const res = await (
-      await fetch(`${this.url}/wallet/sign-vote`, {
-        body: JSON.stringify({
-          amount,
-          spender: contractAddress,
-          key: encryptedKey,
-          submissionHash,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': this.walletApiKey,
-          'x-chain-id': this.chainId.toString(),
-        },
-        method: 'POST',
-      })
+    const account = privateKeyToAccount(
+      this.cipher.decrypt(encryptedKey) as `0x${string}`,
     )
-      .json()
-      .then((res) => {
-        console.log({ res })
-        return {
-          hash: (res as any).hash as string,
-          signature: (res as any).signature as string,
-        }
-      })
-    return res
+    const chainObject = getChain(this.chainId)
+    const wallet = createWalletClient({
+      transport: http(this.rpcUrl),
+      chain: chainObject,
+      account,
+    })
+    const nonce = await this.blockchainClient.readContract({
+      abi: [
+        {
+          inputs: [],
+          name: 'nonce',
+          outputs: [
+            {
+              internalType: 'uint256',
+              name: '',
+              type: 'uint256',
+            },
+          ],
+          stateMutability: 'view',
+          type: 'function',
+        },
+      ] as const,
+      address: contractAddress,
+      functionName: 'nonce',
+    })
+    const messageHash = voteMessageHash(
+      submissionHash,
+      amount,
+      Number.parseInt(nonce.toString()) + 1,
+      contractAddress,
+    )
+    const signature = await wallet.signMessage({
+      message: {
+        raw: messageHash as `0x${string}`,
+      },
+    })
+    return {
+      hash: messageHash,
+      signature: signature,
+    }
   }
 
   async signUsdcTransactionForCustodial({
@@ -129,70 +163,67 @@ export class Wallet extends Blockchain {
     value,
     deadline,
   }: { spender: `0x${string}`; key: string; value: number; deadline: number }) {
-    const res = await (
-      await fetch(`${this.url}/wallet/sign-usdc`, {
-        body: JSON.stringify({
-          spender,
-          value,
-          key,
-          deadline,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': this.walletApiKey,
-          'x-chain-id': this.chainId.toString(),
-        },
-        method: 'POST',
-      })
+    const account = privateKeyToAccount(
+      this.cipher.decrypt(key) as `0x${string}`,
     )
-      .json()
-      .then((res) => {
-        console.log({ res })
-        return {
-          hash: (res as any).hash as string,
-          signature: (res as any).signature as string,
-        }
-      })
-    return res
+    const chainObject = getChain(this.chainId)
+    const wallet = createWalletClient({
+      transport: http(this.rpcUrl),
+      chain: chainObject,
+      account,
+    })
+    const constants = CONTRACT_CONSTANTS_PER_CHAIN[this.chainId]
+    const usdc = constants.USDC
+    const nonce = await this.blockchainClient.readContract({
+      abi: NONCE_ABI,
+      address: usdc,
+      functionName: 'nonces',
+      args: [wallet.account.address],
+    })
+    const signType = usdcSignType({
+      deadline: BigInt(deadline),
+      nonce: nonce,
+      owner: wallet.account.address,
+      spender,
+      usdc: usdc,
+      value: BigInt(value),
+      chainId: this.chainId,
+      tokenName: constants.USDC_DETAIL.name,
+      version: constants.USDC_DETAIL.version,
+    })
+    const hash = hashTypedData(signType as any)
+    const signature = await wallet.signTypedData(signType as any)
+    return {
+      hash,
+      signature,
+    }
   }
 
-  async sendTransaction(tx: TransactionData[], type: WalletType) {
-    const transactionHash = await (
-      await fetch(`${this.url}/${type}`, {
-        body: JSON.stringify(tx),
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': this.walletApiKey,
-          'x-chain-id': this.chainId.toString(),
-        },
-        method: 'POST',
-      })
-    )
-      .json()
-      .then((res) => {
-        console.log(`Transaction hash: ${(res as any).hash}`)
-        return (res as any).hash as string
-      })
-      .catch((e) => {
-        console.error(e)
-        throw e
-      })
-    const receipt = await this.blockchainClient.waitForTransactionReceipt({
-      hash: transactionHash as `0x${string}`,
+  async sendTransaction(tx: MetaTransactionData[], type: WalletType) {
+    const signer = privateKeyToAccount(this.gaslessKey)
+    const safeAddress = this.getAddress(type, 'vault')
+    const protocolKit = await Safe.default.init({
+      provider: this.rpcUrl,
+      signer: signer,
+      safeAddress: safeAddress,
     })
-
-    return receipt
+    const safeTransactionProtocol = await protocolKit.createTransaction({
+      transactions: tx,
+    })
+    const executeTxResponse = await protocolKit.executeTransaction(
+      safeTransactionProtocol,
+    )
+    return executeTxResponse.hash
   }
 
   async getAddress(type: WalletType, addressType: AddressType) {
-    // Get the wallet address
-    const res: { address: string } = (await (
-      await fetch(
-        this.url +
-          `/${type}${addressType === 'signer' ? '/signer' : '/address'}`,
-      )
-    ).json()) as any
-
-    return res.address
+    if (type === 'gasless') {
+      switch (addressType) {
+        case 'signer':
+          return privateKeyToAddress(this.gaslessKey)
+        case 'vault':
+          return CONTRACT_CONSTANTS_PER_CHAIN[this.chainId]
+      }
+    }
   }
 }

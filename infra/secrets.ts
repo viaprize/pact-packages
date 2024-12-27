@@ -7,6 +7,7 @@ export const AUTH_GITHUB_SECRET = new sst.Secret('AuthGithubSecret')
 export const AUTH_GOOGLE_ID = new sst.Secret('AuthGoogleId')
 export const AUTH_GOOGLE_SECRET = new sst.Secret('AuthGoogleSecret')
 export const AUTH_RESEND_KEY = new sst.Secret('AuthResendKey')
+export const GASLESS_KEY = new sst.Secret('GaslessKey')
 
 export const OPENAI_API_KEY = new sst.Secret('OpenAiApiKey')
 

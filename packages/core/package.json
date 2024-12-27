@@ -13,6 +13,8 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
+    "@safe-global/protocol-kit": "^5.1.1",
+    "@safe-global/safe-core-sdk-types": "^5.1.0",
     "add": "^2.0.6",
     "csv-parser": "^3.0.0",
     "drizzle-orm": "^0.33.0",

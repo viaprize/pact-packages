@@ -8,6 +8,7 @@ import { Activities } from './lib/activities'
 import {
   CONTRACT_CONSTANTS_PER_CHAIN,
   type ValidChainIDs,
+  ValidChainSchema,
 } from './lib/constants'
 import { Donations } from './lib/donations'
 import { Prizes } from './lib/prizes'
@@ -30,10 +31,10 @@ export class Viaprize {
       databaseUrl: this.config.databaseUrl,
     })
     this.wallet = new Wallet(
-      this.config.wallet.walletPaymentInfraUrl,
       this.config.wallet.rpcUrl,
-      this.config.chainId,
-      this.config.wallet.walletApiKey,
+      ValidChainSchema.parse(this.config.chainId),
+      this.config.wallet.secretKey,
+      this.config.wallet.gaslessKey as `0x${string}`,
     )
     this.donations = new Donations(this.database)
     this.users = new Users(this.database, this.wallet)
@@ -60,7 +61,7 @@ const TransactionData = z.object({
       value: z.string(),
     }),
   ),
-  walletType: z.enum(['reserve', 'gasless']).default('gasless'),
+  walletType: z.enum(['gasless']).default('gasless'),
 })
 export const Events = {
   Activity: {

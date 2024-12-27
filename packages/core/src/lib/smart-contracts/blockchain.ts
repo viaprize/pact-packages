@@ -1,16 +1,17 @@
 import { http, createPublicClient, encodeFunctionData } from 'viem'
 import { ERC20_PERMIT_ABI } from '../abi'
+import type { ValidChainIDs } from '../constants'
 import { getChain } from '../utils'
 
 export class Blockchain {
   rpcUrl: string
-  chainId: number
+  chainId: ValidChainIDs
   blockchainClient
-  constructor(rpcUrl: string, chainId: number) {
+  constructor(rpcUrl: string, chainId: ValidChainIDs) {
     this.rpcUrl = rpcUrl
     this.chainId = chainId
     this.blockchainClient = createPublicClient({
-      chain: getChain(this.chainId as 10),
+      chain: getChain(this.chainId),
       transport: http(this.rpcUrl),
     })
   }

@@ -129,14 +129,14 @@ export async function handleEndDispute(
   }
 }
 
-export async function handleRefund(
-  viaprize: Viaprize,
-  prizeContractAddress: string,
-  refundBody: {
-    transactionId: string
-    refundAmountInCents: number
-  }[],
-)
+// export async function handleRefund(
+//   viaprize: Viaprize,
+//   prizeContractAddress: string,
+//   refundBody: {
+//     transactionId: string
+//     refundAmountInCents: number
+//   }[],
+// )
 export async function handleEndSubmissionTransaction(
   viaprize: Viaprize,
   txBody: typeof Events.Wallet.Transaction.$input,

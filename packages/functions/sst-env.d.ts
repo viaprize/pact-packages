@@ -50,6 +50,10 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Bus"
     }
+    "GaslessKey": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "ImageUploads": {
       "name": string
       "type": "sst.aws.Bucket"
