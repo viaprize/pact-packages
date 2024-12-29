@@ -128,6 +128,15 @@ export class PrizesBlockchain extends Blockchain {
     ethSignedMessageHash: `0x${string}`,
     fiatPayment: boolean,
   ) {
+    console.log({
+      voter,
+      amount,
+      deadline,
+      v,
+      s,
+      r,
+      ethSignedMessageHash,
+    })
     return encodeFunctionData({
       abi: PRIZE_V2_ABI,
       functionName: 'addTokenFunds',

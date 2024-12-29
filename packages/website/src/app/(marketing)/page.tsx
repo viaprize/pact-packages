@@ -4,6 +4,7 @@ import HeroSection from '@/components/home/hero'
 import IdeaMarket from '@/components/home/idea-market'
 import StepsForFunders from '@/components/home/steps'
 import Testimonials from '@/components/home/testimonials'
+import { env } from '@/env'
 
 export default async function Home() {
   return (

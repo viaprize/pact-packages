@@ -1,7 +1,10 @@
 import type { ContestantStage } from '@/components/prize/details/vfc-details/contestants-card'
 import type { Submissions } from '@/types/submissions'
 import { ERC20_PERMIT_SIGN_TYPE } from '@viaprize/core/lib/abi'
-import type { ValidChainIDs } from '@viaprize/core/lib/constants'
+import {
+  CONTRACT_CONSTANTS_PER_CHAIN,
+  type ValidChainIDs,
+} from '@viaprize/core/lib/constants'
 import {
   differenceInDays,
   differenceInHours,
@@ -89,6 +92,7 @@ export const usdcSignType = ({
   chainId: ValidChainIDs
   usdcContract: `0x${string}`
 }) => {
+  const constants = CONTRACT_CONSTANTS_PER_CHAIN[chainId]
   return {
     message: {
       owner: owner as `0x${string}`,
@@ -102,8 +106,8 @@ export const usdcSignType = ({
     domain: {
       chainId: chainId,
       verifyingContract: usdcContract,
-      name: 'USD Coin',
-      version: '2',
+      name: constants.USDC_DETAIL.name,
+      version: constants.USDC_DETAIL.version,
     },
   }
 }

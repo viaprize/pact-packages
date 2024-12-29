@@ -214,6 +214,7 @@ export default function DonateCard({
       if (!session?.user?.wallet) {
         throw new Error('No user found')
       }
+      console.log(env.NEXT_PUBLIC_CHAIN_ID, "chain id")
       const { amountInUSDC, deadline, hash, rsv } = await generateSignature(
         address,
         contractAddress as `0x${string}`,
@@ -235,8 +236,6 @@ export default function DonateCard({
     } catch (e) {
       console.log(e)
       toast.error('Donation failed. Please try again.')
-    } finally {
-      window.location.reload()
     }
   }
 

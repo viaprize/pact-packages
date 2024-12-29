@@ -37,10 +37,6 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Dynamo"
     }
-    "ChainId": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
     "DatabaseUrl": {
       "type": "sst.sst.Secret"
       "value": string
@@ -57,18 +53,6 @@ declare module "sst" {
     "ImageUploads": {
       "name": string
       "type": "sst.aws.Bucket"
-    }
-    "IndexerPrizeFactoryStartBlock": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "IndexerPrizeStartBlock": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "IndexerRpcUrl": {
-      "type": "sst.sst.Secret"
-      "value": string
     }
     "LoopsApiKey": {
       "type": "sst.sst.Secret"
@@ -90,10 +74,6 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "PaymentSecretKey": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
     "Router": {
       "type": "sst.aws.ApiGatewayV2"
       "url": string
@@ -106,15 +86,7 @@ declare module "sst" {
       "arn": string
       "type": "sst.aws.Function"
     }
-    "WalletApiKey": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "WalletPaymentInfraApi": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "WebhookSecret": {
+    "SecretKey": {
       "type": "sst.sst.Secret"
       "value": string
     }

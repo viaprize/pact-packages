@@ -7,6 +7,7 @@ import {
 } from '@rainbow-me/rainbowkit'
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar'
 
+import { env } from '@/env'
 import {
   SessionProvider,
   getCsrfToken,
@@ -15,11 +16,11 @@ import {
   useSession,
 } from 'next-auth/react'
 import { type State, WagmiProvider } from 'wagmi'
-import { optimism } from 'wagmi/chains'
+import { optimism, sepolia } from 'wagmi/chains'
 
 function WalletProvider({ children }: { children: React.ReactNode }) {
   return (
-    <RainbowKitProvider coolMode initialChain={optimism}>
+    <RainbowKitProvider coolMode initialChain={env.NEXT_PUBLIC_CHAIN_ID === '10' ? optimism : sepolia}>
       {children}
     </RainbowKitProvider>
   )

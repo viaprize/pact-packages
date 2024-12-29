@@ -32,7 +32,7 @@ export class Viaprize {
     })
     this.wallet = new Wallet(
       this.config.wallet.rpcUrl,
-      ValidChainSchema.parse(this.config.chainId),
+      this.config.chainId,
       this.config.wallet.secretKey,
       this.config.wallet.gaslessKey as `0x${string}`,
     )

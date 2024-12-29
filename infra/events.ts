@@ -2,12 +2,11 @@ import { cacheTable } from './cache'
 
 // import { scheduleReceivingFunction, schedulerRole } from "./scheduler";
 import {
-  CHAIN_ID,
   DATABASE_URL,
+  GASLESS_KEY,
   LOOPS_API_KEY,
   RPC_URL,
-  WALLET_API_KEY,
-  WALLET_PAYMENT_INFRA_API,
+  SECRET_KEY,
 } from './secrets'
 sst.Linkable.wrap(aws.iam.Role, (fn) => ({
   properties: {
@@ -61,19 +60,16 @@ export const scheduleReceivingFunction = new sst.aws.Function(
     link: [
       eventBus,
       DATABASE_URL,
-      CHAIN_ID,
       eventBus,
       cacheTable,
-      WALLET_PAYMENT_INFRA_API,
+
       RPC_URL,
-      WALLET_API_KEY,
     ],
     environment: {
       DATABASE_URL: DATABASE_URL.value,
-      CHAIN_ID: CHAIN_ID.value,
-      WALLET_PAYMENT_INFRA_API: WALLET_PAYMENT_INFRA_API.value,
+      CHAIN_ID: $app.stage === 'production' ? '10' : '11155111',
+
       RPC_URL: RPC_URL.value,
-      WALLET_API_KEY: WALLET_API_KEY.value,
     },
   },
 )
@@ -93,22 +89,23 @@ eventBus.subscribe({
 
   environment: {
     DATABASE_URL: DATABASE_URL.value,
-    CHAIN_ID: CHAIN_ID.value,
-    WALLET_PAYMENT_INFRA_API: WALLET_PAYMENT_INFRA_API.value,
+    CHAIN_ID: $app.stage === 'production' ? '10' : '11155111',
+
     RPC_URL: RPC_URL.value,
-    WALLET_API_KEY: WALLET_API_KEY.value,
     LOOPS_API_KEY: LOOPS_API_KEY.value,
+    GASLESS_KEY: GASLESS_KEY.value,
+    SECRET_KEY: SECRET_KEY.value,
   },
   link: [
     DATABASE_URL,
-    CHAIN_ID,
     eventBus,
     cacheTable,
-    WALLET_PAYMENT_INFRA_API,
+
     RPC_URL,
-    WALLET_API_KEY,
     scheduleReceivingFunction,
     schedulerRole,
     LOOPS_API_KEY,
+    GASLESS_KEY,
+    SECRET_KEY,
   ],
 })

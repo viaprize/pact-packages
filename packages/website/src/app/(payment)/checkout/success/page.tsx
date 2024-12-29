@@ -3,16 +3,18 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { env } from '@/env'
+import { NORMIE_TECH_API_KEY, NORMIE_TECH_URL } from '@/lib/constant'
 import { normieTechClient } from '@viaprize/core/normie-tech'
 import { Button } from '@viaprize/ui/button'
 import { Card } from '@viaprize/ui/card'
 
 
 async function getTransactionData(transactionId: string) {
-    const transactionData = (await normieTechClient.GET('/v1/{projectId}/transactions/{transactionId}', {
+    const normieTech = normieTechClient(NORMIE_TECH_URL)
+    const transactionData = (await normieTech.GET('/v1/{projectId}/transactions/{transactionId}', {
         params: {
             header: {
-                "x-api-key": env.NORMIE_TECH_API_KEY ?? "",
+                "x-api-key": NORMIE_TECH_API_KEY ?? "",
 
             },
             path: {

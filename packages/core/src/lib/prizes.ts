@@ -64,7 +64,11 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
   chainId: number
   blockchain: PrizesBlockchain
 
-  constructor(viaprizeDb: ViaprizeDatabase, chainId: number, rpcUrl: string) {
+  constructor(
+    viaprizeDb: ViaprizeDatabase,
+    chainId: ValidChainIDs,
+    rpcUrl: string,
+  ) {
     super(CACHE_TAGS)
     this.db = viaprizeDb.database
     this.chainId = chainId

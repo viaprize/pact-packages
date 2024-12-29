@@ -1,10 +1,14 @@
 import { env } from '@/env'
+import { NORMIE_TECH_URL } from '@/lib/constant'
 import { userSessionSchema } from '@/server/auth'
 import { viaprize } from '@/server/viaprize'
 import { TRPCError } from '@trpc/server'
 import { insertPrizeSchema } from '@viaprize/core/database/schema/prizes'
 import { PRIZE_FACTORY_ABI, PRIZE_V2_ABI } from '@viaprize/core/lib/abi'
-import { CONTRACT_CONSTANTS_PER_CHAIN } from '@viaprize/core/lib/constants'
+import {
+  CONTRACT_CONSTANTS_PER_CHAIN,
+  type ValidChainIDs,
+} from '@viaprize/core/lib/constants'
 import { normieTechClient } from '@viaprize/core/normie-tech'
 import { Events } from '@viaprize/core/viaprize'
 import { ViaprizeUtils } from '@viaprize/core/viaprize-utils'
@@ -185,8 +189,18 @@ export const prizeRouter = createTRPCRouter({
           platformFeePercentage: prize.platformFeePercentage,
           proposerAddress: prize.proposerAddress,
         })
+      console.log({
+        authorFeePercentage: prize.authorFeePercentage,
+        id: prize.id,
+        platformFeePercentage: prize.platformFeePercentage,
+        proposerAddress: prize.proposerAddress,
+      })
       const prizeFactoryAddress =
         ctx.viaprize.prizes.blockchain.getPrizeFactoryV2Address()
+      console.log(viaprize.config.chainId, 'chainId')
+      console.log(viaprize.config.wallet.rpcUrl, 'rpcUrl')
+      console.log({ prizeFactoryAddress })
+      console.log(txData, 'prizeFactoryAddress')
       const txHash = await ctx.viaprize.wallet.withTransactionEvents(
         PRIZE_FACTORY_ABI,
         [
@@ -199,6 +213,7 @@ export const prizeRouter = createTRPCRouter({
         'gasless',
         ['NewViaPrizeCreated'],
         async (events) => {
+          console.log({ events })
           await ctx.viaprize.prizes.approvePrizeProposal(input.prizeId)
           if (!events[0]?.args.viaPrizeAddress) {
             throw new TRPCError({
@@ -481,34 +496,40 @@ export const prizeRouter = createTRPCRouter({
       const prize = await ctx.viaprize.prizes.getPrizeByContractAddress(
         input.spender,
       )
-      const constants = CONTRACT_CONSTANTS_PER_CHAIN[10]
-      const url = await normieTechClient.POST('/v1/viaprize/0/checkout', {
-        params: {
-          header: {
-            'x-api-key': env.NORMIE_TECH_API_KEY,
+      const constants =
+        CONTRACT_CONSTANTS_PER_CHAIN[
+          Number.parseInt(env.CHAIN_ID) as ValidChainIDs
+        ]
+      const url = await normieTechClient(NORMIE_TECH_URL).POST(
+        '/v1/viaprize/0/checkout',
+        {
+          params: {
+            header: {
+              'x-api-key': env.NORMIE_TECH_API_KEY,
+            },
+          },
+          body: {
+            name: prize.title,
+            images: [prize.imageUrl ?? 'https://placehold.jp/150x150.png'],
+            amount: (input.amount / 1_000_000) * 100,
+            success_url: input.successUrl,
+            chainId: Number.parseInt(env.CHAIN_ID),
+            extraMetadata: {
+              prizeId: prize.id,
+              username: user.username,
+            },
+            metadata: {
+              contractAddress: input.spender,
+              userAddress: user.wallet.address,
+              deadline: input.deadline,
+              signature: signature,
+              tokenAddress: constants.USDC,
+              amountApproved: input.amount,
+              ethSignedMessage: hash,
+            },
           },
         },
-        body: {
-          name: prize.title,
-          images: [prize.imageUrl ?? 'https://placehold.jp/150x150.png'],
-          amount: (input.amount / 1_000_000) * 100,
-          success_url: input.successUrl,
-          chainId: 10,
-          extraMetadata: {
-            prizeId: prize.id,
-            username: user.username,
-          },
-          metadata: {
-            contractAddress: input.spender,
-            userAddress: user.wallet.address,
-            deadline: input.deadline,
-            signature: signature,
-            tokenAddress: constants.USDC,
-            amountApproved: input.amount,
-            ethSignedMessage: hash,
-          },
-        },
-      })
+      )
       return url.data?.url
     }),
   addUsdcFundsFiatForAnonymousUser: publicProcedure
@@ -521,31 +542,31 @@ export const prizeRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      console.log('Donation with card anonymously')
-      const prize = await ctx.viaprize.prizes.getPrizeByContractAddress(
-        input.spender,
-      )
-      const checkoutUrl = (
-        await (
-          await fetch(`${env.PAYMENT_URL}/payment/checkout`, {
-            method: 'POST',
-            body: JSON.stringify({
-              title: prize.title,
-              imageUrl: prize.imageUrl,
-              successUrl: input.successUrl,
-              cancelUrl: input.cancelUrl,
-              checkoutMetadata: {
-                spender: prize.primaryContractAddress,
-                deadline: (Math.floor(Date.now() / 1000) + 100_000).toString(),
-                backendId: prize.id,
-                chainId: '10',
-                amount: input.amount.toString(),
-              },
-            }),
-          })
-        ).json()
-      ).url as string
-      return checkoutUrl
+      // console.log('Donation with card anonymously')
+      // const prize = await ctx.viaprize.prizes.getPrizeByContractAddress(
+      //   input.spender,
+      // )
+      // const checkoutUrl = (
+      //   await (
+      //     await fetch(`/payment/checkout`, {
+      //       method: 'POST',
+      //       body: JSON.stringify({
+      //         title: prize.title,
+      //         imageUrl: prize.imageUrl,
+      //         successUrl: input.successUrl,
+      //         cancelUrl: input.cancelUrl,
+      //         checkoutMetadata: {
+      //           spender: prize.primaryContractAddress,
+      //           deadline: (Math.floor(Date.now() / 1000) + 100_000).toString(),
+      //           backendId: prize.id,
+      //           chainId: env.CHAIN_ID,
+      //           amount: input.amount.toString(),
+      //         },
+      //       }),
+      //     })
+      //   ).json()
+      // ).url as string
+      return ''
     }),
   addUsdcFundsCryptoForAnonymousUser: publicProcedure
     .input(

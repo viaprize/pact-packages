@@ -200,29 +200,34 @@ export class Wallet extends Blockchain {
   }
 
   async sendTransaction(tx: MetaTransactionData[], type: WalletType) {
-    const signer = privateKeyToAccount(this.gaslessKey)
     const safeAddress = this.getAddress(type, 'vault')
-    const protocolKit = await Safe.default.init({
+    const protocolKit = await Safe.init({
       provider: this.rpcUrl,
-      signer: signer,
-      safeAddress: safeAddress,
+      signer: this.gaslessKey,
+      safeAddress: safeAddress as `0x${string}`,
     })
+
     const safeTransactionProtocol = await protocolKit.createTransaction({
       transactions: tx,
     })
+
     const executeTxResponse = await protocolKit.executeTransaction(
       safeTransactionProtocol,
     )
-    return executeTxResponse.hash
+    const transaction = await this.blockchainClient.waitForTransactionReceipt({
+      hash: executeTxResponse.hash as `0x${string}`,
+    })
+    return transaction
   }
 
-  async getAddress(type: WalletType, addressType: AddressType) {
+  getAddress(type: WalletType, addressType: AddressType) {
     if (type === 'gasless') {
       switch (addressType) {
         case 'signer':
           return privateKeyToAddress(this.gaslessKey)
         case 'vault':
           return CONTRACT_CONSTANTS_PER_CHAIN[this.chainId]
+            .GASLESS_VAULT_ADDRESS
       }
     }
   }

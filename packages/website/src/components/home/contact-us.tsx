@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import type * as z from 'zod'
 
+import { env } from '@/env'
 import { api } from '@/trpc/react'
 import { Button } from '@viaprize/ui/button'
 import { Checkbox } from '@viaprize/ui/checkbox'
@@ -24,6 +25,7 @@ import { formSchema } from './contactform-schema'
 import { handleFormSubmit } from './handleContact-form'
 
 export default function ContactSection() {
+
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({

@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { NORMIE_TECH_URL } from "@/lib/constant";
 import { viaprize } from "@/server/viaprize";
 import { normieTechClient, type paths } from "@viaprize/core/normie-tech"
 import { type NextRequest, NextResponse } from "next/server";
@@ -18,7 +19,8 @@ export async function GET(request: NextRequest) {
             body: 'Not Found'
         }
     }
-    const paymentDetails = await normieTechClient.GET('/v1/{projectId}/{paymentId}/transactions/{transactionId}', {
+
+    const paymentDetails = await normieTechClient(NORMIE_TECH_URL).GET('/v1/{projectId}/{paymentId}/transactions/{transactionId}', {
         params: {
             header: {
                 "x-api-key": env.NORMIE_TECH_API_KEY

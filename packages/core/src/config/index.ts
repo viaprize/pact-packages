@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { ValidChainSchema } from '../lib/constants'
 
 export const viaprizeConfigSchema = z.object({
   databaseUrl: z.string().url('Invalid database URL'),
@@ -9,7 +10,7 @@ export const viaprizeConfigSchema = z.object({
     secretKey: z.string(),
     rpcUrl: z.string().url('Invalid RPC URL'),
   }),
-  chainId: z.number().int().positive(),
+  chainId: ValidChainSchema,
 })
 
 export type ViaprizeConfig = z.infer<typeof viaprizeConfigSchema>

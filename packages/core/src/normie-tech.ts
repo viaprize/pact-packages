@@ -518,10 +518,11 @@ export interface components {
 export type $defs = Record<string, never>
 export type operations = Record<string, never>
 
-export const normieTechClient = createClient<paths>({
-  baseUrl: 'https://api.normie.tech',
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json',
-  },
-})
+export const normieTechClient = (url: string) =>
+  createClient<paths>({
+    baseUrl: url,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+    },
+  })

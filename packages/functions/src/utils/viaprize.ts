@@ -6,10 +6,9 @@ export const viaprize = new Viaprize({
     inMemoryDb: false,
     mode: 'development',
     wallet: {
-      walletPaymentInfraUrl: process.env.WALLET_PAYMENT_INFRA_API ?? '',
-
-      walletApiKey: process.env.WALLET_API_KEY ?? '',
       rpcUrl: process.env.RPC_URL ?? '',
+      gaslessKey: process.env.GASLESS_KEY ?? '',
+      secretKey: process.env.SECRET_KEY ?? '',
     },
     chainId: Number.parseInt(process.env.CHAIN_ID ?? '10'),
   },

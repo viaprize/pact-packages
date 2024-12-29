@@ -24,7 +24,7 @@ export const PRIZE_FACTORY_ABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: 'string',
         name: 'id',
         type: 'string',
