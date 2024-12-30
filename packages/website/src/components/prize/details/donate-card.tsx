@@ -172,8 +172,8 @@ export default function DonateCard({
 
       const url = await addUsdcFundsFiatForUser.mutateAsync({
         amount: Number.parseInt(amountInUSDC.toString()),
-        cancelUrl: window.location.href,
-        successUrl: window.location.href,
+        cancelUrl: window.location.origin,
+        successUrl: `${window.location.origin}/checkout/result`,
         spender: contractAddress,
         hash: ethHash,
         signature: finalSignature,

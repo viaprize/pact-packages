@@ -12,6 +12,7 @@ import {
 import { normieTechClient } from '@viaprize/core/normie-tech'
 import { Events } from '@viaprize/core/viaprize'
 import { ViaprizeUtils } from '@viaprize/core/viaprize-utils'
+import { nanoid } from 'nanoid'
 import { Resource } from 'sst'
 import { bus } from 'sst/aws/bus'
 import { parseSignature } from 'viem'
@@ -513,6 +514,7 @@ export const prizeRouter = createTRPCRouter({
       })
       console.log(parseSignature(signature))
       console.log('chainId', env.CHAIN_ID)
+      const customId = nanoid(20)
       const url = await normieTechClient(NORMIE_TECH_URL).POST(
         '/v1/viaprize/0/checkout',
         {
@@ -522,14 +524,16 @@ export const prizeRouter = createTRPCRouter({
             },
           },
           body: {
+            customId: customId,
             name: prize.title,
             images: [prize.imageUrl ?? 'https://placehold.jp/150x150.png'],
             amount: (input.amount / 1_000_000) * 100,
-            success_url: input.successUrl,
+            success_url: `${input.successUrl}?transactionId=${customId}`,
             chainId: Number.parseInt(env.CHAIN_ID),
             extraMetadata: {
               prizeId: prize.id,
               username: user.username,
+              prizeSlug: prize.slug,
             },
             metadata: {
               contractAddress: input.spender,
