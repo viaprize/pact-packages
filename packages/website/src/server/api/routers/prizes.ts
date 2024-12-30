@@ -14,7 +14,8 @@ import { Events } from '@viaprize/core/viaprize'
 import { ViaprizeUtils } from '@viaprize/core/viaprize-utils'
 import { Resource } from 'sst'
 import { bus } from 'sst/aws/bus'
-import { z } from 'zod'
+import { parseSignature } from 'viem'
+import { any, z } from 'zod'
 import {
   adminProcedure,
   createTRPCRouter,
@@ -473,7 +474,7 @@ export const prizeRouter = createTRPCRouter({
       let signature = input.signature
       let hash = input.hash
       const user = userSessionSchema.parse(ctx.session.user)
-      CONTRACT_CONSTANTS_PER_CHAIN
+
       console.log({ input })
       if (user.wallet.key && !input.signature && !input.hash) {
         const res = await ctx.viaprize.wallet.signUsdcTransactionForCustodial({
@@ -485,7 +486,7 @@ export const prizeRouter = createTRPCRouter({
         signature = res.signature
         hash = res.hash
       }
-
+      console.log({ signature, hash })
       if (!signature || !hash) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
@@ -496,10 +497,22 @@ export const prizeRouter = createTRPCRouter({
       const prize = await ctx.viaprize.prizes.getPrizeByContractAddress(
         input.spender,
       )
+
       const constants =
         CONTRACT_CONSTANTS_PER_CHAIN[
           Number.parseInt(env.CHAIN_ID) as ValidChainIDs
         ]
+      console.log({
+        contractAddress: input.spender,
+        userAddress: user.wallet.address,
+        deadline: input.deadline,
+        signature: signature,
+        tokenAddress: constants.USDC,
+        amountApproved: input.amount,
+        ethSignedMessage: hash,
+      })
+      console.log(parseSignature(signature))
+      console.log('chainId', env.CHAIN_ID)
       const url = await normieTechClient(NORMIE_TECH_URL).POST(
         '/v1/viaprize/0/checkout',
         {
@@ -530,6 +543,14 @@ export const prizeRouter = createTRPCRouter({
           },
         },
       )
+      if (url.error) {
+        console.log(url.error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `${(url.error as any).title ?? 'Error creating payment'} ${(url.error as any).detail}`,
+          cause: (url.error as any).detail ?? 'Error creating payment',
+        })
+      }
       return url.data?.url
     }),
   addUsdcFundsFiatForAnonymousUser: publicProcedure
@@ -577,30 +598,48 @@ export const prizeRouter = createTRPCRouter({
         s: z.string(),
         r: z.string(),
         ethSignedHash: z.string(),
+        sender: z.string(),
         contractAddress: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      const constants =
+        CONTRACT_CONSTANTS_PER_CHAIN[
+          Number.parseInt(env.CHAIN_ID) as ValidChainIDs
+        ]
       const prize = await ctx.viaprize.prizes.getPrizeByContractAddress(
         input.contractAddress,
       )
 
       const transactions = []
-      const transferToContractData =
-        ctx.viaprize.prizes.blockchain.getEncodedAddUsdcFunds(
+      const permitData =
+        ctx.viaprize.prizes.blockchain.getEncodedERC20PermitFunction(
+          input.sender as `0x${string}`,
+          prize.primaryContractAddress as `0x${string}`,
           BigInt(input.amount),
           BigInt(input.deadline),
           input.v,
-          input.s as `0x${string}`,
           input.r as `0x${string}`,
-          input.ethSignedHash as `0x${string}`,
+          input.s as `0x${string}`,
+        )
+      const transferToContractData =
+        ctx.viaprize.prizes.blockchain.getEncodedAddUsdcFunds(
+          BigInt(input.amount),
+          input.sender as `0x${string}`,
           false,
         )
-      transactions.push({
-        to: prize.primaryContractAddress as `0x${string}`,
-        value: '0',
-        data: transferToContractData,
-      })
+      transactions.push(
+        {
+          to: constants.USDC,
+          value: '0',
+          data: permitData,
+        },
+        {
+          to: prize.primaryContractAddress as `0x${string}`,
+          value: '0',
+          data: transferToContractData,
+        },
+      )
 
       const txHash = await ctx.viaprize.wallet.withTransactionEvents(
         PRIZE_V2_ABI,
@@ -644,6 +683,7 @@ export const prizeRouter = createTRPCRouter({
   addUsdcFundsCryptoForUser: protectedProcedure
     .input(
       z.object({
+        sender: z.string(),
         amount: z.number(),
         deadline: z.number(),
         v: z.number(),
@@ -658,24 +698,41 @@ export const prizeRouter = createTRPCRouter({
       const prize = await ctx.viaprize.prizes.getPrizeByContractAddress(
         input.contractAddress,
       )
+      const constants =
+        CONTRACT_CONSTANTS_PER_CHAIN[
+          Number.parseInt(env.CHAIN_ID) as ValidChainIDs
+        ]
       const user = userSessionSchema.parse(ctx.session.user)
       const transactions = []
+      const permitData =
+        ctx.viaprize.prizes.blockchain.getEncodedERC20PermitFunction(
+          input.sender as `0x${string}`,
+          prize.primaryContractAddress as `0x${string}`,
+          BigInt(input.amount),
+          BigInt(input.deadline),
+          input.v,
+          input.r as `0x${string}`,
+          input.s as `0x${string}`,
+        )
       const transferToContractData =
         ctx.viaprize.prizes.blockchain.getEncodedAllocateFunds(
           user.wallet.address as `0x${string}`,
           BigInt(input.amount),
-          BigInt(input.deadline),
-          input.v,
-          input.s as `0x${string}`,
-          input.r as `0x${string}`,
-          input.ethSignedHash as `0x${string}`,
+          input.sender as `0x${string}`,
           false,
         )
-      transactions.push({
-        to: prize.primaryContractAddress as `0x${string}`,
-        value: '0',
-        data: transferToContractData,
-      })
+      transactions.push(
+        {
+          to: constants.USDC,
+          value: '0',
+          data: permitData,
+        },
+        {
+          to: prize.primaryContractAddress as `0x${string}`,
+          value: '0',
+          data: transferToContractData,
+        },
+      )
       const txHash = await ctx.viaprize.wallet.withTransactionEvents(
         PRIZE_V2_ABI,
         transactions,

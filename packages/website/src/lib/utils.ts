@@ -1,5 +1,7 @@
 import type { ContestantStage } from '@/components/prize/details/vfc-details/contestants-card'
 import type { Submissions } from '@/types/submissions'
+import { TRPCClientError } from '@trpc/client'
+import { TRPCError } from '@trpc/server'
 import { ERC20_PERMIT_SIGN_TYPE } from '@viaprize/core/lib/abi'
 import {
   CONTRACT_CONSTANTS_PER_CHAIN,
@@ -12,6 +14,7 @@ import {
   differenceInSeconds,
   format,
 } from 'date-fns'
+import { toast } from 'sonner'
 import { encodePacked, hashTypedData, keccak256 } from 'viem'
 
 export function containsUppercase(str: string) {
@@ -120,6 +123,19 @@ export const usdcSignTypeHash = (
     usdcSign,
     hash: hashTypedData(usdcSign as any),
   }
+}
+export const handleErrorToast = (error: any | unknown) => {
+  if (error instanceof TRPCClientError) {
+    toast.error(error.cause?.message || error.message, {
+      duration: 6000,
+    })
+    return error.message
+  }
+  if (error instanceof Error) {
+    return error.message
+  }
+
+  return 'An error occurred'
 }
 export function formatDate(dateStr?: string) {
   if (!dateStr) return 'N/A'

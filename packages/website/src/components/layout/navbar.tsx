@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/use-auth'
 import { IconWallet } from '@tabler/icons-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@viaprize/ui/avatar'
 import { Button } from '@viaprize/ui/button'

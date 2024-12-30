@@ -55,6 +55,7 @@ export const website = new sst.aws.Nextjs('website', {
     AUTH_TRUST_HOST: AUTH_TRUST_HOST.value,
     NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID:
       NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID.value,
+    NEXT_PUBLIC_RPC_URL: RPC_URL.value,
     CHAIN_ID: $app.stage === 'production' ? '10' : '11155111',
     NEXT_PUBLIC_CHAIN_ID: $app.stage === 'production' ? '10' : '11155111',
     RPC_URL: RPC_URL.value,

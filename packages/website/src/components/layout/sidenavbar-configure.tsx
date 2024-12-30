@@ -1,5 +1,5 @@
 'use client'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/use-auth'
 import {
   IconBell,
   IconCirclePlus,
@@ -82,9 +82,8 @@ export default function SideNavbarConfigure() {
     <Sidebar open={open} setOpen={setOpen}>
       <SidebarBody>
         <div
-          className={`flex flex-col overflow-y-auto overflow-x-hidden ${
-            !open ? 'items-center' : ''
-          }`}
+          className={`flex flex-col overflow-y-auto overflow-x-hidden ${!open ? 'items-center' : ''
+            }`}
         >
           {session?.user &&
             (open ? (

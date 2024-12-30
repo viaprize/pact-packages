@@ -121,35 +121,19 @@ export class PrizesBlockchain extends Blockchain {
   getEncodedAllocateFunds(
     voter: `0x${string}`,
     amount: bigint,
-    deadline: bigint,
-    v: number,
-    s: `0x${string}`,
-    r: `0x${string}`,
-    ethSignedMessageHash: `0x${string}`,
+    sender: `0x${string}`,
     fiatPayment: boolean,
   ) {
     console.log({
       voter,
       amount,
-      deadline,
-      v,
-      s,
-      r,
-      ethSignedMessageHash,
+      sender,
+      fiatPayment,
     })
     return encodeFunctionData({
       abi: PRIZE_V2_ABI,
-      functionName: 'addTokenFunds',
-      args: [
-        voter,
-        amount,
-        deadline,
-        v,
-        s,
-        r,
-        ethSignedMessageHash,
-        fiatPayment,
-      ],
+      functionName: 'delegateFunds',
+      args: [voter, amount, sender, fiatPayment],
     })
   }
   getEncodedEndDisputeEarly() {
@@ -170,17 +154,13 @@ export class PrizesBlockchain extends Blockchain {
   }
   getEncodedAddUsdcFunds(
     amount: bigint,
-    deadline: bigint,
-    v: number,
-    s: `0x${string}`,
-    r: `0x${string}`,
-    ethSignedMessageHash: `0x${string}`,
+    sender: `0x${string}`,
     fiatPayment: boolean,
   ) {
     const data = encodeFunctionData({
       abi: PRIZE_V2_ABI,
       functionName: 'addUsdcFunds',
-      args: [amount, deadline, v, s, r, ethSignedMessageHash, fiatPayment],
+      args: [amount, sender, fiatPayment],
     })
     return data
   }

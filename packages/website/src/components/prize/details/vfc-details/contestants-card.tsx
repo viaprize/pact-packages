@@ -1,6 +1,6 @@
 'use client'
 import SubmitWorkButton from '@/components/prize/details/submissions-voting/submit-work-button'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/use-auth'
 import { getContestantStage } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import type { Submissions } from '@/types/submissions'

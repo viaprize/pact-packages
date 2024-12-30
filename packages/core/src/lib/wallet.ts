@@ -167,11 +167,13 @@ export class Wallet extends Blockchain {
       this.cipher.decrypt(key) as `0x${string}`,
     )
     const chainObject = getChain(this.chainId)
+    console.log({ chainObject })
     const wallet = createWalletClient({
       transport: http(this.rpcUrl),
       chain: chainObject,
       account,
     })
+    console.log(this.rpcUrl, 'this.rpcUrl')
     const constants = CONTRACT_CONSTANTS_PER_CHAIN[this.chainId]
     const usdc = constants.USDC
     const nonce = await this.blockchainClient.readContract({
@@ -180,6 +182,9 @@ export class Wallet extends Blockchain {
       functionName: 'nonces',
       args: [wallet.account.address],
     })
+    console.log(wallet.account.address, 'wallet.account.address')
+    console.log({ nonce })
+    console.log(this.chainId)
     const signType = usdcSignType({
       deadline: BigInt(deadline),
       nonce: nonce,

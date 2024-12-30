@@ -1,7 +1,7 @@
 'use client'
 
 import SubmissionDialog from '@/components/submission/trigger'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/use-auth'
 import { api } from '@/trpc/react'
 import type { PrizeStages } from '@viaprize/core/lib/prizes'
 import { Badge } from '@viaprize/ui/badge'

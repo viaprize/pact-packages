@@ -11,7 +11,7 @@ import ContestantsCard, {
 } from '@/components/prize/details/vfc-details/contestants-card'
 import VisionaryFunderCard from '@/components/prize/details/vfc-details/visionary-funder-card'
 import Winners from '@/components/prize/details/vfc-details/winners'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/use-auth'
 import { auth } from '@/server/auth'
 import { api } from '@/trpc/react'
 import type { Submissions } from '@/types/submissions'

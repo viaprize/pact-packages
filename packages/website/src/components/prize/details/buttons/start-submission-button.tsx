@@ -1,5 +1,5 @@
 'use client'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/use-auth'
 import { api } from '@/trpc/react'
 import { Button } from '@viaprize/ui/button'
 import { LoaderIcon } from 'lucide-react'

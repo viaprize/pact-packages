@@ -39,6 +39,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CHAIN_ID: z.string(),
     NEXT_PUBLIC_NORMIE_TECH_API_KEY: z.string(),
     NEXT_PUBLIC_NORMIE_TECH_URL: z.string(),
+    NEXT_PUBLIC_RPC_URL: z.string(),
   },
 
   /**
@@ -61,7 +62,7 @@ export const env = createEnv({
     SECRET_KEY: process.env.SECRET_KEY,
     NORMIE_TECH_URL: process.env.NORMIE_TECH_URL,
     NEXT_PUBLIC_NORMIE_TECH_URL: process.env.NEXT_PUBLIC_NORMIE_TECH_URL,
-
+    NEXT_PUBLIC_RPC_URL: process.env.NEXT_PUBLIC_RPC_URL,
     RPC_URL: process.env.RPC_URL,
     NEXT_PUBLIC_CHAIN_ID: process.env.NEXT_PUBLIC_CHAIN_ID,
     LOOPS_API_KEY: process.env.LOOPS_API_KEY,

@@ -1,7 +1,7 @@
 'use client'
 
 import { env } from '@/env'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/use-auth'
 import { wagmiConfig } from '@/lib/wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ERC20_PERMIT_SIGN_TYPE, NONCE_TOKEN_ABI } from '@viaprize/core/lib/abi'
@@ -23,7 +23,7 @@ import {
   DialogTrigger,
 } from '@viaprize/ui/dialog'
 
-import { usdcSignTypeHash } from '@/lib/utils'
+import { handleErrorToast, usdcSignTypeHash } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { Input } from '@viaprize/ui/input'
 import { Label } from '@viaprize/ui/label'
@@ -86,12 +86,14 @@ export default function DonateCard({
 
     const amountInUSDC = BigInt(Number.parseFloat(amount) * 1000000)
     const deadline = BigInt(Math.floor(Date.now() / 1000) + 100_000)
+
     const nonce = await readContract(wagmiConfig, {
       abi: NONCE_TOKEN_ABI,
       address: constants.USDC,
       functionName: 'nonces',
       args: [address],
     })
+    console.log({ nonce })
     const { usdcSign, hash } = usdcSignTypeHash({
       chainId,
       deadline,
@@ -119,8 +121,9 @@ export default function DonateCard({
       if (!address) {
         throw new Error('No wallet connected found')
       }
+      console.log(address, contractAddress, "address, contractAddress")
       const { amountInUSDC, deadline, hash, rsv } = await generateSignature(
-        address,
+        address as `0x${string}`,
         contractAddress as `0x${string}`,
       )
 
@@ -132,13 +135,14 @@ export default function DonateCard({
         s: rsv.s,
         v: Number.parseInt(rsv.v?.toString() ?? '0'),
         contractAddress: contractAddress,
+        sender: address,
       })
 
       toast.success('Donation successful! Thank you for your contribution.')
       router.refresh()
     } catch (e) {
-      console.log(e)
-      toast.error('Donation failed. Please try again.')
+      console.error(e)
+      handleErrorToast(e)
     }
   }
 
@@ -155,6 +159,7 @@ export default function DonateCard({
       let ethHash: string | undefined
       let finalDeadline = Math.floor(Date.now() / 1000) + 100_000
       if (!isCustodial) {
+        console.log(address, contractAddress, "address, contractAddress")
         const { amountInUSDC, deadline, hash, rsv, signature } =
           await generateSignature(
             address ?? '0x0000',
@@ -176,10 +181,10 @@ export default function DonateCard({
       })
       window.open(url, '_blank')
 
-      toast.success('Donation successful! Thank you for your contribution.')
+
     } catch (e) {
       console.error(e)
-      toast.error('Donation failed. Please try again.')
+      handleErrorToast(e)
     }
   }
 
@@ -200,7 +205,7 @@ export default function DonateCard({
       toast.success('Donation successful! Thank you for your contribution.')
     } catch (e) {
       console.error(e)
-      toast.error('Donation failed. Please try again.')
+      handleErrorToast(e)
     }
   }
 
@@ -214,7 +219,9 @@ export default function DonateCard({
       if (!session?.user?.wallet) {
         throw new Error('No user found')
       }
+      console.log(address, contractAddress, "address, contractAddress")
       console.log(env.NEXT_PUBLIC_CHAIN_ID, "chain id")
+      console.log(env.NEXT_PUBLIC_RPC_URL, "rpc url")
       const { amountInUSDC, deadline, hash, rsv } = await generateSignature(
         address,
         contractAddress as `0x${string}`,
@@ -229,13 +236,14 @@ export default function DonateCard({
         v: Number.parseInt(rsv.v?.toString() ?? '0'),
         owner: address,
         contractAddress: contractAddress,
+        sender: address,
       })
       await utils.prizes.getPrizeBySlug.invalidate()
 
       toast.success('Donation successful! Thank you for your contribution.')
     } catch (e) {
-      console.log(e)
-      toast.error('Donation failed. Please try again.')
+      console.error(e)
+      handleErrorToast(e)
     }
   }
 

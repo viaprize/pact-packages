@@ -537,32 +537,24 @@ contract PrizeV2 is ReentrancyGuard {
     /// @notice function to add the tokens into campagin and give voting access to others
     /// @param _voter The address of the voter adding funds.
     /// @param _amount The amount of tokens being added.
-    /// @param _deadline The deadline for the permit function.
-    /// @param v The `v, r, s` component of the ECDSA signature.
-    /// @param _ethSignedMessageHash The Ethereum signed message hash.
+    /// @param _sender The user sending the funds
     /// @param _fiatPayment A boolean indicating whether the payment is in fiat.
-    function addTokenFunds(address _voter, uint256 _amount, uint256 _deadline, uint8 v, bytes32 s, bytes32 r, bytes32 _ethSignedMessageHash, bool _fiatPayment) public {
+    function delegateFunds(address _voter, uint256 _amount,address _sender, bool _fiatPayment) public {
         if(_amount <= 0) revert ErrorAndEventsLibrary.NotEnoughFunds();
-        address sender = ecrecover(_ethSignedMessageHash, v, r, s);
-        _usdc.permit(sender, address(this), _amount, _deadline,v,r,s);
         _tokenFundLogic(_fiatPayment, _voter, _amount);
-        _usdc.transferFrom(sender, address(this), _amount);
+        _usdc.transferFrom(_sender, address(this), _amount);
         emit ErrorAndEventsLibrary.Donation(_voter, address(_usdc), ErrorAndEventsLibrary.DonationType.PAYMENT, ErrorAndEventsLibrary.TokenType.TOKEN, _fiatPayment, _amount);
     }
 
     /// @notice Function to add direct usdc funds into the campaign
-    /// @param _amountUsdc The amount of USDC being added.
-    /// @param _deadline The deadline for the permit function.
-    /// @param v The `v, r, s` component of the ECDSA signature.
-    /// @param _ethSignedMessageHash The Ethereum signed message hash.
+    /// @param _amountUsdc The amount of tokens being added.
+    /// @param _sender The user sending the funds
     /// @param _fiatPayment A boolean indicating whether the payment is in fiat.
-    function addUsdcFunds(uint256 _amountUsdc, uint256 _deadline, uint8 v, bytes32 s, bytes32 r, bytes32 _ethSignedMessageHash, bool _fiatPayment) public onlyActive nonReentrant payable {
+    function addUsdcFunds(uint256 _amountUsdc,address _sender, bool _fiatPayment) public onlyActive nonReentrant payable {
         if(_amountUsdc <= 0) revert ErrorAndEventsLibrary.NotEnoughFunds();
-        address sender = ecrecover(_ethSignedMessageHash, v, r, s);
-        _usdc.permit(sender, address(this), _amountUsdc, _deadline,v,r,s);
-        _tokenFundLogic(_fiatPayment, sender, _amountUsdc);
-        _usdc.transferFrom(sender, address(this), _amountUsdc);
-        emit ErrorAndEventsLibrary.Donation(sender, address(_usdc), ErrorAndEventsLibrary.DonationType.PAYMENT, ErrorAndEventsLibrary.TokenType.TOKEN, _fiatPayment, _amountUsdc);
+        _tokenFundLogic(_fiatPayment, _sender, _amountUsdc);
+        _usdc.transferFrom(_sender, address(this), _amountUsdc);
+        emit ErrorAndEventsLibrary.Donation(_sender, address(_usdc), ErrorAndEventsLibrary.DonationType.PAYMENT, ErrorAndEventsLibrary.TokenType.TOKEN, _fiatPayment, _amountUsdc);
     }
 
     /// @notice function to handle the logic for swapping tokens through the router.

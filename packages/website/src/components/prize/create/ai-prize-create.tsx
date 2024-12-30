@@ -1,7 +1,7 @@
 'use client'
 
 import { getImageUploadUrl } from '@/actions/image-get'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/use-auth'
 import { api } from '@/trpc/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@viaprize/ui/button'
@@ -92,9 +92,8 @@ export default function BountyCreationForm() {
         error: 'Failed to upload Image',
       },
     )
-    const extractedUrl = `${new URL(imageUploadUrl).origin}${
-      new URL(imageUploadUrl).pathname
-    }`
+    const extractedUrl = `${new URL(imageUploadUrl).origin}${new URL(imageUploadUrl).pathname
+      }`
     console.log({ values })
     toast.promise(
       createPrize({

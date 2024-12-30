@@ -1,7 +1,7 @@
 'use client'
 
 import { WalletConnectButton } from '@/components/common/wallet-connect-button'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/use-auth'
 import { voteMessageHash } from '@/lib/utils'
 import { wagmiConfig } from '@/lib/wagmi'
 import { api } from '@/trpc/react'

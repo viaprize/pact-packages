@@ -6,9 +6,11 @@ export const NORMIE_TECH_API_KEY =
     ? env.NORMIE_TECH_API_KEY
     : env.NEXT_PUBLIC_NORMIE_TECH_URL
 export const NORMIE_TECH_URL =
-  typeof window !== 'undefined'
-    ? env.NORMIE_TECH_URL
-    : env.NEXT_PUBLIC_NORMIE_TECH_URL
+  'https://84i54kd5nk.execute-api.us-east-1.amazonaws.com'
+// export const NORMIE_TECH_URL =
+//   typeof window !== 'undefined'
+//     ? env.NORMIE_TECH_URL
+//     : env.NEXT_PUBLIC_NORMIE_TECH_URL
 export const categories = [
   { label: 'Technology', value: 'technology' },
   { label: 'Science', value: 'science' },

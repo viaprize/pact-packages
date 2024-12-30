@@ -628,82 +628,14 @@ export const PRIZE_V2_ABI = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: '_voter',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: '_amount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: '_deadline',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint8',
-        name: 'v',
-        type: 'uint8',
-      },
-      {
-        internalType: 'bytes32',
-        name: 's',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'bytes32',
-        name: 'r',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'bytes32',
-        name: '_ethSignedMessageHash',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'bool',
-        name: '_fiatPayment',
-        type: 'bool',
-      },
-    ],
-    name: 'addTokenFunds',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'uint256',
         name: '_amountUsdc',
         type: 'uint256',
       },
       {
-        internalType: 'uint256',
-        name: '_deadline',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint8',
-        name: 'v',
-        type: 'uint8',
-      },
-      {
-        internalType: 'bytes32',
-        name: 's',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'bytes32',
-        name: 'r',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'bytes32',
-        name: '_ethSignedMessageHash',
-        type: 'bytes32',
+        internalType: 'address',
+        name: '_sender',
+        type: 'address',
       },
       {
         internalType: 'bool',
@@ -810,6 +742,34 @@ export const PRIZE_V2_ABI = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_voter',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: '_amount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: '_sender',
+        type: 'address',
+      },
+      {
+        internalType: 'bool',
+        name: '_fiatPayment',
+        type: 'bool',
+      },
+    ],
+    name: 'delegateFunds',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {

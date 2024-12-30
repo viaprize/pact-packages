@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/use-auth'
 import { api } from '@/trpc/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ConnectButton, useAccountModal } from '@rainbow-me/rainbowkit'
