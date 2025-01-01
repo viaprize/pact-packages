@@ -1,11 +1,23 @@
+import { donations } from '@viaprize/core/database/schema/donations'
+import { prizes } from '@viaprize/core/database/schema/prizes'
+import { getValueFromDonation } from '@viaprize/core/lib/utils'
 import { normieTechClient } from '@viaprize/core/normie-tech'
 import { Events } from '@viaprize/core/viaprize'
 import { ViaprizeUtils } from '@viaprize/core/viaprize-utils'
-import { addDays, addMinutes, addSeconds, isBefore, subMinutes } from 'date-fns'
+import {
+  addDays,
+  addMinutes,
+  addSeconds,
+  formatDate,
+  isBefore,
+  subMinutes,
+} from 'date-fns'
+import { eq } from 'drizzle-orm'
 import { LoopsClient } from 'loops'
 import { Resource } from 'sst'
 import { bus } from 'sst/aws/bus'
-import { email } from '../email'
+import type { z } from 'zod'
+import { EMAIL_TEMPLATES, email } from '../email'
 import { Cache } from '../utils/cache'
 import { schedule } from '../utils/schedule'
 import { viaprize } from '../utils/viaprize'
@@ -32,8 +44,9 @@ export const handler = bus.subscriber(
 
     Events.Emails.Newsletter,
     Events.Emails.Welcome,
-    Events.Emails.prizeCreated,
+    Events.Emails.PrizeCreated,
     Events.Emails.Donated,
+    Events.Emails.PrizeApproved,
 
     Events.Fiat.Refund,
   ],
@@ -238,35 +251,87 @@ export const handler = bus.subscriber(
 
       case 'emails.donated': {
         try {
-          const response = await email.sendTransactionalEmail({
-            transactionalId: 'cm28t5iav00ueo4s7f9dltleh',
-            email: event.properties.email,
-            dataVariables: {
-              prizeTitle: event.properties.prizeTitle,
-              donationAmount: event.properties.donationAmount,
-            },
-          })
-          console.log('donation email response', { response })
+          const transaction =
+            await viaprize.database.database.query.donations.findFirst({
+              where: eq(donations.id, event.properties.donationId),
+              with: {
+                user: {
+                  columns: { email: true },
+                },
+                prize: {
+                  columns: { authorUsername: true, title: true, funds: true },
+                  with: {
+                    author: {
+                      columns: { email: true },
+                    },
+                  },
+                },
+              },
+            })
+          console.log('transaction', transaction)
+          if (transaction?.prize?.title) {
+            if (transaction?.user?.email) {
+              await email.sendTransactionalEmail({
+                transactionalId: EMAIL_TEMPLATES.DONATION_EMAIL_TO_FUNDER.id,
+                email: transaction.user?.email,
+                dataVariables: {
+                  prizeTitle: transaction.prize.title,
+                  donationAmount: `${getValueFromDonation(transaction)} USD`,
+                  date: formatDate(new Date(), 'MMMM dd, yyyy'),
+                  totalFunds: transaction.prize.funds.toString(),
+                } as z.infer<
+                  typeof EMAIL_TEMPLATES.DONATION_EMAIL_TO_FUNDER.dataVariablesSchema
+                >,
+              })
+            }
+            if (transaction?.prize?.author?.email) {
+              await email
+                .sendTransactionalEmail({
+                  transactionalId: EMAIL_TEMPLATES.DONATION_TO_PROPOSER.id,
+                  email: transaction.prize.author?.email,
+                  dataVariables: {
+                    prizeTitle: transaction.prize.title,
+                    donationAmount: `${getValueFromDonation(transaction)} USD`,
+                    proposer: transaction.prize.authorUsername,
+                    date: formatDate(new Date(), 'MMMM dd, yyyy'),
+                    donator: transaction.username,
+                    totalFunds: transaction.prize.funds.toString(),
+                  } as z.infer<
+                    typeof EMAIL_TEMPLATES.DONATION_TO_PROPOSER.dataVariablesSchema
+                  >,
+                })
+                .catch((e) => {
+                  console.error('Error sending email to proposer', e)
+                })
+            }
+          }
         } catch (error) {
           console.error('the error while sending donation email....', error)
         }
         break
       }
-
-      case 'fiat.refund': {
-        const response = await normieTechClient.POST('/v1/viaprize/0/refund', {
-          body: {
-            refundAmountInCents: event.properties.refundAmountInCents,
-            transactionId: event.properties.transactionId,
-          },
-          params: {
-            header: {
-              // biome-ignore lint/suspicious/noExtraNonNullAssertion: <explanation>
-              // biome-ignore lint/style/noNonNullAssertion: <explanation>
-              'x-api-key': process.env.NORMIE_TECH_API_KEY!!,
+      case 'emails.prizeApproved': {
+        const prize = await viaprize.database.database.query.prizes.findFirst({
+          where: eq(prizes.id, event.properties.prizeId),
+          with: {
+            author: {
+              columns: { email: true },
             },
           },
+          columns: { title: true, authorUsername: true },
         })
+        if (prize?.author.email) {
+          await email.sendTransactionalEmail({
+            transactionalId: EMAIL_TEMPLATES.PRIZE_APPROVAL_PROPOSER.id,
+            email: prize.author.email,
+            dataVariables: {
+              proposalTitle: prize.title,
+            } as z.infer<
+              typeof EMAIL_TEMPLATES.PRIZE_APPROVAL_PROPOSER.dataVariablesSchema
+            >,
+          })
+        }
+        break
       }
     }
   },

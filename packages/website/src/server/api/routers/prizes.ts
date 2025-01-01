@@ -199,10 +199,7 @@ export const prizeRouter = createTRPCRouter({
       })
       const prizeFactoryAddress =
         ctx.viaprize.prizes.blockchain.getPrizeFactoryV2Address()
-      console.log(viaprize.config.chainId, 'chainId')
-      console.log(viaprize.config.wallet.rpcUrl, 'rpcUrl')
-      console.log({ prizeFactoryAddress })
-      console.log(txData, 'prizeFactoryAddress')
+
       const txHash = await ctx.viaprize.wallet.withTransactionEvents(
         PRIZE_FACTORY_ABI,
         [
@@ -225,15 +222,20 @@ export const prizeRouter = createTRPCRouter({
             })
           }
           if (events[0]?.args.viaPrizeAddress) {
-            await bus.publish(Resource.EventBus.name, Events.Prize.Approve, {
-              contractAddress: events[0].args.viaPrizeAddress,
-              prizeId: input.prizeId,
-            })
-            await ViaprizeUtils.publishActivity({
-              activity: 'Created a prize',
-              username: prize.authorUsername,
-              link: `/prize/${prize.slug}`,
-            })
+            await Promise.all([
+              bus.publish(Resource.EventBus.name, Events.Prize.Approve, {
+                contractAddress: events[0].args.viaPrizeAddress,
+                prizeId: input.prizeId,
+              }),
+              ViaprizeUtils.publishActivity({
+                activity: 'Created a prize',
+                username: prize.authorUsername,
+                link: `/prize/${prize.slug}`,
+              }),
+              bus.publish(Resource.EventBus.name, Events.Emails.PrizeApproved, {
+                prizeId: input.prizeId,
+              }),
+            ])
           }
         },
       )
@@ -754,7 +756,7 @@ export const prizeRouter = createTRPCRouter({
               cause: 'No donation found',
             })
           }
-          await ctx.viaprize.prizes.addUsdcFunds({
+          const id = await ctx.viaprize.prizes.addUsdcFunds({
             recipientAddress: prize.primaryContractAddress as `0x${string}`,
             username: ctx.session.user.username,
             donor: ctx.session.user.name ?? 'Anonymous',
@@ -764,23 +766,22 @@ export const prizeRouter = createTRPCRouter({
             isFiat: false,
             prizeId: prize.id,
           })
-          await ViaprizeUtils.publishDeployedPrizeCacheDelete(
-            viaprize,
-            prize.slug,
-          )
+          const calls = [
+            ViaprizeUtils.publishDeployedPrizeCacheDelete(viaprize, prize.slug),
+            ViaprizeUtils.publishActivity({
+              activity: `Donated ${input.amount / 1_000_000} USD`,
+              username: user.username,
+              link: `/prize/${prize.slug}`,
+            }),
+            id
+              ? bus.publish(Resource.EventBus.name, Events.Emails.Donated, {
+                  donationId: id,
+                })
+              : Promise.resolve(),
+          ]
+          await Promise.all(calls)
         },
       )
-      await ViaprizeUtils.publishActivity({
-        activity: `Donated ${input.amount / 1_000_000} USD`,
-        username: user.username,
-        link: `/prize/${prize.slug}`,
-      })
-      await bus.publish(Resource.EventBus.name, Events.Emails.Donated, {
-        email: user.email,
-        prizeTitle: prize.title,
-        donationAmount: input.amount,
-        // email: ctx.session.user.email ?? 'email',
-      })
       return txHash
     }),
 

@@ -596,14 +596,17 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
   async addUsdcFunds(
     data: Omit<typeof donations.$inferInsert, 'token' | 'decimals'>,
   ) {
-    await this.db.transaction(async (trx) => {
-      await trx.insert(donations).values({
-        ...data,
-        token: 'USD',
-        recipientType: 'PRIZE',
+    return await this.db.transaction(async (trx) => {
+      const ids = await trx
+        .insert(donations)
+        .values({
+          ...data,
+          token: 'USD',
+          recipientType: 'PRIZE',
 
-        decimals: 6,
-      })
+          decimals: 6,
+        })
+        .returning({ id: donations.id })
       console.log('Donation added')
       const prize = await trx.query.prizes.findFirst({
         where: eq(prizes.primaryContractAddress, data.recipientAddress),
@@ -625,7 +628,7 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
           prize.funds,
         numberOfFunders: sql`${prizes.numberOfFunders} + 1`,
       })
-      console.log('Prize updated')
+      return ids[0]?.id
     })
   }
 }

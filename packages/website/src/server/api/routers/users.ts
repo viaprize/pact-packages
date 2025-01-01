@@ -5,7 +5,7 @@ import { LoopsClient } from 'loops'
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
 const loops = new LoopsClient((process.env.LOOPS_API_KEY as string) ?? '')
-import fs from 'node:fs'
+
 export const userRouter = createTRPCRouter({
   getUserStatistics: publicProcedure
     .input(z.string())

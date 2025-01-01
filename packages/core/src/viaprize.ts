@@ -181,17 +181,19 @@ export const Events = {
       z.object({ email: z.string(), firstName: z.string() }),
     ),
     Welcome: defineEvent('emails.onboarding', z.object({ email: z.string() })),
-    prizeCreated: defineEvent(
+    PrizeCreated: defineEvent(
       'emails.prizeCreated',
       z.object({ email: z.string() }),
     ),
     Donated: defineEvent(
       'emails.donated',
       z.object({
-        email: z.string(),
-        prizeTitle: z.string(),
-        donationAmount: z.number(),
+        donationId: z.number(),
       }),
+    ),
+    PrizeApproved: defineEvent(
+      'emails.prizeApproved',
+      z.object({ prizeId: z.string() }),
     ),
   },
 }
