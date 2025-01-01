@@ -139,7 +139,10 @@ export default function SubmissionDialog({
           />
 
           <Button
-            onClick={form.handleSubmit(onSubmit)}
+            onClick={async (e) => {
+              e.preventDefault()
+              await onSubmit(form.getValues())
+            }}
 
             className="w-full"
             disabled={addSubmission.isPending}
