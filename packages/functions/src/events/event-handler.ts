@@ -1,5 +1,6 @@
 import { donations } from '@viaprize/core/database/schema/donations'
 import { prizes } from '@viaprize/core/database/schema/prizes'
+import { submissions } from '@viaprize/core/database/schema/submissions'
 import { getValueFromDonation } from '@viaprize/core/lib/utils'
 import { normieTechClient } from '@viaprize/core/normie-tech'
 import { Events } from '@viaprize/core/viaprize'
@@ -17,7 +18,7 @@ import { LoopsClient } from 'loops'
 import { Resource } from 'sst'
 import { bus } from 'sst/aws/bus'
 import type { z } from 'zod'
-import { EMAIL_TEMPLATES, email } from '../email'
+import { EMAIL_TEMPLATES, email, sendTransactionalEmail } from '../email'
 import { Cache } from '../utils/cache'
 import { schedule } from '../utils/schedule'
 import { viaprize } from '../utils/viaprize'
@@ -47,6 +48,9 @@ export const handler = bus.subscriber(
     Events.Emails.PrizeCreated,
     Events.Emails.Donated,
     Events.Emails.PrizeApproved,
+    Events.Emails.Submission,
+    Events.Emails.SubmissionEnd,
+    Events.Emails.VotingEnd,
 
     Events.Fiat.Refund,
   ],
@@ -271,38 +275,30 @@ export const handler = bus.subscriber(
           console.log('transaction', transaction)
           if (transaction?.prize?.title) {
             if (transaction?.user?.email) {
-              await email.sendTransactionalEmail({
-                transactionalId: EMAIL_TEMPLATES.DONATION_EMAIL_TO_FUNDER.id,
-                email: transaction.user?.email,
-                dataVariables: {
+              await sendTransactionalEmail(
+                'DONATION_EMAIL_TO_FUNDER',
+                transaction.user.email,
+                {
                   prizeTitle: transaction.prize.title,
                   donationAmount: `${getValueFromDonation(transaction)} USD`,
                   date: formatDate(new Date(), 'MMMM dd, yyyy'),
                   totalFunds: transaction.prize.funds.toString(),
-                } as z.infer<
-                  typeof EMAIL_TEMPLATES.DONATION_EMAIL_TO_FUNDER.dataVariablesSchema
-                >,
-              })
+                },
+              )
             }
             if (transaction?.prize?.author?.email) {
-              await email
-                .sendTransactionalEmail({
-                  transactionalId: EMAIL_TEMPLATES.DONATION_TO_PROPOSER.id,
-                  email: transaction.prize.author?.email,
-                  dataVariables: {
-                    prizeTitle: transaction.prize.title,
-                    donationAmount: `${getValueFromDonation(transaction)} USD`,
-                    proposer: transaction.prize.authorUsername,
-                    date: formatDate(new Date(), 'MMMM dd, yyyy'),
-                    donator: transaction.username,
-                    totalFunds: transaction.prize.funds.toString(),
-                  } as z.infer<
-                    typeof EMAIL_TEMPLATES.DONATION_TO_PROPOSER.dataVariablesSchema
-                  >,
-                })
-                .catch((e) => {
-                  console.error('Error sending email to proposer', e)
-                })
+              await sendTransactionalEmail(
+                'DONATION_TO_PROPOSER',
+                transaction.prize.author.email,
+                {
+                  prizeTitle: transaction.prize.title,
+                  donationAmount: `${getValueFromDonation(transaction)} USD`,
+                  proposer: transaction.prize.authorUsername,
+                  date: formatDate(new Date(), 'MMMM dd, yyyy'),
+                  donator: transaction.username ?? 'Anonymous',
+                  totalFunds: transaction.prize.funds.toString(),
+                },
+              )
             }
           }
         } catch (error) {
@@ -321,18 +317,308 @@ export const handler = bus.subscriber(
           columns: { title: true, authorUsername: true },
         })
         if (prize?.author.email) {
-          await email.sendTransactionalEmail({
-            transactionalId: EMAIL_TEMPLATES.PRIZE_APPROVAL_PROPOSER.id,
-            email: prize.author.email,
-            dataVariables: {
+          await sendTransactionalEmail(
+            'PRIZE_APPROVAL_PROPOSER',
+            prize.author.email,
+            {
               proposalTitle: prize.title,
-            } as z.infer<
-              typeof EMAIL_TEMPLATES.PRIZE_APPROVAL_PROPOSER.dataVariablesSchema
-            >,
-          })
+            },
+          )
         }
         break
       }
+      case 'emails.submission': {
+        const submission =
+          await viaprize.database.database.query.submissions.findFirst({
+            where: eq(
+              submissions.submissionHash,
+              event.properties.submissionId,
+            ),
+            with: {
+              user: {
+                columns: { email: true },
+              },
+              prize: {
+                with: {
+                  author: {
+                    columns: { email: true, name: true },
+                  },
+                },
+              },
+            },
+          })
+        if (
+          submission?.prize.author.email &&
+          submission?.prize?.author?.name &&
+          submission?.username
+        ) {
+          await sendTransactionalEmail(
+            'SUBMISSION_EMAIL_TO_PROPOSER',
+            submission.prize.author.email,
+            {
+              proposer: submission.prize.author.name,
+              dateRecieved: formatDate(new Date(), 'MMMM dd, yyyy'),
+              prizeTitle: submission.prize.title,
+              contestantName: submission.username,
+            },
+          )
+        }
+        if (submission?.user?.email && submission?.prize?.author?.name) {
+          await sendTransactionalEmail(
+            'SUBMISSION_EMAIL_TO_CONTESTANT',
+            submission.user.email,
+            {
+              prizeTitle: submission.prize.title,
+              dateRecieved: formatDate(new Date(), 'MMMM dd, yyyy'),
+              proposerName: submission.prize.author.name,
+            },
+          )
+        }
+        if (
+          submission?.prizeId &&
+          submission.prize.author.name &&
+          submission.username
+        ) {
+          const donators = (
+            await viaprize.database.database.query.donations.findMany({
+              where: eq(donations.prizeId, submission.prizeId),
+              with: {
+                user: {
+                  columns: { email: true },
+                },
+              },
+            })
+          ).filter((donation) => !!donation?.user?.email)
+          const calls = []
+          for (const donator of donators) {
+            if (donator?.user?.email) {
+              calls.push(
+                sendTransactionalEmail(
+                  'SUBMISSION_EMAIL_TO_FUNDERS',
+                  donator.user.email,
+                  {
+                    prizeTitle: submission.prize.title,
+                    dateRecieved: formatDate(new Date(), 'MMMM dd, yyyy'),
+                    proposerName: submission.prize.author.name,
+                    contestantName: submission.username,
+                  },
+                ),
+              )
+            }
+          }
+          await Promise.all(calls)
+        }
+        break
+      }
+      case 'emails.submissionEnd': {
+        const prize = await viaprize.database.database.query.prizes.findFirst({
+          where: eq(prizes.id, event.properties.prizeId),
+          with: {
+            author: {
+              columns: { email: true, name: true },
+            },
+            submissions: {
+              with: {
+                user: {
+                  columns: { email: true },
+                },
+              },
+            },
+          },
+        })
+        const donators = (
+          await viaprize.database.database.query.donations.findMany({
+            where: eq(donations.prizeId, event.properties.prizeId),
+            with: {
+              user: {
+                columns: { email: true, name: true },
+              },
+            },
+          })
+        ).filter((donation) => !!donation?.user?.email)
+
+        if (prize) {
+          const votingDeadline = addMinutes(
+            prize.startVotingDate,
+            prize.votingDurationInMinutes,
+          ).toDateString()
+          if (prize.submissions.length > 0) {
+            const submissionUsers = prize.submissions.map(
+              (submission) => submission.user,
+            )
+            if (submissionUsers) {
+              const calls = []
+              for (const user of submissionUsers) {
+                if (user?.email) {
+                  calls.push(
+                    sendTransactionalEmail(
+                      'SUBMISSION_END_EMAIL_TO_CONTESTANTS',
+                      user.email,
+                      {
+                        prizeTitle: prize.title,
+                        numberOfSubmissions:
+                          prize.submissions.length.toString(),
+                        votingDeadline: votingDeadline,
+                      },
+                    ),
+                  )
+                }
+              }
+              await Promise.all(calls)
+            }
+            if (prize.author.email) {
+              await sendTransactionalEmail(
+                'SUBMISSION_END_EMAIL_TO_PROPOSER_GREATER_THAN_ZERO',
+                prize.author.email,
+                {
+                  numberOfSubmissions: prize.submissions.length.toString(),
+                  prizeTitle: prize.title,
+                  votingDeadline: votingDeadline,
+                  proposerName: prize.author.name ?? 'Unknown',
+                },
+              )
+            }
+            if (donators.length > 0) {
+              const calls = []
+              for (const donator of donators) {
+                if (donator?.user?.email) {
+                  calls.push(
+                    sendTransactionalEmail(
+                      'SUBMISSION_END_EMAIL_TO_FUNDERS_GREATER_THAN_ZERO',
+                      donator.user.email,
+                      {
+                        prizeTitle: prize.title,
+                        numberOfSubmissions:
+                          prize.submissions.length.toString(),
+                        votingDeadline: votingDeadline,
+                        funderName: donator.user.name ?? 'Unknown',
+                      },
+                    ),
+                  )
+                }
+              }
+              await Promise.all(calls)
+            }
+          } else {
+            if (prize.author.email) {
+              await sendTransactionalEmail(
+                'SUBMISSION_END_EMAIL_TO_PROPOSER_EQUAL_TO_ZERO',
+                prize.author.email,
+                {
+                  prizeTitle: prize.title,
+                  proposerName: prize.author.name ?? 'Unknown',
+                },
+              )
+            }
+            if (donators.length > 0) {
+              const calls = []
+              for (const donator of donators) {
+                if (donator?.user?.email) {
+                  calls.push(
+                    sendTransactionalEmail(
+                      'SUBMISSION_END_EMAIL_TO_FUNDERS_EQUAL_TO_ZERO',
+                      donator.user.email,
+                      {
+                        prizeTitle: prize.title,
+                        funderName: donator.user.name ?? 'Unknown',
+                      },
+                    ),
+                  )
+                }
+              }
+              await Promise.all(calls)
+            }
+          }
+        }
+        break
+      }
+      case 'emails.votingEnd':
+        {
+          const prize = await viaprize.database.database.query.prizes.findFirst(
+            {
+              where: eq(prizes.id, event.properties.prizeId),
+              with: {
+                author: {
+                  columns: { email: true, name: true },
+                },
+                submissions: {
+                  with: {
+                    user: {
+                      columns: { email: true },
+                    },
+                  },
+                },
+              },
+            },
+          )
+          const donators = (
+            await viaprize.database.database.query.donations.findMany({
+              where: eq(donations.prizeId, event.properties.prizeId),
+              with: {
+                user: {
+                  columns: { email: true, name: true },
+                },
+              },
+            })
+          ).filter((donation) => !!donation?.user?.email)
+
+          if (prize) {
+            if (prize.author.email) {
+              await sendTransactionalEmail(
+                'VOTING_END_EMAIL_TO_PROPOSER',
+                prize.author.email,
+                {
+                  prizeTitle: prize.title,
+                  proposerName: prize.author.name ?? 'Anonymous',
+                },
+              )
+            }
+            if (prize.submissions.length > 0) {
+              const submissionUsers = prize.submissions.map(
+                (submission) => submission.user,
+              )
+              if (submissionUsers) {
+                const calls = []
+                for (const user of submissionUsers) {
+                  if (user?.email) {
+                    calls.push(
+                      sendTransactionalEmail(
+                        'VOTING_END_EMAIL_TO_CONTESTANTS',
+                        user.email,
+                        {
+                          prizeTitle: prize.title,
+                          numberOfSubmissions:
+                            prize.submissions.length.toString(),
+                        },
+                      ),
+                    )
+                  }
+                }
+                await Promise.all(calls)
+              }
+            }
+            if (donators.length > 0) {
+              const calls = []
+              for (const donator of donators) {
+                if (donator?.user?.email) {
+                  calls.push(
+                    sendTransactionalEmail(
+                      'VOTING_END_EMAIL_TO_FUNDERS',
+                      donator.user.email,
+                      {
+                        prizeTitle: prize.title,
+                        funderName: donator.user.name ?? 'Anonymous',
+                      },
+                    ),
+                  )
+                }
+              }
+              await Promise.all(calls)
+            }
+          }
+        }
+
+        break
     }
   },
 )

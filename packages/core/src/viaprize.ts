@@ -195,5 +195,23 @@ export const Events = {
       'emails.prizeApproved',
       z.object({ prizeId: z.string() }),
     ),
+    Submission: defineEvent(
+      'emails.submission',
+      z.object({
+        submissionId: z.string(),
+      }),
+    ),
+    SubmissionEnd: defineEvent(
+      'emails.submissionEnd',
+      z.object({
+        prizeId: z.string(),
+      }),
+    ),
+    VotingEnd: defineEvent(
+      'emails.votingEnd',
+      z.object({
+        prizeId: z.string(),
+      }),
+    ),
   },
 }
