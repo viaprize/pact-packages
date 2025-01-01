@@ -90,7 +90,12 @@ export const handler: ScheduledHandler<{
       const prize = await viaprize.prizes.getPrizeByContractAddress(
         txBody.transactions[0].to,
       )
-      await ViaprizeUtils.publishDeployedPrizeCacheDelete(viaprize, prize.slug)
+      await Promise.all([
+        bus.publish(Resource.EventBus.name, Events.Emails.VotingEnd, {
+          prizeId: prize.id,
+        }),
+        ViaprizeUtils.publishDeployedPrizeCacheDelete(viaprize, prize.slug),
+      ])
 
       break
     }

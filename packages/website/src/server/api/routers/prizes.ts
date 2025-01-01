@@ -331,27 +331,32 @@ export const prizeRouter = createTRPCRouter({
               cause: 'Submission hash not found',
             })
           }
-          await ctx.viaprize.prizes.addSubmission({
+          const submissionId = await ctx.viaprize.prizes.addSubmission({
             submissionHash: submissionCreatedEvents[0].args.submissionHash,
             submitterAddress: submitterAddress,
             description: input.submissionText,
             prizeId: input.prizeId,
             username: ctx.session.user.username as string,
           })
+          if (submissionId) {
+            await Promise.all([
+              bus.publish(Resource.EventBus.name, Events.Emails.Submission, {
+                submissionId: submissionId,
+              }),
+              ViaprizeUtils.publishActivity({
+                activity: 'Created a submission',
+                username: user.username,
+                link: `/prize/${prize.slug}`,
+              }),
+              ViaprizeUtils.publishDeployedPrizeCacheDelete(
+                viaprize,
+                prize.slug,
+              ),
+            ])
+          }
         },
       )
-      if (txHash) {
-        await ViaprizeUtils.publishActivity({
-          activity: 'Created a submission',
-          username: user.username,
-          link: `/prize/${prize.slug}`,
-        })
 
-        await ViaprizeUtils.publishDeployedPrizeCacheDelete(
-          viaprize,
-          prize.slug,
-        )
-      }
       return txHash
     }),
 
@@ -817,11 +822,17 @@ export const prizeRouter = createTRPCRouter({
           await ctx.viaprize.prizes.endVotingPeriodByContractAddress(
             input.contractAddress,
           )
+
+          await Promise.all([
+            ViaprizeUtils.publishDeployedPrizeCacheDelete(
+              ctx.viaprize,
+              prize.slug,
+            ),
+            bus.publish(Resource.EventBus.name, Events.Emails.VotingEnd, {
+              prizeId: prize.id,
+            }),
+          ])
         },
-      )
-      await ViaprizeUtils.publishDeployedPrizeCacheDelete(
-        ctx.viaprize,
-        prize.slug,
       )
     }),
   endDisputeEarly: adminProcedure

@@ -358,7 +358,6 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
       }
     })
   }
-
   async startVotingPeriodByContractAddress(contractAddress: string) {
     await this.db.transaction(async (trx) => {
       const prize = await trx.query.prizes.findFirst({
@@ -388,6 +387,7 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
     await this.db
       .update(prizes)
       .set({
+        stage: 'REFUNDED',
         totalRefunded: totalRefunded,
       })
       .where(
@@ -547,7 +547,7 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
       if (!submission) {
         throw new Error('Submission not created in database')
       }
-      return submissions.submissionHash
+      return submission.submissionHash
     })
 
     return submissionId

@@ -153,39 +153,29 @@ export async function handleEndSubmissionTransaction(
       ? txBody.transactions
       : [txBody.transactions[0]]
   console.log({ finalTxData })
-  // await viaprize.prizes.startVotingPeriodByContractAddress(prizeContractAddress)
 
-  // const receipt = await viaprize.wallet.blockchainClient.getTransactionReceipt({
-  //   hash: '0x9b1aa2464e84fd4ac56f849386da83562e384b0fe5c48eb0f402f6e4b1f2a328',
-  // })
-  // console.log(receipt.logs, 'logs')
   const final = await viaprize.wallet.withTransactionEvents(
     PRIZE_V2_ABI,
     finalTxData,
     'gasless',
-    ['SubmissionEnded', 'VotingEnded', 'FunderRefund'],
+    ['SubmissionEnded', 'VotingStarted', 'FunderRefund'],
     async (event) => {
       const submissionEndedEvents = event.filter(
         (e) => e.eventName === 'SubmissionEnded',
       )
-      const votingEndedEvents = event.filter(
-        (e) => e.eventName === 'VotingEnded',
+      const votingStartedEvents = event.filter(
+        (e) => e.eventName === 'VotingStarted',
       )
 
       const funderRefundEvents = event.filter(
         (e) => e.eventName === 'FunderRefund',
       )
 
-      console.log({ votingEndedEvents })
+      console.log({ votingStartedEvents })
       console.log({ submissionEndedEvents })
       console.log({ funderRefundEvents })
 
-      if (submissionEndedEvents.length && votingEndedEvents.length) {
-        await viaprize.prizes.startVotingPeriodByContractAddress(
-          prizeContractAddress,
-        )
-      }
-      if (submissionEndedEvents.length) {
+      if (submissionEndedEvents.length && votingStartedEvents.length) {
         await viaprize.prizes.startVotingPeriodByContractAddress(
           prizeContractAddress,
         )
@@ -201,6 +191,10 @@ export async function handleEndSubmissionTransaction(
           totalRefunded: totalFunderRefunded,
         })
       }
+
+      await bus.publish(Resource.EventBus.name, Events.Emails.SubmissionEnd, {
+        prizeId: prize.id,
+      })
     },
   )
   console.log({ final })
