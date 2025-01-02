@@ -20,5 +20,4 @@ export const RPC_URL = new sst.Secret('RpcUrl')
 
 export const NORMIE_TECH_API_KEY = new sst.Secret('NormieTechApiKey')
 export const NORMIE_TECH_SECRET_KEY = new sst.Secret('NormieTechSecretKey')
-
 export const LOOPS_API_KEY = new sst.Secret('LoopsApiKey')

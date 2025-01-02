@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import type * as z from 'zod'
 
-import { env } from '@/env'
+
 import { api } from '@/trpc/react'
 import { Button } from '@viaprize/ui/button'
 import { Checkbox } from '@viaprize/ui/checkbox'

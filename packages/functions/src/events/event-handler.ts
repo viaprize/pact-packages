@@ -13,10 +13,11 @@ import {
   isBefore,
   subMinutes,
 } from 'date-fns'
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { LoopsClient } from 'loops'
 import { Resource } from 'sst'
 import { bus } from 'sst/aws/bus'
+import { formatUnits, parseUnits } from 'viem'
 import type { z } from 'zod'
 import { EMAIL_TEMPLATES, email, sendTransactionalEmail } from '../email'
 import { Cache } from '../utils/cache'
@@ -532,82 +533,61 @@ export const handler = bus.subscriber(
         }
         break
       }
-      case 'emails.votingEnd':
-        {
-          const prize = await viaprize.database.database.query.prizes.findFirst(
-            {
-              where: eq(prizes.id, event.properties.prizeId),
+
+      case 'emails.votingEnd': {
+        const prize = await viaprize.database.database.query.prizes.findFirst({
+          where: eq(prizes.id, event.properties.prizeId),
+          with: {
+            author: {
+              columns: { email: true, name: true },
+            },
+            submissions: {
               with: {
-                author: {
-                  columns: { email: true, name: true },
-                },
-                submissions: {
-                  with: {
-                    user: {
-                      columns: { email: true },
-                    },
-                  },
+                user: {
+                  columns: { email: true },
                 },
               },
             },
-          )
-          const donators = (
-            await viaprize.database.database.query.donations.findMany({
-              where: eq(donations.prizeId, event.properties.prizeId),
-              with: {
-                user: {
-                  columns: { email: true, name: true },
-                },
+          },
+        })
+        const donators = (
+          await viaprize.database.database.query.donations.findMany({
+            where: eq(donations.prizeId, event.properties.prizeId),
+            with: {
+              user: {
+                columns: { email: true, name: true },
               },
-            })
-          ).filter((donation) => !!donation?.user?.email)
+            },
+          })
+        ).filter((donation) => !!donation?.user?.email)
 
-          if (prize) {
-            if (prize.author.email) {
-              await sendTransactionalEmail(
-                'VOTING_END_EMAIL_TO_PROPOSER',
-                prize.author.email,
-                {
-                  prizeTitle: prize.title,
-                  proposerName: prize.author.name ?? 'Anonymous',
-                },
-              )
-            }
-            if (prize.submissions.length > 0) {
-              const submissionUsers = prize.submissions.map(
-                (submission) => submission.user,
-              )
-              if (submissionUsers) {
-                const calls = []
-                for (const user of submissionUsers) {
-                  if (user?.email) {
-                    calls.push(
-                      sendTransactionalEmail(
-                        'VOTING_END_EMAIL_TO_CONTESTANTS',
-                        user.email,
-                        {
-                          prizeTitle: prize.title,
-                          numberOfSubmissions:
-                            prize.submissions.length.toString(),
-                        },
-                      ),
-                    )
-                  }
-                }
-                await Promise.all(calls)
-              }
-            }
-            if (donators.length > 0) {
+        if (prize) {
+          if (prize.author.email) {
+            await sendTransactionalEmail(
+              'VOTING_END_EMAIL_TO_PROPOSER',
+              prize.author.email,
+              {
+                prizeTitle: prize.title,
+                proposerName: prize.author.name ?? 'Anonymous',
+              },
+            )
+          }
+          if (prize.submissions.length > 0) {
+            const submissionUsers = prize.submissions.map(
+              (submission) => submission.user,
+            )
+            if (submissionUsers) {
               const calls = []
-              for (const donator of donators) {
-                if (donator?.user?.email) {
+              for (const user of submissionUsers) {
+                if (user?.email) {
                   calls.push(
                     sendTransactionalEmail(
-                      'VOTING_END_EMAIL_TO_FUNDERS',
-                      donator.user.email,
+                      'VOTING_END_EMAIL_TO_CONTESTANTS',
+                      user.email,
                       {
                         prizeTitle: prize.title,
-                        funderName: donator.user.name ?? 'Anonymous',
+                        numberOfSubmissions:
+                          prize.submissions.length.toString(),
                       },
                     ),
                   )
@@ -616,9 +596,131 @@ export const handler = bus.subscriber(
               await Promise.all(calls)
             }
           }
+          if (donators.length > 0) {
+            const calls = []
+            for (const donator of donators) {
+              if (donator?.user?.email) {
+                calls.push(
+                  sendTransactionalEmail(
+                    'VOTING_END_EMAIL_TO_FUNDERS',
+                    donator.user.email,
+                    {
+                      prizeTitle: prize.title,
+                      funderName: donator.user.name ?? 'Anonymous',
+                    },
+                  ),
+                )
+              }
+            }
+            await Promise.all(calls)
+          }
         }
-
         break
+      }
+      case 'fiat.refund': {
+        const normieTech = normieTechClient(
+          'https://84i54kd5nk.execute-api.us-east-1.amazonaws.com',
+        )
+
+        const fiatDonatorsInDb =
+          await viaprize.donations.db.query.donations.findMany({
+            where: and(
+              eq(donations.recipientAddress, event.properties.contractAddress),
+              eq(donations.prizeId, event.properties.prizeId),
+              eq(donations.isFiat, true),
+            ),
+          })
+        if (!fiatDonatorsInDb) {
+          throw new Error('No fiat donators found in the database')
+        }
+        let totalPaidInSmartContractDbInTokenDecimals =
+          event.properties.funder.amountInTokenDecimals
+        const totalPaidInFiatDbInTokenDecimals = fiatDonatorsInDb.reduce(
+          (acc, curr) => acc + getValueFromDonation(curr),
+          0,
+        )
+        if (
+          totalPaidInSmartContractDbInTokenDecimals >
+          totalPaidInFiatDbInTokenDecimals
+        ) {
+          throw new Error(
+            'The total paid in the smart contract is greater than the total paid in fiat',
+          )
+        }
+        let index = 0
+        while (totalPaidInSmartContractDbInTokenDecimals > 0) {
+          const fiatPayment = fiatDonatorsInDb[index]
+          index = index + 1
+          if (!fiatPayment) {
+            break
+          }
+
+          if (
+            totalPaidInSmartContractDbInTokenDecimals < fiatPayment.valueInToken
+          ) {
+            const res = await normieTech.POST('/v1/viaprize/0/refund', {
+              body: {
+                refundAmountInCents:
+                  Number.parseFloat(
+                    formatUnits(
+                      BigInt(
+                        totalPaidInSmartContractDbInTokenDecimals.toString(),
+                      ),
+                      6,
+                    ),
+                  ) * 100,
+                transactionId: fiatPayment.paymentId ?? '',
+              },
+              params: {
+                header: {
+                  'x-api-key': '',
+                },
+              },
+            })
+
+            if (!res.error) {
+              await viaprize.donations.db.update(donations).set({
+                totalRefunded: (
+                  fiatPayment.valueInToken -
+                  totalPaidInSmartContractDbInTokenDecimals
+                ).toString(),
+                isPartiallyRefunded: true,
+                isFullyRefunded: false,
+              })
+            }
+            totalPaidInSmartContractDbInTokenDecimals = 0
+          }
+          if (
+            totalPaidInSmartContractDbInTokenDecimals >=
+            fiatPayment.valueInToken
+          ) {
+            const res = await normieTech.POST('/v1/viaprize/0/refund', {
+              body: {
+                refundAmountInCents:
+                  Number.parseFloat(
+                    formatUnits(BigInt(fiatPayment.valueInToken.toString()), 6),
+                  ) * 100,
+                transactionId: fiatPayment.paymentId ?? '',
+              },
+              params: {
+                header: {
+                  'x-api-key': '',
+                },
+              },
+            })
+            if (!res.error) {
+              await viaprize.donations.db.update(donations).set({
+                totalRefunded: fiatPayment.valueInToken.toString(),
+                isPartiallyRefunded: false,
+                isFullyRefunded: true,
+              })
+            }
+
+            totalPaidInSmartContractDbInTokenDecimals -=
+              fiatPayment.valueInToken
+          }
+        }
+      }
     }
   },
 )

@@ -166,12 +166,12 @@ export const Events = {
     Refund: defineEvent(
       'fiat.refund',
       z.object({
-        transactionId: z.string(),
-        refundAmountInCents: z.number(),
-        isFullyRefunded: z.boolean(),
-        isPartiallyRefunded: z.boolean(),
-        totalRefunded: z.number(),
-        paymentId: z.string(),
+        contractAddress: z.string(),
+        prizeId: z.string(),
+        funder: z.object({
+          address: z.string(),
+          amountInTokenDecimals: z.number(),
+        }),
       }),
     ),
   },

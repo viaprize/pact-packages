@@ -181,20 +181,37 @@ export async function handleEndSubmissionTransaction(
         )
       }
       if (funderRefundEvents.length) {
-        const totalFunderRefunded = funderRefundEvents.reduce(
+        const cryptoRefundEvent = funderRefundEvents.filter(
+          (e) => !e.args.isFiat,
+        )
+        const totalCryptoRefunded = cryptoRefundEvent.reduce(
           (acc, e) => acc + Number.parseInt(e.args._amount?.toString() ?? '0'),
           0,
         )
+        const refundCalls = cryptoRefundEvent.map((e) =>
+          bus.publish(Resource.EventBus.name, Events.Fiat.Refund, {
+            prizeId: prize.id,
+            contractAddress: prizeContractAddress,
+            funder: {
+              address: e.args._funder,
+              amountInTokenDecimals: Number.parseInt(
+                e.args._amount?.toString() ?? '0',
+              ),
+            },
+          }),
+        )
 
-        await viaprize.prizes.refundByContractAddress({
-          primaryContractAddress: prizeContractAddress,
-          totalRefunded: totalFunderRefunded,
-        })
+        await Promise.all([
+          viaprize.prizes.refundByContractAddress({
+            primaryContractAddress: prizeContractAddress,
+            totalRefunded: totalCryptoRefunded,
+          }),
+          ...refundCalls,
+          bus.publish(Resource.EventBus.name, Events.Emails.SubmissionEnd, {
+            prizeId: prize.id,
+          }),
+        ])
       }
-
-      await bus.publish(Resource.EventBus.name, Events.Emails.SubmissionEnd, {
-        prizeId: prize.id,
-      })
     },
   )
   console.log({ final })

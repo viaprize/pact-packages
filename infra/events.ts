@@ -5,6 +5,7 @@ import {
   DATABASE_URL,
   GASLESS_KEY,
   LOOPS_API_KEY,
+  NORMIE_TECH_API_KEY,
   RPC_URL,
   SECRET_KEY,
 } from './secrets'
@@ -95,6 +96,7 @@ eventBus.subscribe({
     LOOPS_API_KEY: LOOPS_API_KEY.value,
     GASLESS_KEY: GASLESS_KEY.value,
     SECRET_KEY: SECRET_KEY.value,
+    NORMIE_TECH_API_EKY: NORMIE_TECH_API_KEY.value,
   },
   link: [
     DATABASE_URL,
@@ -107,5 +109,6 @@ eventBus.subscribe({
     LOOPS_API_KEY,
     GASLESS_KEY,
     SECRET_KEY,
+    NORMIE_TECH_API_KEY,
   ],
 })
