@@ -21,6 +21,12 @@ import { imageBucket } from './storage'
 
 export const website = new sst.aws.Nextjs('website', {
   path: './packages/website',
+  domain:
+    $app.stage === 'production'
+      ? 'viaprize.org'
+      : $app.stage === 'dev'
+        ? 'dev.viaprize.org'
+        : undefined,
   link: [
     AUTH_SECRET,
     DATABASE_URL,
