@@ -1,15 +1,15 @@
 import { env } from '@/env'
 
 export const REDIRECT_TO_AFTER_AUTH = '/prize'
-
+export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const NORMIE_TECH_API_KEY =
-  typeof window !== 'undefined'
+  typeof window === 'undefined'
     ? env.NORMIE_TECH_API_KEY
     : env.NEXT_PUBLIC_NORMIE_TECH_URL
 // export const NORMIE_TECH_URL =
 //   'https://84i54kd5nk.execute-api.us-east-1.amazonaws.com'
 export const NORMIE_TECH_URL =
-  typeof window !== 'undefined'
+  typeof window === 'undefined'
     ? env.NORMIE_TECH_URL
     : env.NEXT_PUBLIC_NORMIE_TECH_URL
 export const categories = [

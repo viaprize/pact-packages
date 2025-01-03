@@ -9,6 +9,7 @@ export const wagmiConfig = getDefaultConfig({
   chains: [env.NEXT_PUBLIC_CHAIN_ID === '10' ? optimism : sepolia],
   transports: {
     [sepolia.id]: http(env.NEXT_PUBLIC_RPC_URL),
+    [optimism.id]: http(env.NEXT_PUBLIC_RPC_URL),
   },
   storage: createStorage({
     storage: cookieStorage,

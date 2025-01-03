@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from '@viaprize/ui/dialog'
 
+import { NULL_ADDRESS } from '@/lib/constant'
 import { handleErrorToast, usdcSignTypeHash } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { Input } from '@viaprize/ui/input'
@@ -162,7 +163,7 @@ export default function DonateCard({
         console.log(address, contractAddress, "address, contractAddress")
         const { amountInUSDC, deadline, hash, rsv, signature } =
           await generateSignature(
-            address ?? '0x0000',
+            (address ?? NULL_ADDRESS) as `0x${string}`,
             contractAddress as `0x${string}`,
           )
         finalSignature = signature
@@ -223,7 +224,7 @@ export default function DonateCard({
       console.log(env.NEXT_PUBLIC_CHAIN_ID, "chain id")
       console.log(env.NEXT_PUBLIC_RPC_URL, "rpc url")
       const { amountInUSDC, deadline, hash, rsv } = await generateSignature(
-        address,
+        (address ?? NULL_ADDRESS) as `0x${string}`,
         contractAddress as `0x${string}`,
       )
 

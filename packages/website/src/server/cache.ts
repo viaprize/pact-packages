@@ -15,7 +15,7 @@ export class Cache {
   async get(key: string) {
     const res = await this.client.send(
       new QueryCommand({
-        TableName: Resource.CacheTable.name,
+        TableName: Resource.Cache.name,
         KeyConditionExpression: '#K = :key',
         ExpressionAttributeNames: {
           '#K': 'key',
@@ -34,7 +34,7 @@ export class Cache {
 
     await this.client.send(
       new DeleteCommand({
-        TableName: Resource.CacheTable.name, // Ensure this is your table name
+        TableName: Resource.Cache.name, // Ensure this is your table name
 
         Key: {
           key, // Primary key to identify the item to delete
@@ -49,7 +49,7 @@ export class Cache {
     const expireAtUnixEpoch = Math.floor((Date.now() + expireAt * 1000) / 1000)
     await this.client.send(
       new UpdateCommand({
-        TableName: Resource.CacheTable.name,
+        TableName: Resource.Cache.name,
 
         Key: {
           key,

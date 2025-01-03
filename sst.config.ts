@@ -10,11 +10,8 @@ export default $config({
       home: 'aws',
       providers: {
         aws: {
-          profile:
-            input.stage === 'production'
-              ? 'viaprize-production'
-              : 'viaprize-dev',
-          region: 'us-east-2',
+          profile: 'viaprize-dev',
+          region: 'us-east-1',
         },
       },
     }

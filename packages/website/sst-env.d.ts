@@ -25,7 +25,7 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "CacheTable": {
+    "Cache": {
       "name": string
       "type": "sst.aws.Dynamo"
     }

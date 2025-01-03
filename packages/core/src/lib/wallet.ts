@@ -206,6 +206,7 @@ export class Wallet extends Blockchain {
 
   async sendTransaction(tx: MetaTransactionData[], type: WalletType) {
     const safeAddress = this.getAddress(type, 'vault')
+    // @ts-ignore
     const safe = Safe.default ? Safe.default : Safe
     const protocolKit = await safe.init({
       provider: this.rpcUrl,

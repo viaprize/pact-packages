@@ -1,5 +1,6 @@
 import 'server-only'
 import { env } from '@/env'
+import { ValidChainSchema } from '@viaprize/core/lib/constants'
 import { Viaprize } from '@viaprize/core/viaprize'
 export const viaprize = new Viaprize({
   config: {
@@ -11,6 +12,6 @@ export const viaprize = new Viaprize({
       gaslessKey: env.GASLESS_KEY,
       secretKey: env.SECRET_KEY,
     },
-    chainId: Number.parseInt(env.CHAIN_ID),
+    chainId: ValidChainSchema.parse(Number.parseInt(env.CHAIN_ID)),
   },
 })

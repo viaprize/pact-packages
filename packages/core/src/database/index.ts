@@ -9,9 +9,14 @@ export class ViaprizeDatabase {
   database: ViaprizeClientDatabase
 
   constructor({ databaseUrl }: { databaseUrl: string }) {
-    this.database = drizzle(postgres(databaseUrl), {
-      schema,
-    })
+    this.database = drizzle(
+      postgres(
+        'postgresql://postgres.gcyuufvbmwfyvguwlxgd:dFvqYlVoyzw6lbaZ@aws-0-us-east-2.pooler.supabase.com:6543/postgres',
+      ),
+      {
+        schema,
+      },
+    )
   }
 
   async refreshCache(name: schema.DonationViewNames) {

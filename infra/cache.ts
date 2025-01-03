@@ -1,4 +1,4 @@
-export const cacheTable = new sst.aws.Dynamo('CacheTable', {
+export const cacheTable = new sst.aws.Dynamo('Cache', {
   fields: {
     key: 'string',
   },

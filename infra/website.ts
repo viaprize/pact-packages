@@ -23,9 +23,14 @@ export const website = new sst.aws.Nextjs('website', {
   path: './packages/website',
   domain:
     $app.stage === 'production'
-      ? 'viaprize.org'
+      ? {
+          name: 'viaprize.org',
+          aliases: ['www.viaprize.org'],
+        }
       : $app.stage === 'dev'
-        ? 'dev.viaprize.org'
+        ? {
+            name: 'test.viaprize.org',
+          }
         : undefined,
   link: [
     AUTH_SECRET,
