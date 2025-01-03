@@ -1,9 +1,7 @@
 import { cacheTable } from './cache'
 import { eventBus } from './events'
-import { router } from './router'
+
 import {
-  AUTH_GITHUB_ID,
-  AUTH_GITHUB_SECRET,
   AUTH_GOOGLE_ID,
   AUTH_GOOGLE_SECRET,
   AUTH_RESEND_KEY,
@@ -14,6 +12,7 @@ import {
   LOOPS_API_KEY,
   NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
   NORMIE_TECH_API_KEY,
+  NORMIE_TECH_SECRET_KEY,
   OPENAI_API_KEY,
   RPC_URL,
   SECRET_KEY,
@@ -25,8 +24,6 @@ export const website = new sst.aws.Nextjs('website', {
   link: [
     AUTH_SECRET,
     DATABASE_URL,
-    AUTH_GITHUB_ID,
-    AUTH_GITHUB_SECRET,
     AUTH_GOOGLE_ID,
     AUTH_GOOGLE_SECRET,
     AUTH_RESEND_KEY,
@@ -38,7 +35,6 @@ export const website = new sst.aws.Nextjs('website', {
     imageBucket,
     eventBus,
     cacheTable,
-    router,
     LOOPS_API_KEY,
     GASLESS_KEY,
     SECRET_KEY,
@@ -46,8 +42,6 @@ export const website = new sst.aws.Nextjs('website', {
   environment: {
     AUTH_SECRET: AUTH_SECRET.value,
     DATABASE_URL: DATABASE_URL.value,
-    AUTH_GITHUB_ID: AUTH_GITHUB_ID.value,
-    AUTH_GITHUB_SECRET: AUTH_GITHUB_SECRET.value,
     AUTH_GOOGLE_ID: AUTH_GOOGLE_ID.value,
     AUTH_GOOGLE_SECRET: AUTH_GOOGLE_SECRET.value,
     AUTH_RESEND_KEY: AUTH_RESEND_KEY.value,
@@ -63,7 +57,7 @@ export const website = new sst.aws.Nextjs('website', {
     SECRET_KEY: SECRET_KEY.value,
     OPENAI_API_KEY: OPENAI_API_KEY.value,
     LOOPS_API_KEY: LOOPS_API_KEY.value,
-
+    NORMIE_TECH_SECRET_KEY: NORMIE_TECH_SECRET_KEY.value,
     NORMIE_TECH_URL:
       $app.stage === 'production'
         ? 'https://api.normie.tech'

@@ -2,6 +2,7 @@ import { env } from '@/env'
 import { NORMIE_TECH_URL } from '@/lib/constant'
 import { userSessionSchema } from '@/server/auth'
 import { viaprize } from '@/server/viaprize'
+import type { ExtraMetadata } from '@/types/payment'
 import { TRPCError } from '@trpc/server'
 import { insertPrizeSchema } from '@viaprize/core/database/schema/prizes'
 import { PRIZE_FACTORY_ABI, PRIZE_V2_ABI } from '@viaprize/core/lib/abi'
@@ -519,8 +520,7 @@ export const prizeRouter = createTRPCRouter({
         amountApproved: input.amount,
         ethSignedMessage: hash,
       })
-      console.log(parseSignature(signature))
-      console.log('chainId', env.CHAIN_ID)
+
       const customId = nanoid(20)
       const url = await normieTechClient(NORMIE_TECH_URL).POST(
         '/v1/viaprize/0/checkout',
@@ -541,7 +541,8 @@ export const prizeRouter = createTRPCRouter({
               prizeId: prize.id,
               username: user.username,
               prizeSlug: prize.slug,
-            },
+              name: user.name,
+            } as ExtraMetadata,
             metadata: {
               contractAddress: input.spender,
               userAddress: user.wallet.address,

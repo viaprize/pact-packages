@@ -110,6 +110,7 @@ contract PrizeV2 is ReentrancyGuard {
     /// @notice This variable represents the platform's address.
     address public immutable platformAddress = 0x1f00DD750aD3A6463F174eD7d63ebE1a7a930d0c;
 
+    address public refundAddress;
     /// @notice This variable represents the contract instance of the SubmissionAVLTree.
     SubmissionAVLTree private _submissionTree;
 
@@ -128,8 +129,8 @@ contract PrizeV2 is ReentrancyGuard {
     /// @param _usdcToEthPool The address of the Uniswap V3 pool for USDC to ETH swaps.
     /// @param _ethPriceAggregator The address of the Chainlink price aggregator for ETH.
     /// @param _wethToken The address of the WETH token contract.
-    constructor(address _visionary, address[] memory _platformAdmins, uint8 _platFormFee, uint8 _visionaryFee, address _usdcAddress, address _usdcBridgedAddress , address _swapRouter ,address _usdcToUsdcePool,address _usdcToEthPool,address _ethPriceAggregator,address _wethToken) {
-
+    constructor(address _visionary, address[] memory _platformAdmins, uint8 _platFormFee, uint8 _visionaryFee, address _usdcAddress, address _usdcBridgedAddress , address _swapRouter ,address _usdcToUsdcePool,address _usdcToEthPool,address _ethPriceAggregator,address _wethToken,address _refundAddress) {
+        refundAddress = _refundAddress;
         visionary = _visionary;
         isVisionary[visionary] = true;
         for (uint i = 0; i < _platformAdmins.length; i++) {
@@ -294,11 +295,11 @@ contract PrizeV2 is ReentrancyGuard {
                         emit ErrorAndEventsLibrary.FunderRefund(refundRequestedFunders[j], fiatToSend, false);
                         _usdc.transfer(refundRequestedFunders[j], cryptoToSend);
                     }
-                    _usdc.transfer(platformAddress, fiatToSend);
+                    _usdc.transfer(refundAddress, fiatToSend);
                     emit ErrorAndEventsLibrary.FunderRefund(refundRequestedFunders[j], fiatToSend, true);
                 } else {
                     _usdc.transfer(refundRequestedFunders[j], reward_amount);
-                    emit ErrorAndEventsLibrary.FunderRefund(refundRequestedFunders[j], reward_amount, true);
+                    emit ErrorAndEventsLibrary.FunderRefund(refundRequestedFunders[j], reward_amount, false);
                 }
             }
         }
@@ -688,7 +689,7 @@ contract PrizeV2 is ReentrancyGuard {
             address funder = fiatFunders[i];
             uint256 transferable_amount = fiatFunderAmount[funder];
             fiatFunderAmount[funder] = 0;
-            _usdc.transfer(platformAddress, transferable_amount);
+            _usdc.transfer(refundAddress, transferable_amount);
             emit ErrorAndEventsLibrary.FunderRefund(funder, transferable_amount, true);
         }
     }

@@ -6,6 +6,8 @@ import {
   GASLESS_KEY,
   LOOPS_API_KEY,
   NORMIE_TECH_API_KEY,
+  NORMIE_TECH_SECRET_KEY,
+  NORMIE_TECH_URL,
   RPC_URL,
   SECRET_KEY,
 } from './secrets'
@@ -63,12 +65,19 @@ export const scheduleReceivingFunction = new sst.aws.Function(
       DATABASE_URL,
       eventBus,
       cacheTable,
-
+      NORMIE_TECH_API_KEY,
+      NORMIE_TECH_SECRET_KEY,
+      NORMIE_TECH_URL,
       RPC_URL,
     ],
     environment: {
       DATABASE_URL: DATABASE_URL.value,
       CHAIN_ID: $app.stage === 'production' ? '10' : '11155111',
+      GASLESS_KEY: GASLESS_KEY.value,
+      SECRET_KEY: SECRET_KEY.value,
+      NORMIE_TECH_API_KEY: NORMIE_TECH_API_KEY.value,
+      NORMIE_TECH_SECRET_KEY: NORMIE_TECH_SECRET_KEY.value,
+      NORMIE_TECH_URL: NORMIE_TECH_URL.value,
 
       RPC_URL: RPC_URL.value,
     },
@@ -97,6 +106,8 @@ eventBus.subscribe({
     GASLESS_KEY: GASLESS_KEY.value,
     SECRET_KEY: SECRET_KEY.value,
     NORMIE_TECH_API_EKY: NORMIE_TECH_API_KEY.value,
+    NORMIE_TECH_SECRET_KEY: NORMIE_TECH_SECRET_KEY.value,
+    NORMIE_TECH_URL: NORMIE_TECH_URL.value,
   },
   link: [
     DATABASE_URL,
@@ -110,5 +121,7 @@ eventBus.subscribe({
     GASLESS_KEY,
     SECRET_KEY,
     NORMIE_TECH_API_KEY,
+    NORMIE_TECH_SECRET_KEY,
+    NORMIE_TECH_URL,
   ],
 })

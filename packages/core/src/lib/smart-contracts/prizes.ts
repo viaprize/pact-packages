@@ -221,6 +221,7 @@ export class PrizesBlockchain extends Blockchain {
         constants.USDC_TO_ETH_POOL,
         constants.ETH_PRICE,
         constants.WETH,
+        constants.REFUND_ADDRESS,
       ],
     })
     return data

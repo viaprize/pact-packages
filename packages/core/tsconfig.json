@@ -6,6 +6,7 @@
     "target": "ES2022",
     "lib": ["ES2023"],
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,

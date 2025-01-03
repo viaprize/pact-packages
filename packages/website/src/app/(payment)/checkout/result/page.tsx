@@ -83,7 +83,8 @@ export default async function PaymentResultPage({
     if (!donation) {
         try {
             await viaprize.prizes.addUsdcFunds({
-                donor: metadata.userAddress,
+                donor: extraMetadata.name ?? "Anonymous",
+
                 recipientAddress: metadata.contractAddress,
                 isFiat: true,
                 prizeId: extraMetadata.prizeId,

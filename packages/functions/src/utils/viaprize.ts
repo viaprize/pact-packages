@@ -10,6 +10,6 @@ export const viaprize = new Viaprize({
       gaslessKey: process.env.GASLESS_KEY ?? '',
       secretKey: process.env.SECRET_KEY ?? '',
     },
-    chainId: Number.parseInt(process.env.CHAIN_ID ?? '10'),
+    chainId: Number.parseInt(process.env.CHAIN_ID ?? '10') as any,
   },
 })

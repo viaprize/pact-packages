@@ -120,7 +120,9 @@ export class Prizes extends CacheTag<typeof CACHE_TAGS> {
           existingFunder.valueInToken += funder.valueInToken
         } else {
           // Add new funder to the map
-          funderMap[funderKey] = { ...funder }
+          funderMap[funderKey] = {
+            ...funder,
+          }
         }
       } else {
         // If no username, just add the funder as is with a unique key

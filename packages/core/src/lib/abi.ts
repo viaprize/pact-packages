@@ -101,6 +101,11 @@ export const PRIZE_FACTORY_ABI = [
         name: '_wethToken',
         type: 'address',
       },
+      {
+        internalType: 'address',
+        name: '_refundAddress',
+        type: 'address',
+      },
     ],
     name: 'createViaPrize',
     outputs: [
@@ -171,6 +176,11 @@ export const PRIZE_V2_ABI = [
       {
         internalType: 'address',
         name: '_wethToken',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_refundAddress',
         type: 'address',
       },
     ],
@@ -1308,6 +1318,19 @@ export const PRIZE_V2_ABI = [
     name: 'raiseDispute',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'refundAddress',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {

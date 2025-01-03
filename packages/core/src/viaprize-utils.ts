@@ -120,6 +120,27 @@ export async function handleEndDispute(
   })
   const platformTransactionLogs = transferEvents.slice(-2)
   console.log({ platformTransactionLogs })
+
+  const fiatRefundsEvents = funderRefundEvents.filter((e) => e.args.isFiat)
+  const totalFiatRefunded = fiatRefundsEvents.reduce(
+    (acc, e) => acc + Number.parseInt(e.args._amount?.toString() ?? '0'),
+    0,
+  )
+  if (totalFiatRefunded > 0) {
+    const refundCalls = fiatRefundsEvents.map((e) =>
+      bus.publish(Resource.EventBus.name, Events.Fiat.Refund, {
+        prizeId: prize.id,
+        contractAddress: prizeContractAddress,
+        funder: {
+          address: e.args._address ?? '',
+          amountInTokenDecimals: Number.parseInt(
+            e.args._amount?.toString() ?? '0',
+          ),
+        },
+      }),
+    )
+    await Promise.all(refundCalls)
+  }
   if (disputeEndedEvent.length > 0) {
     await viaprize.prizes.endDisputeByContractAddress({
       contractAddress: prizeContractAddress,
@@ -166,21 +187,28 @@ export async function handleEndSubmissionTransaction(
       const votingStartedEvents = event.filter(
         (e) => e.eventName === 'VotingStarted',
       )
-
       const funderRefundEvents = event.filter(
         (e) => e.eventName === 'FunderRefund',
       )
-
-      console.log({ votingStartedEvents })
-      console.log({ submissionEndedEvents })
-      console.log({ funderRefundEvents })
-
+      console.log(
+        votingStartedEvents.map((e) => e.args),
+        'votingStartedEvents',
+      )
+      console.log(
+        submissionEndedEvents.map((e) => e.args),
+        'submissionEndedEvents',
+      )
+      console.log(
+        funderRefundEvents.map((e) => e.args),
+        'funderRefundEvents',
+      )
+      console.log(funderRefundEvents.length)
       if (submissionEndedEvents.length && votingStartedEvents.length) {
         await viaprize.prizes.startVotingPeriodByContractAddress(
           prizeContractAddress,
         )
       }
-      if (funderRefundEvents.length) {
+      if (funderRefundEvents.length > 0) {
         const cryptoRefundEvent = funderRefundEvents.filter(
           (e) => !e.args.isFiat,
         )
@@ -188,25 +216,31 @@ export async function handleEndSubmissionTransaction(
           (acc, e) => acc + Number.parseInt(e.args._amount?.toString() ?? '0'),
           0,
         )
-        const refundCalls = cryptoRefundEvent.map((e) =>
-          bus.publish(Resource.EventBus.name, Events.Fiat.Refund, {
-            prizeId: prize.id,
-            contractAddress: prizeContractAddress,
-            funder: {
-              address: e.args._funder,
-              amountInTokenDecimals: Number.parseInt(
-                e.args._amount?.toString() ?? '0',
-              ),
-            },
-          }),
+        const fiatRefundEvent = funderRefundEvents.filter((e) => e.args.isFiat)
+        const totalFiatRefunded = fiatRefundEvent.reduce(
+          (acc, e) => acc + Number.parseInt(e.args._amount?.toString() ?? '0'),
+          0,
         )
-
+        if (totalFiatRefunded > 0) {
+          const refundCalls = fiatRefundEvent.map((e) =>
+            bus.publish(Resource.EventBus.name, Events.Fiat.Refund, {
+              prizeId: prize.id,
+              contractAddress: prizeContractAddress,
+              funder: {
+                address: e.args._address ?? '',
+                amountInTokenDecimals: Number.parseInt(
+                  e.args._amount?.toString() ?? '0',
+                ),
+              },
+            }),
+          )
+          await Promise.all(refundCalls)
+        }
         await Promise.all([
           viaprize.prizes.refundByContractAddress({
             primaryContractAddress: prizeContractAddress,
-            totalRefunded: totalCryptoRefunded,
+            totalRefunded: totalCryptoRefunded + totalFiatRefunded,
           }),
-          ...refundCalls,
           bus.publish(Resource.EventBus.name, Events.Emails.SubmissionEnd, {
             prizeId: prize.id,
           }),
@@ -214,6 +248,16 @@ export async function handleEndSubmissionTransaction(
       }
     },
   )
-  console.log({ final })
+  // const txLog =
+  //   await viaprize.wallet.blockchainClient.waitForTransactionReceipt({
+  //     hash: '0x6141385ca20c54e4e1961d0c97e24226b5c408dd81d3f82154bc3ccacd65538e',
+  //   })
+  // const event = parseEventLogs({
+  //   abi: PRIZE_V2_ABI,
+  //   logs: txLog.logs,
+  //   eventName: ['SubmissionEnded', 'VotingStarted', 'FunderRefund'],
+  // })
+
+  // console.log({ final })
   await publishDeployedPrizeCacheDelete(viaprize, prize.slug)
 }

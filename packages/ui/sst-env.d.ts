@@ -5,31 +5,23 @@ import "sst"
 export {}
 declare module "sst" {
   export interface Resource {
-    "AuthGithubId": {
+    "AUTH_GOOGLE_ID": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "AuthGithubSecret": {
+    "AUTH_GOOGLE_SECRET": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "AuthGoogleId": {
+    "AUTH_RESEND_KEY": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "AuthGoogleSecret": {
+    "AUTH_SECRET": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "AuthResendKey": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "AuthSecret": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "AuthTrustHost": {
+    "AUTH_TRUST_HOST": {
       "type": "sst.sst.Secret"
       "value": string
     }
@@ -37,7 +29,7 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Dynamo"
     }
-    "DatabaseUrl": {
+    "DATABASE_URL": {
       "type": "sst.sst.Secret"
       "value": string
     }
@@ -46,7 +38,7 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Bus"
     }
-    "GaslessKey": {
+    "GASLESS_KEY": {
       "type": "sst.sst.Secret"
       "value": string
     }
@@ -54,41 +46,41 @@ declare module "sst" {
       "name": string
       "type": "sst.aws.Bucket"
     }
-    "LoopsApiKey": {
+    "LOOPS_API_KEY": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "NextPublicWalletConnectProjectId": {
+    "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "NormieTechApiKey": {
+    "NORMIE_TECH_API_KEY": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "NormieTechSecretKey": {
+    "NORMIE_TECH_SECRET_KEY": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "OpenAiApiKey": {
+    "NORMIE_TECH_URL": {
       "type": "sst.sst.Secret"
       "value": string
     }
-    "Router": {
-      "type": "sst.aws.ApiGatewayV2"
-      "url": string
+    "OPENAI_API_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
-    "RpcUrl": {
+    "RPC_URL": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "SECRET_KEY": {
       "type": "sst.sst.Secret"
       "value": string
     }
     "ScheduleReceivingLambda": {
       "arn": string
       "type": "sst.aws.Function"
-    }
-    "SecretKey": {
-      "type": "sst.sst.Secret"
-      "value": string
     }
     "schedulerRole": {
       "arn": string

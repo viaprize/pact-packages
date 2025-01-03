@@ -28,8 +28,8 @@ export default function LoginCard() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <div className="grid grid-cols-2 gap-1">
-            <GithubAuthButton redirectTo={REDIRECT_TO_AFTER_AUTH} />
+          <div className="grid grid-cols-1 gap-1">
+            {/* <GithubAuthButton redirectTo={REDIRECT_TO_AFTER_AUTH} /> */}
             <GoogleAuthButton redirectTo={REDIRECT_TO_AFTER_AUTH} />
           </div>
           <div className="relative">

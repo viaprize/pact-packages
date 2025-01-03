@@ -19,6 +19,7 @@ export const userSessionSchema = z.object({
     address: z.string(),
     key: z.string().nullable(),
   }),
+  name: z.string(),
   isAdmin: z.boolean(),
   email: z.string(),
 })

@@ -21,6 +21,7 @@ import { formatUnits, parseUnits } from 'viem'
 import type { z } from 'zod'
 import { EMAIL_TEMPLATES, email, sendTransactionalEmail } from '../email'
 import { Cache } from '../utils/cache'
+import { normieTech } from '../utils/normie-tech'
 import { schedule } from '../utils/schedule'
 import { viaprize } from '../utils/viaprize'
 const cache = new Cache()
@@ -618,10 +619,6 @@ export const handler = bus.subscriber(
         break
       }
       case 'fiat.refund': {
-        const normieTech = normieTechClient(
-          'https://84i54kd5nk.execute-api.us-east-1.amazonaws.com',
-        )
-
         const fiatDonatorsInDb =
           await viaprize.donations.db.query.donations.findMany({
             where: and(
@@ -636,8 +633,12 @@ export const handler = bus.subscriber(
         let totalPaidInSmartContractDbInTokenDecimals =
           event.properties.funder.amountInTokenDecimals
         const totalPaidInFiatDbInTokenDecimals = fiatDonatorsInDb.reduce(
-          (acc, curr) => acc + getValueFromDonation(curr),
+          (acc, curr) => acc + curr.valueInToken,
           0,
+        )
+        console.log(
+          { totalPaidInSmartContractDbInTokenDecimals },
+          { totalPaidInFiatDbInTokenDecimals },
         )
         if (
           totalPaidInSmartContractDbInTokenDecimals >
@@ -647,6 +648,7 @@ export const handler = bus.subscriber(
             'The total paid in the smart contract is greater than the total paid in fiat',
           )
         }
+
         let index = 0
         while (totalPaidInSmartContractDbInTokenDecimals > 0) {
           const fiatPayment = fiatDonatorsInDb[index]
@@ -673,7 +675,7 @@ export const handler = bus.subscriber(
               },
               params: {
                 header: {
-                  'x-api-key': '',
+                  'x-api-key': Resource.NORMIE_TECH_API_KEY.value,
                 },
               },
             })
@@ -704,7 +706,7 @@ export const handler = bus.subscriber(
               },
               params: {
                 header: {
-                  'x-api-key': '',
+                  'x-api-key': Resource.NORMIE_TECH_API_KEY.value,
                 },
               },
             })
