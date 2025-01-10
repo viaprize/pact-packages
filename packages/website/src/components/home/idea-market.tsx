@@ -26,26 +26,27 @@ export default function IdeaMarket() {
       linkText: 'Create a Prize',
     },
     {
-      title: 'For Freelancers',
+      title: 'For Builders',
       imageSrc: '/hero/avatar.png',
       description:
-        'You are a developer and you want to earn more? and tired of searching for projects on fiverr and upwork?',
+        'Are you an entrepreneur who wants to work on a project that you know has real demand?',
       listItems: [
         'Find projects that match your skills',
-        'You can compete with other freelancers and win the prize',
-        'You can earn and also be part of the project',
+        'Know how much reward is there for completing a project',
+        'Compete or join forces with others interested in completing the project',
       ],
       link: '/prize/explore',
       linkText: 'Explore Prizes',
     },
     {
-      title: 'For Investors',
+      title: 'For Funders',
       imageSrc: '/hero/avatar.png',
       description:
-        'You are an investor and invest into early stage projects? and ideas ? and also we make sure your investment if your investment is not successful',
+        'Want to fund projects with a guarantee of either success or a refund?',
       listItems: [
-        'You can invest into ideas that you believe in',
-        'Your investment is protected by money-back guarantee',
+        'Crowdfund projects you believe in and want to see turned into reality',
+        'Refunded by the deadline if no one successfully completes it',
+        'Vote on winners'
       ],
       link: '/prize/explore',
       linkText: 'Explore Prizes',

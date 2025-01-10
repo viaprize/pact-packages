@@ -21,11 +21,11 @@ export default async function Dashboard() {
 
         <div className="hidden bg-muted lg:block">
           <Image
-            src="https://picsum.photos/200"
+            src="/lamp.jpg"
             alt="Image"
-            width="1920"
-            height="1080"
-            className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+            width={2000}
+            height={2000}
+            className="h-full w-full object-cover "
           />
         </div>
       </div>

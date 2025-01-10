@@ -21,7 +21,7 @@ export default function ExploreCard(props: selectPrizeType) {
 
   return (
     <Link href={`/prize/${props.slug}`} className="block">
-      <Card className=" h-full flex flex-col">
+      <Card className=" h-full flex flex-col hover:bg-muted-foreground/10">
         <Image
           src={props.imageUrl ?? ''}
           width={1250}
