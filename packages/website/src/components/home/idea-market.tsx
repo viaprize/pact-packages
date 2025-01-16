@@ -35,7 +35,7 @@ export default function IdeaMarket() {
         'Know how much reward is there for completing a project',
         'Compete or join forces with others interested in completing the project',
       ],
-      link: '/prize/explore',
+      link: '/prize',
       linkText: 'Explore Prizes',
     },
     {
@@ -48,7 +48,7 @@ export default function IdeaMarket() {
         'Refunded by the deadline if no one successfully completes it',
         'Vote on winners'
       ],
-      link: '/prize/explore',
+      link: '/prize',
       linkText: 'Explore Prizes',
     },
   ]

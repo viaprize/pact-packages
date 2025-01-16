@@ -172,7 +172,7 @@ export default function PrizeChatbot() {
 
   return (
     <div
-      className={`fixed bottom-4 right-4 transition-all duration-300 ${isMinimized ? 'w-16 h-16' : 'w-[400px] h-[600px]'}`}
+      className={`fixed bottom-20 lg:bottom-4 right-4 transition-all duration-300 ${isMinimized ? 'w-16 h-16' : 'w-[400px] h-[600px]'}`}
     >
       {isMinimized ? (
         <Button
