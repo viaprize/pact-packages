@@ -136,7 +136,9 @@ export default function Navbar({
             variant="default"
             className="rounded-full h-12 w-12 flex items-center justify-center -mt-16"
           >
+            <Link href='/prize/create'>
             <Plus className="h-6 w-6" />
+            </Link>
           </Button>
           <Button
             variant="ghost"
